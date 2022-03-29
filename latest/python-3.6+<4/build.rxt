@@ -1,0 +1,506 @@
+{
+    "append_sys_path": true,
+    "arch": "x86_64",
+    "building": true,
+    "caching": true,
+    "created": 1648443644,
+    "default_patch_lock": "no_lock",
+    "failure_description": null,
+    "from_cache": false,
+    "graph": "{'nodes': [((('fillcolor', '#FFFFAA'), ('fontsize', 10), ('style', 'filled,dashed')), [('_1', 'PyYAML-5.4+<7'), ('_2', 'Sphinx-1.8+<4'), ('_3', 'python-3.6+<3.8'), ('_4', 'rez-2.42+<3'), ('_5', 'rez_bump-1.5+<2'), ('_6', 'rez_industry-3.1+<4'), ('_7', 'rez_python_compatibility-2.8+<3'), ('_8', 'rez_utilities-2.6+<3'), ('_9', 'schema-0.7+<1'), ('_10', 'six-1.15+<2'), ('_11', 'rez_build_helper-1+<2'), ('_12', '~platform==linux'), ('_13', '~arch==x86_64'), ('_14', '~os==CentOS-7.9.2009')]), ((('fillcolor', '#AAFFAA'), ('fontsize', 10), ('style', 'filled')), [('_15', 'platform-linux[]'), ('_16', 'arch-x86_64[]'), ('_17', 'os-CentOS-7.9.2009[]'), ('_18', 'python-3.6.8[1]'), ('_19', 'PyYAML-6.0[0]'), ('_20', 'pytz-2021.3[0]'), ('_21', 'Babel-2.9.1[0]'), ('_22', 'MarkupSafe-2.0.1[0]'), ('_23', 'Jinja2-3.0.3[0]'), ('_24', 'Pygments-2.11.2[0]'), ('_25', 'alabaster-0.7.12[1]'), ('_26', 'certifi-2021.10.8[0]'), ('_27', 'charset_normalizer-2.0.12[0]'), ('_28', 'docutils-0.17.1[0]'), ('_29', 'idna-3.3[0]'), ('_30', 'imagesize-1.3.0[0]'), ('_31', 'pyparsing-3.0.7[0]'), ('_32', 'packaging-21.3[0]'), ('_33', 'urllib3-1.26.9[0]'), ('_34', 'requests-2.27.1[3]'), ('_35', 'setuptools-51.1.2[0]'), ('_36', 'snowballstemmer-2.2.0[0]'), ('_37', 'sphinxcontrib_applehelp-1.0.2[0]'), ('_38', 'sphinxcontrib_devhelp-1.0.2[0]'), ('_39', 'sphinxcontrib_htmlhelp-2.0.0[0]'), ('_40', 'sphinxcontrib_jsmath-1.0.1[0]'), ('_41', 'sphinxcontrib_qthelp-1.0.3[0]'), ('_42', 'sphinxcontrib_serializinghtml-1.1.5[0]'), ('_43', 'Sphinx-3.4.3[0]'), ('_44', 'rez-2.105.0[0]'), ('_45', 'six-1.16.0[1]'), ('_46', 'backports.weakref-1.0.post1[1]'), ('_47', 'backports.tempfile-1.0[1]'), ('_48', 'mock-4.0.2[0]'), ('_49', 'rez_python_compatibility-2.8.0[]'), ('_50', 'wurlitzer-2.0.1[0]'), ('_51', 'rez_utilities-2.6.1[]'), ('_52', 'parso-0.8.3[0]'), ('_53', 'parso_helper-1.2.0[]'), ('_54', 'rez_industry-3.1.0[]'), ('_55', 'rez_bump-1.6.0[]'), ('_56', 'contextlib2-21.6.0[0]'), ('_57', 'schema-0.7.5[0]'), ('_58', 'whichcraft-0.6.1[1]'), ('_59', 'rez_build_helper-1.8.0[1]')]), ((('fillcolor', '#F6F6F6'), ('fontsize', 10), ('style', 'filled,dashed')), [('_60', 'platform-linux'), ('_61', 'arch-x86_64'), ('_62', 'os-CentOS-7'), ('_63', 'python-3.6'), ('_64', 'pytz-2015.7+'), ('_65', 'MarkupSafe-2.0+'), ('_66', 'pyparsing-2.0.2+<3.0.5|3.0.5.1+'), ('_67', 'urllib3-1.21.1+<1.27'), ('_68', 'certifi-2017.4.17+'), ('_69', 'idna-2.5+<4'), ('_70', 'charset_normalizer-2.0.0+<2.1'), ('_71', 'Pygments-2.0+'), ('_72', 'packaging'), ('_73', 'snowballstemmer-1.1+'), ('_74', 'sphinxcontrib_jsmath'), ('_75', 'sphinxcontrib_serializinghtml'), ('_76', 'sphinxcontrib_devhelp'), ('_77', 'Jinja2-2.3+'), ('_78', 'sphinxcontrib_htmlhelp'), ('_79', 'imagesize'), ('_80', 'requests-2.5.0+'), ('_81', 'docutils-0.12+'), ('_82', 'sphinxcontrib_qthelp'), ('_83', 'alabaster-0.7+<0.8'), ('_84', 'setuptools'), ('_85', 'sphinxcontrib_applehelp'), ('_86', 'Babel-1.3+'), ('_87', 'python-2.7+<4'), ('_88', 'os-CentOS-7.9.2009'), ('_89', 'backports.weakref'), ('_90', 'backports.tempfile-1+<2'), ('_91', 'mock-3+<6'), ('_92', 'python-2.7+<3.8'), ('_93', 'six-1.13+<2'), ('_94', 'rez-2.47+<3'), ('_95', 'rez_python_compatibility-2.5+<3'), ('_96', 'six-1.12+<2'), ('_97', 'wurlitzer-2+<3'), ('_98', 'parso-0.5+<1'), ('_99', 'python-2+<3.8'), ('_100', 'parso_helper-1+<2'), ('_101', 'rez_utilities-2.3+<3'), ('_102', 'parso-0.6+<1'), ('_103', 'rez_industry-1+<4'), ('_104', 'rez_utilities-2+<3'), ('_105', 'contextlib2-0.5.5+'), ('_106', 'rez-2.71+<3'), ('_107', 'six-1.11+<2'), ('_108', 'whichcraft-0.6+<1'), ('_109', 'setuptools-51+<52')])], 'edges': [((('arrowsize', '0.5'),), [('_1', '_19'), ('_2', '_43'), ('_3', '_18'), ('_4', '_44'), ('_5', '_55'), ('_6', '_54'), ('_7', '_49'), ('_8', '_51'), ('_9', '_57'), ('_10', '_45'), ('_11', '_59'), ('_12', '_15'), ('_13', '_16'), ('_14', '_17'), ('_17', '_60'), ('_17', '_61'), ('_18', '_60'), ('_18', '_61'), ('_18', '_62'), ('_19', '_60'), ('_19', '_61'), ('_19', '_63'), ('_20', '_63'), ('_21', '_64'), ('_21', '_63'), ('_22', '_60'), ('_22', '_61'), ('_22', '_63'), ('_23', '_65'), ('_23', '_63'), ('_24', '_63'), ('_25', '_63'), ('_26', '_63'), ('_27', '_63'), ('_28', '_63'), ('_29', '_63'), ('_30', '_63'), ('_31', '_63'), ('_32', '_66'), ('_32', '_63'), ('_33', '_63'), ('_34', '_67'), ('_34', '_68'), ('_34', '_63'), ('_34', '_69'), ('_34', '_70'), ('_35', '_63'), ('_36', '_63'), ('_37', '_63'), ('_38', '_63'), ('_39', '_63'), ('_40', '_63'), ('_41', '_63'), ('_42', '_63'), ('_43', '_71'), ('_43', '_72'), ('_43', '_73'), ('_43', '_74'), ('_43', '_75'), ('_43', '_76'), ('_43', '_77'), ('_43', '_78'), ('_43', '_79'), ('_43', '_80'), ('_43', '_81'), ('_43', '_82'), ('_43', '_83'), ('_43', '_84'), ('_43', '_85'), ('_43', '_86'), ('_43', '_63'), ('_44', '_87'), ('_44', '_60'), ('_44', '_61'), ('_44', '_88'), ('_45', '_63'), ('_46', '_63'), ('_47', '_89'), ('_47', '_63'), ('_48', '_63'), ('_49', '_90'), ('_49', '_91'), ('_49', '_92'), ('_49', '_93'), ('_50', '_63'), ('_51', '_92'), ('_51', '_94'), ('_51', '_95'), ('_51', '_96'), ('_51', '_97'), ('_52', '_63'), ('_53', '_98'), ('_53', '_99'), ('_54', '_98'), ('_54', '_100'), ('_54', '_92'), ('_54', '_4'), ('_54', '_101'), ('_54', '_93'), ('_55', '_102'), ('_55', '_99'), ('_55', '_4'), ('_55', '_103'), ('_55', '_104'), ('_56', '_63'), ('_57', '_105'), ('_57', '_63'), ('_58', '_63'), ('_59', '_106'), ('_59', '_107'), ('_59', '_108'), ('_59', '_63'), ('_59', '_109'), ('_60', '_15'), ('_61', '_16'), ('_62', '_17'), ('_63', '_18'), ('_64', '_20'), ('_65', '_22'), ('_66', '_31'), ('_67', '_33'), ('_68', '_26'), ('_69', '_29'), ('_70', '_27'), ('_71', '_24'), ('_72', '_32'), ('_73', '_36'), ('_74', '_40'), ('_75', '_42'), ('_76', '_38'), ('_77', '_23'), ('_78', '_39'), ('_79', '_30'), ('_80', '_34'), ('_81', '_28'), ('_82', '_41'), ('_83', '_25'), ('_84', '_35'), ('_85', '_37'), ('_86', '_21'), ('_87', '_18'), ('_88', '_17'), ('_89', '_46'), ('_90', '_47'), ('_91', '_48'), ('_92', '_18'), ('_93', '_45'), ('_94', '_44'), ('_95', '_49'), ('_96', '_45'), ('_97', '_50'), ('_98', '_52'), ('_99', '_18'), ('_100', '_53'), ('_101', '_51'), ('_102', '_52'), ('_103', '_54'), ('_104', '_51'), ('_105', '_56'), ('_106', '_44'), ('_107', '_45'), ('_108', '_58'), ('_109', '_35')])]}",
+    "host": "SelecaoOne.lan",
+    "implicit_packages": [
+        "~platform==linux",
+        "~arch==x86_64",
+        "~os==CentOS-7.9.2009"
+    ],
+    "load_time": 0.0,
+    "num_loaded_packages": 121,
+    "os": "CentOS-7.9.2009",
+    "package_caching": false,
+    "package_filter": [],
+    "package_orderers": null,
+    "package_paths": [
+        "/home/selecaoone/work_area/add_rez_docbot_2",
+        "/home/selecaoone/.rez/packages/int"
+    ],
+    "package_requests": [
+        "PyYAML-5.4+<7",
+        "Sphinx-1.8+<4",
+        "python-2.7+<3.8",
+        "rez-2.42+<3",
+        "rez_bump-1.5+<2",
+        "rez_industry-3.1+<4",
+        "rez_python_compatibility-2.8+<3",
+        "rez_utilities-2.6+<3",
+        "schema-0.7+<1",
+        "six-1.15+<2",
+        "python-3.6+<4",
+        "rez_build_helper-1+<2"
+    ],
+    "parent_suite_path": null,
+    "patch_locks": {},
+    "platform": "linux",
+    "requested_timestamp": null,
+    "resolved_ephemerals": [],
+    "resolved_packages": [
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "platform",
+                "repository_type": "filesystem",
+                "version": "linux"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "arch",
+                "repository_type": "filesystem",
+                "version": "x86_64"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "os",
+                "repository_type": "filesystem",
+                "version": "CentOS-7.9.2009"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "python",
+                "repository_type": "filesystem",
+                "version": "3.6.8"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "PyYAML",
+                "repository_type": "filesystem",
+                "version": "6.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "pytz",
+                "repository_type": "filesystem",
+                "version": "2021.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "Babel",
+                "repository_type": "filesystem",
+                "version": "2.9.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "MarkupSafe",
+                "repository_type": "filesystem",
+                "version": "2.0.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "Jinja2",
+                "repository_type": "filesystem",
+                "version": "3.0.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "Pygments",
+                "repository_type": "filesystem",
+                "version": "2.11.2"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "alabaster",
+                "repository_type": "filesystem",
+                "version": "0.7.12"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "certifi",
+                "repository_type": "filesystem",
+                "version": "2021.10.8"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "charset_normalizer",
+                "repository_type": "filesystem",
+                "version": "2.0.12"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "docutils",
+                "repository_type": "filesystem",
+                "version": "0.17.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "idna",
+                "repository_type": "filesystem",
+                "version": "3.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "imagesize",
+                "repository_type": "filesystem",
+                "version": "1.3.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "pyparsing",
+                "repository_type": "filesystem",
+                "version": "3.0.7"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "packaging",
+                "repository_type": "filesystem",
+                "version": "21.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "urllib3",
+                "repository_type": "filesystem",
+                "version": "1.26.9"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 3,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "requests",
+                "repository_type": "filesystem",
+                "version": "2.27.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "setuptools",
+                "repository_type": "filesystem",
+                "version": "51.1.2"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "snowballstemmer",
+                "repository_type": "filesystem",
+                "version": "2.2.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_applehelp",
+                "repository_type": "filesystem",
+                "version": "1.0.2"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_devhelp",
+                "repository_type": "filesystem",
+                "version": "1.0.2"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_htmlhelp",
+                "repository_type": "filesystem",
+                "version": "2.0.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_jsmath",
+                "repository_type": "filesystem",
+                "version": "1.0.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_qthelp",
+                "repository_type": "filesystem",
+                "version": "1.0.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "sphinxcontrib_serializinghtml",
+                "repository_type": "filesystem",
+                "version": "1.1.5"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "Sphinx",
+                "repository_type": "filesystem",
+                "version": "3.4.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "rez",
+                "repository_type": "filesystem",
+                "version": "2.105.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "six",
+                "repository_type": "filesystem",
+                "version": "1.16.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "backports.weakref",
+                "repository_type": "filesystem",
+                "version": "1.0.post1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "backports.tempfile",
+                "repository_type": "filesystem",
+                "version": "1.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "mock",
+                "repository_type": "filesystem",
+                "version": "4.0.2"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/work_area/add_rez_docbot_2",
+                "name": "rez_python_compatibility",
+                "repository_type": "filesystem",
+                "version": "2.8.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "wurlitzer",
+                "repository_type": "filesystem",
+                "version": "2.0.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/work_area/add_rez_docbot_2",
+                "name": "rez_utilities",
+                "repository_type": "filesystem",
+                "version": "2.6.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "parso",
+                "repository_type": "filesystem",
+                "version": "0.8.3"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "parso_helper",
+                "repository_type": "filesystem",
+                "version": "1.2.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/work_area/add_rez_docbot_2",
+                "name": "rez_industry",
+                "repository_type": "filesystem",
+                "version": "3.1.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": null,
+                "location": "/home/selecaoone/work_area/add_rez_docbot_2",
+                "name": "rez_bump",
+                "repository_type": "filesystem",
+                "version": "1.6.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "contextlib2",
+                "repository_type": "filesystem",
+                "version": "21.6.0"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 0,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "schema",
+                "repository_type": "filesystem",
+                "version": "0.7.5"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/.rez/packages/int",
+                "name": "whichcraft",
+                "repository_type": "filesystem",
+                "version": "0.6.1"
+            }
+        },
+        {
+            "key": "filesystem.variant",
+            "variables": {
+                "index": 1,
+                "location": "/home/selecaoone/work_area/add_rez_docbot_2",
+                "name": "rez_build_helper",
+                "repository_type": "filesystem",
+                "version": "1.8.0"
+            }
+        }
+    ],
+    "rez_path": "/home/selecaoone/rez-2.105.0-python-3.6/lib/python3.6/site-packages/rez",
+    "rez_version": "2.105.0",
+    "serialize_version": "4.7",
+    "solve_time": 0.12586188316345215,
+    "status": "solved",
+    "suite_context_name": null,
+    "timestamp": 1648443644,
+    "user": "selecaoone"
+}

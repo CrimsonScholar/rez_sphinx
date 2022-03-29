@@ -1,0 +1,7 @@
+rez\_sphinx.core.package\_query
+-------------------------------
+
+.. automodule:: rez_sphinx.core.package_query
+   :members:
+   :undoc-members:
+   :show-inheritance:

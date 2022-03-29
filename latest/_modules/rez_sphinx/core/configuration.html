@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.core.configuration &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.core.configuration</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.core.configuration</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A wrap for accessing data from `Sphinx conf.py`_, from `Sphinx`_.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">python_compatibility</span> <span class="kn">import</span> <span class="n">imports</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">mock</span>
+<span class="kn">from</span> <span class="nn">sphinx</span> <span class="kn">import</span> <span class="n">config</span>
+
+<span class="n">_CONFIGURATION_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;conf.py&quot;</span>
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConfPy"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy">[docs]</a><span class="k">class</span> <span class="nc">ConfPy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A wrap for accessing data from `Sphinx conf.py`_, from `Sphinx`_.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep track of a `Sphinx conf.py`_ module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module (module): The Python `Sphinx conf.py`_ to keep.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConfPy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsourcefile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ConfPy.from_directory"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.from_directory">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_directory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find and convert a `Sphinx conf.py`_ located directly within ``directory``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            directory (str):</span>
+<span class="sd">                The absolute path to the documentation source directory,</span>
+<span class="sd">                within some source Rez package.</span>
+<span class="sd">                e.g. ``&quot;{rez_root}/documentaion/source&quot;``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ConfPy: The created instance.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_CONFIGURATION_FILE_NAME</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ConfPy.from_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.from_path">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_path</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert a file path into an instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The absolute path to a file or folder on-disk.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError:</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ConfPy: The converted instance.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                <span class="s1">&#39;Path &quot;</span><span class="si">{path}</span><span class="s1">&quot; does not exist and cannot be imported.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">module</span> <span class="o">=</span> <span class="n">imports</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s2">&quot;rez_sphinx_conf&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">module</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfPy.is_valid_directory"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.is_valid_directory">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if ``directory`` has a configuration file that this class can load.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            directory (str): The absolute or relative folder path on-disk.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: If the configuration can be read, return True.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_CONFIGURATION_FILE_NAME</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_extensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;list[str]: Get each Python importable module that `Sphinx`_ will load.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="p">,</span> <span class="s2">&quot;extensions&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="p">,</span> <span class="s2">&quot;extensions&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_master_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: Get the name of the documentation &quot;front page&quot; file.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="n">master_doc</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;index&quot;</span>  <span class="c1"># A reasonable default</span>
+
+<div class="viewcode-block" id="ConfPy.get_attributes"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">get_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_extensions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get each found attribute and its values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            allow_extensions (bool, optional):</span>
+<span class="sd">                If True, include `Sphinx`_ extension attributes, like</span>
+<span class="sd">                `intersphinx_mapping`_. If False, only return the base</span>
+<span class="sd">                `Sphinx`_ attributes and nothing else.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[tuple[str], object]: The found attribute and its value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_known_attribute_names</span><span class="p">(</span><span class="n">allow_extensions</span><span class="o">=</span><span class="n">allow_extensions</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="ConfPy.get_extensions"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_extensions">[docs]</a>    <span class="k">def</span> <span class="nf">get_extensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all registered `Sphinx`_ extensions. e.g. `sphinx.ext.viewcode`_.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: The registered extensions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="n">extensions</span> <span class="ow">or</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ConfPy.get_known_attribute_names"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_known_attribute_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_known_attribute_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_extensions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find every `Sphinx conf.py`_ attribute.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            allow_extensions (bool, optional):</span>
+<span class="sd">                If True, include `Sphinx`_ extension attributes, like</span>
+<span class="sd">                `intersphinx_mapping`_. If False, only return the base</span>
+<span class="sd">                `Sphinx`_ attributes and nothing else.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: Each found attribute name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">config_values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">allow_extensions</span><span class="p">:</span>
+            <span class="n">extensions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_extensions</span><span class="p">()</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_extension_attribute_names</span><span class="p">(</span><span class="n">extensions</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="ConfPy.get_master_document_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_master_document_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_master_document_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: Get the full path on-disk where this `Sphinx conf.py`_ lives.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_master_doc</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_extension</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfPy.get_source_extension"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_source_extension">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: Get the extension to search for ReST files.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="n">source_suffix</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;.rst&quot;</span>  <span class="c1"># A reasonable default</span></div>
+
+<div class="viewcode-block" id="ConfPy.get_module_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_module_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_module_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: Get the full path to this `Sphinx conf.py`_ file, on-disk.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="vm">__file__</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_get_extension_attribute_names</span><span class="p">(</span><span class="n">extensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every attribute for each `Sphinx`_ extension in ``extensions``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        extensions (iter[str]):</span>
+<span class="sd">            An importable Python namespace to try to get attribute contents</span>
+<span class="sd">            from. e.g. ``[&quot;sphinx.ext.intersphinx&quot;, &quot;sphinx.ext.viewcode&quot;]``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[str]: Every found attribute name across all extensions.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_capture_value</span><span class="p">(</span><span class="n">appender</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+            <span class="n">appender</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_wrap</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Now importing &quot;</span><span class="si">%s</span><span class="s1">&quot; to query its attributes.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+            <span class="c1"># We&#39;re importing arbitrary Python modules based on whatever the</span>
+            <span class="c1"># user has set.  So we need to catch generalized errors.</span>
+            <span class="c1">#</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot;. Error, &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+
+            <span class="k">continue</span>
+
+    <span class="c1"># Since `Sphinx`_ requires a ``setup`` function on every extension module</span>
+    <span class="c1"># which defines attributes, we take advantage of this convention by passing</span>
+    <span class="c1"># a fake ``app`` variable and returning its accumulated results.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Simple but effective.</span>
+    <span class="c1">#</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">mocker</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">add_config_value</span> <span class="o">=</span> <span class="n">_capture_value</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;setup&quot;</span><span class="p">):</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">mocker</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">container</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

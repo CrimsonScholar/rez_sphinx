@@ -1,0 +1,20 @@
+rez\_sphinx.preferences
+=======================
+
+.. toctree::
+   :maxdepth: 4
+
+   
+   preference <rez_sphinx.preferences.preference>
+   
+   preference_configuration <rez_sphinx.preferences.preference_configuration>
+   
+   preference_help <rez_sphinx.preferences.preference_help>
+   
+   preference_help_ <rez_sphinx.preferences.preference_help_>
+   
+   preference_init <rez_sphinx.preferences.preference_init>
+.. automodule:: rez_sphinx.preferences
+   :members:
+   :undoc-members:
+   :show-inheritance:

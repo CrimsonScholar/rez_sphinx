@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.suggest.suggestion_mode &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.commands.suggest.suggestion_mode</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.commands.suggest.suggestion_mode</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Implement all code for :ref:`build-order --search-mode`.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+<span class="kn">from</span> <span class="nn">...core</span> <span class="kn">import</span> <span class="n">package_query</span>
+
+
+<span class="k">def</span> <span class="nf">_get_regular_dependencies</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grab all known / obvious dependencies from ``package``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source / installed Rez package to query from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[str]:</span>
+<span class="sd">            Each found Rez package family name which ``package`` depends on.</span>
+<span class="sd">            This list of dependencies is &quot;only the dependencies which</span>
+<span class="sd">            :ref:`rez_sphinx` needs&quot;, not a full list of dependencies.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">request</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">package_query</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">(</span><span class="n">package</span><span class="p">)}</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_package_depth</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">all_family_names</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">_get_regular_dependencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine how &quot;deep&quot; the dependencies ``package`` is.</span>
+
+<span class="sd">    Imagine 2 packages. &quot;no_listed_requires&quot; and &quot;has_a_requirement&quot;.</span>
+<span class="sd">    &quot;has_a_requirement&quot; includes &quot;no_listed_requires&quot;. This function would</span>
+<span class="sd">    return `0` for &quot;no_listed_requires&quot; and `1` for &quot;has_a_requirement&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source / installed Rez package to query from.</span>
+<span class="sd">        all_family_names (dict[str, rez.packages.Package]):</span>
+<span class="sd">            A store of possible Rez packages to consider while iterating over</span>
+<span class="sd">            ``package``&#39;s dependencies. Each key is a Rez package family name,</span>
+<span class="sd">            each value is the in-memory Rez package which the family refers to.</span>
+<span class="sd">        getter (callable[rez.packages.Package] -&gt; set[str]):</span>
+<span class="sd">            The function which takes ``package`` as input and returns its</span>
+<span class="sd">            dependencies (e.g. its `requires`_).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int:</span>
+<span class="sd">            A 0-or-more value indicating ``package``&#39;s depth. 0 being &quot;shallow&quot;</span>
+<span class="sd">            and 1+ meaning &quot;has at least a dependency within</span>
+<span class="sd">            ``all_family_names``&quot;. Higher values means higher dependency</span>
+<span class="sd">            nesting.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">seen</span><span class="p">,</span> <span class="n">computed_depths</span><span class="p">):</span>
+        <span class="n">depths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">getter</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">computed_depths</span><span class="p">:</span>
+                <span class="n">depths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">computed_depths</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_family_names</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">computed_depths</span><span class="p">:</span>
+                <span class="n">computed_depths</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute</span><span class="p">(</span>
+                    <span class="n">all_family_names</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                    <span class="n">seen</span><span class="p">,</span>
+                    <span class="n">computed_depths</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">depths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">computed_depths</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">depths</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">computed_depths</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_compute</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">seen</span><span class="p">,</span> <span class="n">computed_depths</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_config</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Re-order ``packages`` based on their dependencies.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (container[rez.packages.Package]):</span>
+<span class="sd">            The source / installed Rez packages to re-order.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[rez.packages.Package]]:</span>
+<span class="sd">            A list with each depth&#39;s packages, starting from depth=0 and</span>
+<span class="sd">            ascending order.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_family_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">package</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">}</span>
+    <span class="n">depths</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="n">_compute_package_depth</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">all_family_names</span><span class="p">)</span>
+        <span class="n">depths</span><span class="p">[</span><span class="n">depth</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">packages</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">packages</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">depths</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_guess</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Re-order ``packages`` based on their dependencies.</span>
+
+<span class="sd">    Unlike :func:`_config`, this function is intentionally hacky and just looks</span>
+<span class="sd">    for any reference to any dependency within packages. It has the potential</span>
+<span class="sd">    to get more dependencies than :func:`_config` could, at the cost of</span>
+<span class="sd">    possibly computing more dependencies than needed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (container[rez.packages.Package]):</span>
+<span class="sd">            The source / installed Rez packages to re-order.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[rez.packages.Package]]:</span>
+<span class="sd">            A list with each depth&#39;s packages, starting from depth=0 and</span>
+<span class="sd">            ascending order.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_guess_dependencies</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">all_family_names</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">_get_regular_dependencies</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">name</span>
+                    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">all_family_names</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># Prevent infinite RecursionError</span>
+                    <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="n">_wrapper</span>
+
+    <span class="n">all_family_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">package</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">}</span>
+    <span class="n">depths</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">_guesser</span> <span class="o">=</span> <span class="n">_guess_dependencies</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_family_names</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="n">depth</span> <span class="o">=</span> <span class="n">_compute_package_depth</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">all_family_names</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">_guesser</span><span class="p">)</span>
+        <span class="n">depths</span><span class="p">[</span><span class="n">depth</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">packages</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">packages</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">depths</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_mode_by_name"><a class="viewcode-back" href="../../../../api/rez_sphinx.commands.suggest.suggestion_mode.html#rez_sphinx.commands.suggest.suggestion_mode.get_mode_by_name">[docs]</a><span class="k">def</span> <span class="nf">get_mode_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find a callable function matching ``name``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): A registered possibility, e.g. ``&quot;config&quot;`` or ``&quot;guess&quot;``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``name`` is not a registered command.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable[list[rez.packages.Package] -&gt; list[list[rez.packages.Package]]]:</span>
+<span class="sd">            A function which takes a list of Rez packages, for example, and</span>
+<span class="sd">            returns a list with each depth&#39;s packages, starting from depth=0</span>
+<span class="sd">            and ascending order.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CHOICES</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Name &quot;</span><span class="si">{name}</span><span class="s1">&quot; is invalid. The options were, &quot;</span><span class="si">{options}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">CHOICES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+<span class="n">CHOICES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">_config</span><span class="p">,</span>
+    <span class="s2">&quot;guess&quot;</span><span class="p">:</span> <span class="n">_guess</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

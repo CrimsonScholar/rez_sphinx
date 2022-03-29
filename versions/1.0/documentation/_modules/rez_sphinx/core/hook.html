@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.core.hook &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.core.hook</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.core.hook</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Automatically add :ref:`rez_sphinx tags &lt;rez_sphinx tag&gt;` to built packages.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span><span class="p">,</span> <span class="n">preference_init</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">sphinx_helper</span>
+
+<span class="n">_DEFAULT_LABEL</span> <span class="o">=</span> <span class="s2">&quot;Home Page&quot;</span>
+<span class="n">_REZ_HELP_KEY</span> <span class="o">=</span> <span class="s2">&quot;help&quot;</span>
+<span class="n">_SEEN</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_already_processed</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``path`` has already been preprocessed before.</span>
+
+<span class="sd">    This function exists to prevent a cyclic loop which may be a bug. See</span>
+<span class="sd">    reference for details.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        https://github.com/nerdvegas/rez/issues/1239#issuecomment-1061390415</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The directory to a path on-disk pointing to a Rez package.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``path`` was already processed, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">_SEEN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">_SEEN</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">_expand_help</span><span class="p">(</span><span class="n">help_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert ``help_`` into a list of lists.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        help_ (list[str] or str or NoneType): The found Rez package help, if any.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: Each found label + documentation entry, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">help_</span>
+
+    <span class="k">return</span> <span class="p">[[</span><span class="n">_DEFAULT_LABEL</span><span class="p">,</span> <span class="n">help_</span><span class="p">]]</span>
+
+
+<span class="k">def</span> <span class="nf">_find_help_labels</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Auto-find all `package help`_ links, using :ref:`rez_sphinx`.</span>
+
+<span class="sd">    It works by querying all Sphinx .rst files at ``root`` (or whatever your</span>
+<span class="sd">    source extension is), checks each file to a known :ref:`rez_sphinx tag`,</span>
+<span class="sd">    and then adds those entries directly into the users&#39;s `package help`_</span>
+<span class="sd">    just before it is built.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root (str):</span>
+<span class="sd">            The root documentation source directory. It should directly contain</span>
+<span class="sd">            a `Sphinx conf.py`_.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]:</span>
+<span class="sd">            Each found label + destination entry, if any. If no destination is</span>
+<span class="sd">            defined, a destination is auto-assigned directly to the</span>
+<span class="sd">            documentation file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># TODO : Consider making this a non-hard-coded value</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;.html&quot;</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">_iter_sphinx_source_files</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+        <span class="n">fallback_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">root</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fallback_destination</span> <span class="o">=</span> <span class="n">fallback_name</span> <span class="o">+</span> <span class="n">extension</span>
+
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">_get_rez_sphinx_tags</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">destination</span><span class="p">:</span>
+                <span class="n">destination</span> <span class="o">=</span> <span class="n">fallback_destination</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">destination</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">htmlize_ref</span><span class="p">(</span>
+                    <span class="n">fallback_destination</span><span class="p">,</span> <span class="n">destination</span>
+                <span class="p">)</span>
+
+            <span class="n">entry</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">ROOT_REPLACEMENT</span><span class="p">,</span> <span class="n">destination</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">entry</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+                <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tags</span>
+
+
+<span class="k">def</span> <span class="nf">_get_rez_sphinx_tags</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grab all tags within ``path``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The Sphinx ReST file to load and directly parse.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: Each hard-coded label + &quot;destination&quot;, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">preference_init</span><span class="o">.</span><span class="n">find_tags</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_iter_sphinx_source_files</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every Sphinx ReST file within ``root``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root (str):</span>
+<span class="sd">            The root documentation source directory. It should directly contain</span>
+<span class="sd">            a `Sphinx conf.py`_.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        str: The absolute path to every Sphinx ReST file, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sphinx</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">ConfPy</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">get_source_extension</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">current_root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">extension</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_root</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_sort</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="n">original_help</span><span class="p">,</span> <span class="n">full_help</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sort ``full_help`` based on the other parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sort_method (callable[list[list[str, str]], str]):</span>
+<span class="sd">            A function that takes ``original_help`` plus some sort term</span>
+<span class="sd">            to determine where the sort term should be placed.</span>
+<span class="sd">        original_help (list[list[str, str]]):</span>
+<span class="sd">            The user&#39;s original `package help`_ data, if any.</span>
+<span class="sd">        full_help (iter[list[str, str]]):</span>
+<span class="sd">            The user&#39;s original `package help`_ data, plus any auto-found</span>
+<span class="sd">            data, if any.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: The final, sorted `package help`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorter</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="n">original_help</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">full_help</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sorter</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="package_preprocess_function"><a class="viewcode-back" href="../../../api/rez_sphinx.core.hook.html#rez_sphinx.api.package_preprocess_function">[docs]</a><span class="k">def</span> <span class="nf">package_preprocess_function</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="sd">&quot;&quot;&quot;Replace the `package help`_ in ``data`` with auto-found Sphinx documentation.</span>
+
+<span class="sd">    If no :ref:`rez_sphinx tags &lt;rez_sphinx tag&gt;` are found, this function will</span>
+<span class="sd">    exit early and do nothing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        this (rez.packages.Package):</span>
+<span class="sd">            The installed (built) Rez package. This package is mostly read-only.</span>
+<span class="sd">        data (dict[str, object]):</span>
+<span class="sd">            The contents of ``this``. Changing this instance will have an</span>
+<span class="sd">            effect on the Rez package which is written to-disk.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">package_source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">_already_processed</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="n">help_</span> <span class="o">=</span> <span class="n">_expand_help</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_REZ_HELP_KEY</span><span class="p">))</span>
+
+    <span class="n">source_path</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">find_configuration_path</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source_path</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+    <span class="n">new_labels</span> <span class="o">=</span> <span class="n">_find_help_labels</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span>
+
+    <span class="c1"># TODO : Make sure we incorporate user preference here. e.g. if no all</span>
+    <span class="c1"># duplicates, only add if we prefer auto-generated.</span>
+    <span class="c1">#</span>
+    <span class="n">new_labels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">constant</span><span class="o">.</span><span class="n">REZ_SPHINX_OBJECTS_INV</span><span class="p">,</span> <span class="n">constant</span><span class="o">.</span><span class="n">ROOT_REPLACEMENT</span><span class="p">])</span>
+
+    <span class="n">original_help</span> <span class="o">=</span> <span class="n">help_</span>
+    <span class="n">sort_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_sort_method</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">filter_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_filter_method</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">EnvironmentError</span><span class="p">:</span>
+        <span class="n">full_help</span> <span class="o">=</span> <span class="n">help_</span> <span class="o">+</span> <span class="n">new_labels</span>
+        <span class="n">full_help</span> <span class="o">=</span> <span class="n">_sort</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="n">original_help</span><span class="p">,</span> <span class="n">full_help</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filtered_original</span><span class="p">,</span> <span class="n">filtered_labels</span> <span class="o">=</span> <span class="n">filter_method</span><span class="p">(</span><span class="n">original_help</span><span class="p">,</span> <span class="n">new_labels</span><span class="p">)</span>
+        <span class="n">full_help</span> <span class="o">=</span> <span class="n">_sort</span><span class="p">(</span>
+            <span class="n">sort_method</span><span class="p">,</span> <span class="n">filtered_original</span><span class="p">,</span> <span class="n">filtered_original</span> <span class="o">+</span> <span class="n">filtered_labels</span>
+        <span class="p">)</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="n">_REZ_HELP_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_help</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

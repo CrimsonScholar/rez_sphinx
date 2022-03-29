@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.initer &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.commands.initer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.commands.initer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The module which handles the :ref:`rez_sphinx init` command.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">python_compatibility</span> <span class="kn">import</span> <span class="n">wrapping</span>
+<span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
+<span class="kn">from</span> <span class="nn">sphinx.cmd</span> <span class="kn">import</span> <span class="n">quickstart</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">bootstrap</span><span class="p">,</span>
+    <span class="n">configuration</span><span class="p">,</span>
+    <span class="n">doc_finder</span><span class="p">,</span>
+    <span class="n">exception</span><span class="p">,</span>
+    <span class="n">package_change</span><span class="p">,</span>
+    <span class="n">path_control</span><span class="p">,</span>
+    <span class="n">sphinx_helper</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_add_build_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a &quot;build&quot; folder under ``directory``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            The absolute path to the root documentation folder. Usually</span>
+<span class="sd">            this is &quot;{rez_root}/documentation&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">build</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
+
+    <span class="n">path_control</span><span class="o">.</span><span class="n">add_gitignore</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_add_initial_files</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">entries</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add template documentation files to ``root``, based on ``configuration``.</span>
+
+<span class="sd">    &quot;Template documentation files&quot; in this case just refers to &quot;A common set of</span>
+<span class="sd">    .rst files which users are expected to fill out by hand&quot;. Examples could</span>
+<span class="sd">    include &quot;Developer Documentation&quot;, &quot;User Documentation&quot;, etc.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root (str):</span>
+<span class="sd">            The directory on-disk where the source documentation lives. e.g.</span>
+<span class="sd">            {rez_root}/documentation/source is the most common path.</span>
+<span class="sd">        entries (list[Entry]):</span>
+<span class="sd">            All descriptions of files to make during :ref:`rez_sphinx init`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sphinx</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">ConfPy</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="n">master_index</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">get_master_document_path</span><span class="p">()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">get_toctree_line</span><span class="p">())</span>
+
+    <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">add_links_to_a_tree</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">master_index</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_run_sphinx_quickstart</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Run `sphinx-quickstart`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            The starting folder on-disk where newly created documentation files</span>
+<span class="sd">            will live under. e.g. ``&quot;{root}/documentation&quot;``.</span>
+<span class="sd">        options (list[str], optional):</span>
+<span class="sd">            The arguments which are passed directly to `sphinx-quickstart`_.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        SphinxExecutionError:</span>
+<span class="sd">            If `sphinx-quickstart`_ failed midway during execution.</span>
+<span class="sd">        RuntimeError:</span>
+<span class="sd">            If for some reason `sphinx-quickstart`_ completed but</span>
+<span class="sd">            somehow failed to generate the expected files.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">directory</span><span class="p">]</span> <span class="o">+</span> <span class="n">options</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Got sphinx-quickstart arguments &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Now running sphinx-quickstart in &quot;</span><span class="si">%s</span><span class="s1">&quot; folder.&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">quickstart</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">SphinxExecutionError</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">doc_finder</span><span class="o">.</span><span class="n">get_source_from_directory</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+    <span class="c1"># TODO : Don&#39;t hard-code</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;conf.py&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s1">&#39;Something went wrong, &quot;</span><span class="si">{path}</span><span class="s1">&quot; was not defined.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">path</span>
+
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.initer.html#rez_sphinx.commands.initer.init">[docs]</a><span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">quick_start_options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Connect the Rez package at ``directory`` to :ref:`rez_sphinx`.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        This function generates many files directly underneath</span>
+<span class="sd">        ``directory`` as well as changes your source Rez package.py</span>
+<span class="sd">        file.  Save your work first before running this function!</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The Rez package to apply documentation onto.</span>
+<span class="sd">        quick_start_options (list[str], optional):</span>
+<span class="sd">            User-provided arguments to consider while resolving</span>
+<span class="sd">            `sphinx-quickstart`_ values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO : Need to add API documentation support here.</span>
+    <span class="c1"># Or get it from rez-config settings</span>
+    <span class="c1">#</span>
+    <span class="n">initial_files</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_initial_files_from_configuration</span><span class="p">()</span>
+
+    <span class="n">options</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_quick_start_options</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">quick_start_options</span>
+    <span class="p">)</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_package_root</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">SPHINX_SEPARATE_SOURCE_AND_BUILD</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="c1"># TODO : Don&#39;t hard-code here</span>
+        <span class="n">documentation_source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;documentation&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># TODO : Don&#39;t hard-code here</span>
+        <span class="n">documentation_source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;documentation&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">wrapping</span><span class="o">.</span><span class="n">silence_printing</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">SPHINX_SEPARATE_SOURCE_AND_BUILD</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">quickstart_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">documentation_source_root</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">quickstart_root</span> <span class="o">=</span> <span class="n">documentation_source_root</span>
+
+        <span class="n">configuration_path</span> <span class="o">=</span> <span class="n">_run_sphinx_quickstart</span><span class="p">(</span><span class="n">quickstart_root</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">SPHINX_SEPARATE_SOURCE_AND_BUILD</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="c1"># TODO : Check if &quot;source&quot; can be some variable instead of hard-coded</span>
+        <span class="n">_add_initial_files</span><span class="p">(</span><span class="n">documentation_source_root</span><span class="p">,</span> <span class="n">initial_files</span><span class="p">)</span>
+        <span class="n">_add_build_directory</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">documentation_source_root</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_add_initial_files</span><span class="p">(</span><span class="n">documentation_source_root</span><span class="p">,</span> <span class="n">initial_files</span><span class="p">)</span>
+
+    <span class="n">bootstrap</span><span class="o">.</span><span class="n">append_bootstrap_lines</span><span class="p">(</span><span class="n">configuration_path</span><span class="p">)</span>
+
+    <span class="n">package_change</span><span class="o">.</span><span class="n">initialize_rez_package</span><span class="p">(</span><span class="n">package</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

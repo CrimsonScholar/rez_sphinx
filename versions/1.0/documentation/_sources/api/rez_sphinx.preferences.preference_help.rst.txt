@@ -1,0 +1,7 @@
+rez\_sphinx.preferences.preference\_help
+----------------------------------------
+
+.. automodule:: rez_sphinx.preferences.preference_help
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx suggest &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rez_sphinx view" href="view_command.html" />
+    <link rel="prev" title="rez_sphinx publish" href="publish_command.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="user_documentation.html#all-commands">All Commands</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="build_command.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config_command.html">config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="init_command.html">init</a></li>
+<li class="toctree-l3"><a class="reference internal" href="publish_command.html">publish</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">suggest</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-suggest-build-order">rez_sphinx suggest build-order</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="view_command.html">view</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#advanced-topics">Advanced Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="user_documentation.html">User Documentation</a> &raquo;</li>
+      <li>rez_sphinx suggest</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/suggest_command.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rez-sphinx-suggest">
+<span id="id1"></span><h1>rez_sphinx suggest<a class="headerlink" href="#rez-sphinx-suggest" title="Permalink to this headline">¶</a></h1>
+<p>This generic command is simply for querying things about Rez packages which
+users or <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> uses. See the sections below for example
+sub-commands.</p>
+<section id="rez-sphinx-suggest-build-order">
+<span id="id2"></span><h2>rez_sphinx suggest build-order<a class="headerlink" href="#rez-sphinx-suggest-build-order" title="Permalink to this headline">¶</a></h2>
+<p>This command can look at a group of directories, scan the Rez packages found
+within it, and recommend the order in which their documentation should be
+built. Imagine you have two packages:</p>
+<ul class="simple">
+<li><p>dependency</p></li>
+<li><p>package_that_needs_dependency</p></li>
+</ul>
+<p>Imagine again these packages both have new changes that affect their
+documentation.  <code class="docutils literal notranslate"><span class="pre">package_that_needs_dependency</span></code> refers to something new
+within <code class="docutils literal notranslate"><span class="pre">dependency</span></code>.  If you build documentation for <code class="docutils literal notranslate"><span class="pre">dependency</span></code> first,
+followed by <code class="docutils literal notranslate"><span class="pre">package_that_needs_dependency</span></code>, everything works as intended.
+But if you accidentally build in the opposite order, any links
+<code class="docutils literal notranslate"><span class="pre">package_that_needs_dependency</span></code> have to <code class="docutils literal notranslate"><span class="pre">dependency</span></code> will be messed up.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">suggest</span> <span class="pre">build-order</span></code> exists to automate this discovery + package
+ordering process.</p>
+<section id="rez-sphinx-suggest-build-order-search-mode">
+<span id="build-order-search-mode"></span><h3>rez_sphinx suggest build-order –search-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-search-mode" title="Permalink to this headline">¶</a></h3>
+<p>To find Rez packages, we must provide <code class="docutils literal notranslate"><span class="pre">build-order</span></code> some directories to
+search within. But that’s not enough because those directories may contain
+multiple Rez packages. The directory could be the root of installed packages,
+like <code class="docutils literal notranslate"><span class="pre">~/packages</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.rez/packages/int</span></code>. Or the directory could be a git
+repository with a completely arbitrary folder structure.</p>
+<p><code class="docutils literal notranslate"><span class="pre">build-order</span> <span class="pre">--search-mode</span></code> handles this and comes in 3 flavors.</p>
+<ul class="simple">
+<li><p>source - <code class="docutils literal notranslate"><span class="pre">./*</span></code> - Search all immediate subfolders for Rez packages</p></li>
+<li><p>installed - <code class="docutils literal notranslate"><span class="pre">./*/*</span></code> - Search for {family_name}/{version} Rez packages</p></li>
+<li><p>recursive - <code class="docutils literal notranslate"><span class="pre">./**/**</span></code> - Search everywhere for Rez packages</p></li>
+</ul>
+</section>
+<section id="rez-sphinx-suggest-build-order-suggestion-mode">
+<span id="build-order-suggestion-mode"></span><h3>rez_sphinx suggest build-order –suggestion-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-suggestion-mode" title="Permalink to this headline">¶</a></h3>
+<p>Once Rez packages are found, we need to query those Rez packages for
+“dependencies” needed by <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>. Normally the default value, which
+checks for <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#requires">requires</a> and <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#variants">variants</a> will work for 90%+ of Rez packages and
+is most recommended.  But if your pipeline has special considerations,
+<code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">suggest</span> <span class="pre">build-order</span> <span class="pre">--suggestion-mode=guess</span></code> might be for you.</p>
+</section>
+<section id="rez-sphinx-suggest-build-order-display-as">
+<span id="build-order-display-as"></span><h3>rez_sphinx suggest build-order –display-as<a class="headerlink" href="#rez-sphinx-suggest-build-order-display-as" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--display-as</span></code> determines how found packages will be printed to the terminal.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--display-as=names</span></code> Copies the style of <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-depends">rez-depends</a>, which looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rez_sphinx</span> <span class="n">suggest</span> <span class="n">build</span><span class="o">-</span><span class="n">order</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span> <span class="o">--</span><span class="n">display</span><span class="o">-</span><span class="k">as</span><span class="o">=</span><span class="n">names</span>
+
+<span class="c1">#0: package_with_no_dependencies another_package</span>
+<span class="c1">#1: package_that_depends_on_something_in_row_0</span>
+<span class="c1">#2: package_that_depends_on_something_in_row_1</span>
+<span class="c1">#3: package_that_depends_on_something_in_row_2</span>
+
+<span class="n">etc</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--display-as=directories</span></code> shows all directories which contain Rez packages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rez_sphinx</span> <span class="n">suggest</span> <span class="n">build</span><span class="o">-</span><span class="n">order</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span> <span class="o">--</span><span class="n">display</span><span class="o">-</span><span class="k">as</span><span class="o">=</span><span class="n">directories</span>
+
+<span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">package_with_no_dependencies_directory</span>
+<span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">another_package_directory</span>
+<span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">package_that_depends_on_something_in_row_0</span>
+<span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">package_that_depends_on_something_in_row_1</span>
+<span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">package_that_depends_on_something_in_row_2</span>
+</pre></div>
+</div>
+<p>It’s useful for automation purposes and debugging. Though
+<code class="docutils literal notranslate"><span class="pre">--display-as=names</span></code> is definitely more readable.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="publish_command.html" class="btn btn-neutral float-left" title="rez_sphinx publish" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="view_command.html" class="btn btn-neutral float-right" title="rez_sphinx view" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

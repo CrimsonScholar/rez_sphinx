@@ -1,0 +1,7 @@
+rez\_sphinx.commands.suggest.build\_display
+-------------------------------------------
+
+.. automodule:: rez_sphinx.commands.suggest.build_display
+   :members:
+   :undoc-members:
+   :show-inheritance:

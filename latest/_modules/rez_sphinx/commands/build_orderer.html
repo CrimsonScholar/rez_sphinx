@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.build_orderer &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.commands.build_orderer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.commands.build_orderer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A set of functions for implementing :ref:`rez_sphinx suggest build-order`.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">constant</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">sphinx_helper</span>
+<span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_in_help</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">help_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``label`` is in ``help_``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        label (str):</span>
+<span class="sd">            A phrase to search with ``help_`` for. e.g. ``&quot;Foo&quot;``.</span>
+<span class="sd">        help_ (list[list[str, str]] or str or NoneType):</span>
+<span class="sd">            The defined `help`_, if any. e.g. ``[[&quot;Foo&quot;, &quot;README.md&quot;]]``</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``label`` is in ``help_``, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">entry_label</span> <span class="o">==</span> <span class="n">label</span> <span class="k">for</span> <span class="n">entry_label</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">help_</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="collect_packages"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.build_orderer.html#rez_sphinx.commands.build_orderer.collect_packages">[docs]</a><span class="k">def</span> <span class="nf">collect_packages</span><span class="p">(</span><span class="n">directories</span><span class="p">,</span> <span class="n">searcher</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check ``directories`` for Rez packages.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directories (iter[str]):</span>
+<span class="sd">            The absolute path to folders on-disk to look within. It&#39;s not</span>
+<span class="sd">            required for Rez packages to be located directly under each folder.</span>
+<span class="sd">            And often, they are not.</span>
+<span class="sd">        searcher (callable[str] -&gt; list[rez.packages.Package]):</span>
+<span class="sd">            A function which searches within ``directories`` for Rez packages</span>
+<span class="sd">            and returns those results. These Rez packages could be source</span>
+<span class="sd">            packages **or** installed packages.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        PackageConflict:</span>
+<span class="sd">            If any Rez package was found in more than one of the listed</span>
+<span class="sd">            directories.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[rez.packages.Package]: The found packages.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">found_names</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">found_uuids</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">invalids</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">searcher</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">uuid</span> <span class="ow">in</span> <span class="n">found_uuids</span><span class="p">:</span>
+                    <span class="n">invalids</span><span class="p">[</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+                    <span class="k">continue</span>
+
+                <span class="n">found_uuids</span><span class="p">[</span><span class="n">package</span><span class="o">.</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">found_names</span><span class="p">:</span>
+                <span class="n">invalids</span><span class="p">[</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="n">found_names</span><span class="p">[</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+            <span class="n">packages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">invalids</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">packages</span>
+
+    <span class="n">blob</span> <span class="o">=</span> <span class="s2">&quot;Multiple packages found when we expected one:</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">for</span> <span class="n">package_name</span><span class="p">,</span> <span class="n">directories_</span> <span class="ow">in</span> <span class="n">invalids</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">directories_</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">found_names</span><span class="p">[</span><span class="n">package_name</span><span class="p">])</span>
+
+        <span class="n">blob</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{package_name}</span><span class="s2">: </span><span class="si">{directories_}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">package_name</span><span class="o">=</span><span class="n">package_name</span><span class="p">,</span>
+            <span class="n">directories_</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">directories_</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">PackageConflict</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="filter_existing_documentation"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.build_orderer.html#rez_sphinx.commands.build_orderer.filter_existing_documentation">[docs]</a><span class="k">def</span> <span class="nf">filter_existing_documentation</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove any Rez package from ``packages`` which already has documentation.</span>
+
+<span class="sd">    This function uses a variety of checks including searching &quot;known&quot;</span>
+<span class="sd">    documentation locations. As well as guessing where it could be.</span>
+
+<span class="sd">    This function searches specifically for `Sphinx`_ documentation only.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (list[rez.packages.Package]):</span>
+<span class="sd">            The source / installed Rez packages to filter. Usually,</span>
+<span class="sd">            these are source Rez packages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[rez.packages.Package]:</span>
+<span class="sd">            Every package from ``packages`` which doesn&#39;t have documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="c1"># Check if ``package`` is an installed, auto-generated package</span>
+        <span class="k">if</span> <span class="n">_in_help</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">REZ_SPHINX_OBJECTS_INV</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">help</span><span class="p">):</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It already has an objects.inv.&#39;</span><span class="p">,</span>
+                <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">package_root</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_package_root</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+        <span class="c1"># Check if ``package`` is a source package</span>
+        <span class="n">documentation_top</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">package_root</span><span class="p">,</span>
+            <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">documentation_top</span><span class="p">):</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It has a documentation folder.&#39;</span><span class="p">,</span>
+                <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">configuration</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">find_configuration_path</span><span class="p">(</span><span class="n">package_root</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It has a conf.py &quot;</span><span class="si">%s</span><span class="s1">&quot; file.&#39;</span><span class="p">,</span>
+                <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">configuration</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

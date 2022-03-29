@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.publish_run &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.commands.publish_run</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.commands.publish_run</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">rez</span> <span class="kn">import</span> <span class="n">package_test</span>
+<span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>  <span class="c1"># Python 3.2+</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">backports.functools_lru_cache</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">exception</span>
+<span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+<span class="kn">from</span> <span class="nn">.builder</span> <span class="kn">import</span> <span class="n">runner</span> <span class="k">as</span> <span class="n">runner_</span>
+
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_SUCCESS_EXIT_CODE</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">_get_documentation_destination</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the directory where built documentation now lives.</span>
+
+<span class="sd">    This function assumes that ``name`` has already been run at least once.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            The name of the Rez `tests`_ key that ran.</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The package which defines `name`_ and was ran from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found documentation build directory.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_parse_destination</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="c1"># TODO : Deal with this recursive import, later</span>
+        <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">cli</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">namespace</span> <span class="o">=</span> <span class="n">cli</span><span class="o">.</span><span class="n">parse_arguments</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="n">documentation_source</span> <span class="o">=</span> <span class="n">runner_</span><span class="o">.</span><span class="n">get_documentation_source</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">documentation_build</span> <span class="o">=</span> <span class="n">runner_</span><span class="o">.</span><span class="n">get_documentation_build</span><span class="p">(</span><span class="n">documentation_source</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">documentation_build</span>
+
+    <span class="n">test</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_parse_destination</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+
+    <span class="c1"># TODO : Consider replacing with a global variable?</span>
+    <span class="k">return</span> <span class="n">_parse_destination</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;command&quot;</span><span class="p">])</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_get_fallback_destination</span><span class="p">():</span>
+    <span class="c1"># TODO : Add docstring here once it&#39;s implemented</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Need to write this&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_validated_test_keys</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get every :ref:`rez_sphinx`-registered `tests`_ key in ``runner``.</span>
+
+<span class="sd">    Since :ref:`rez_sphinx.build_documentation_key` may be multiple values, we</span>
+<span class="sd">    must check and return every matching key in ``runner``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        runner (rez.package_test.PackageTestRunner): The Rez package to query from.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        BadPackage:</span>
+<span class="sd">            If ``runner`` has no tests or the defined tests have nothing in</span>
+<span class="sd">            common with :ref:`rez_sphinx.build_documentation_key`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]:</span>
+<span class="sd">            Every found, matching key. In most cases, this will return either</span>
+<span class="sd">            ``[&quot;build_documentation&quot;]``, which is the default</span>
+<span class="sd">            :ref:`rez_sphinx.build_documentation_key`, or nothing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tests</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">get_test_names</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tests</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">BadPackage</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">{package}</span><span class="s1">&quot; has no ``tests`` attribute.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">package</span><span class="o">=</span><span class="n">runner</span><span class="o">.</span><span class="n">get_package</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># TODO : It may make more sense to add a</span>
+    <span class="c1"># `preference.get_publish_documentation_keys` and have that list default to</span>
+    <span class="c1"># `preference.get_build_documentation_keys` if it is not defined. That way</span>
+    <span class="c1"># users can specify publish keys differently than build ones.</span>
+    <span class="c1">#</span>
+    <span class="n">build_tests</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_keys</span><span class="p">()</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">build_tests</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">names</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">get_package</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">BadPackage</span><span class="p">(</span>
+        <span class="s1">&#39;Package &quot;</span><span class="si">{name}</span><span class="s1">&quot; has no rez_sphinx key for building documentation. &#39;</span>
+        <span class="s2">&quot;Run ``rez_sphinx init`` to fix this.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="is_publishing_enabled"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.publish_run.html#rez_sphinx.commands.publish_run.is_publishing_enabled">[docs]</a><span class="k">def</span> <span class="nf">is_publishing_enabled</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;bool: Check if the user&#39;s current environment is capable of publishing.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;REZ_EPH_REZ_SPHINX_FEATURE_DOCBOT_PLUGIN_REQUEST&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span>
+        <span class="s2">&quot;1&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_all_publishers"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.publish_run.html#rez_sphinx.commands.publish_run.get_all_publishers">[docs]</a><span class="k">def</span> <span class="nf">get_all_publishers</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="c1"># Note: This inner import is because it&#39;s not a guarantee that users have</span>
+    <span class="c1"># rez_docbot loaded as a plugin. They need to include:</span>
+    <span class="c1">#</span>
+    <span class="c1"># &quot;.rez_sphinx.feature.docbot_plugin-1&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1"># in their resolves for this import to work.</span>
+    <span class="c1">#</span>
+    <span class="kn">from</span> <span class="nn">rez_docbot</span> <span class="kn">import</span> <span class="n">api</span>
+
+    <span class="n">publishers</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_all_publishers</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">publisher</span> <span class="ow">in</span> <span class="n">publishers</span><span class="p">:</span>
+        <span class="n">publisher</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">publishers</span></div>
+
+
+<div class="viewcode-block" id="build_documentation"><a class="viewcode-back" href="../../../api/rez_sphinx.commands.publish_run.html#rez_sphinx.commands.publish_run.build_documentation">[docs]</a><span class="k">def</span> <span class="nf">build_documentation</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build all :ref:`rez_sphinx` registered documentation at ``directory``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            The absolute path to a folder on disk. This folder should be</span>
+<span class="sd">            a sub-folder inside of a Rez package to the root of the Rez package.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NoDocumentationFound:</span>
+<span class="sd">            If any found `tests`_ attributes ran, succeeded to run, but no</span>
+<span class="sd">            destination documentation could be found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]:</span>
+<span class="sd">            The root directories on-disk where all documentation was generated</span>
+<span class="sd">            into. For typical users, this list contains only one value.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_to_exact_request</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+        <span class="c1"># TODO : Check if Rez has a function for this</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{package.name}</span><span class="s2">==</span><span class="si">{package.version}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">package_test</span><span class="o">.</span><span class="n">PackageTestRunner</span><span class="p">(</span>
+        <span class="n">package_request</span><span class="o">=</span><span class="n">_to_exact_request</span><span class="p">(</span><span class="n">package</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">tests</span> <span class="o">=</span> <span class="n">_validated_test_keys</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Found &quot;</span><span class="si">%s</span><span class="s1">&quot; documentation tests.&#39;</span><span class="p">,</span> <span class="n">tests</span><span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">invalids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Now building documentation with &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_test</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="n">_SUCCESS_EXIT_CODE</span><span class="p">:</span>
+            <span class="n">invalids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">destination</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_get_documentation_destination</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_get_fallback_destination</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">destination</span><span class="p">:</span>
+            <span class="n">invalids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invalids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoDocumentationFound</span><span class="p">(</span>
+            <span class="s2">&quot;No documentation could be found after &quot;</span>
+            <span class="s1">&#39;&quot;</span><span class="si">{invalids}</span><span class="s1">&quot; commands were ran.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">invalids</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">invalids</span><span class="p">)))</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">invalids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoDocumentationFound</span><span class="p">(</span>
+            <span class="s2">&quot;No documentation could be found after &quot;</span>
+            <span class="s1">&#39;&quot;</span><span class="si">{invalids}</span><span class="s1">&quot; command was ran.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">invalids</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">invalids</span><span class="p">)))</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

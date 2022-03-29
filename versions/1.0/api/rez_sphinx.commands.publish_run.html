@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.publish_run &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rez_sphinx.commands.suggest" href="rez_sphinx.commands.suggest.html" />
+    <link rel="prev" title="rez_sphinx.commands.initer" href="rez_sphinx.commands.initer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rez_sphinx.html">rez_sphinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.api.html">api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.cli.html">cli</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.commands.html">commands</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.commands.build_orderer.html">build_orderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.commands.builder.html">builder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.commands.initer.html">initer</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">publish_run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.commands.suggest.html">suggest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.core.html">core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preferences.html">preferences</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">python</a> &raquo;</li>
+          <li><a href="rez_sphinx.html">rez_sphinx</a> &raquo;</li>
+          <li><a href="rez_sphinx.commands.html">rez_sphinx.commands</a> &raquo;</li>
+      <li>rez_sphinx.commands.publish_run</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/rez_sphinx.commands.publish_run.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rez_sphinx.commands.publish_run">
+<span id="rez-sphinx-commands-publish-run"></span><h1>rez_sphinx.commands.publish_run<a class="headerlink" href="#module-rez_sphinx.commands.publish_run" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="rez_sphinx.commands.publish_run.build_documentation">
+<code class="sig-name descname">build_documentation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#build_documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.build_documentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build all <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> registered documentation at <code class="docutils literal notranslate"><span class="pre">directory</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path to a folder on disk. This folder should be
+a sub-folder inside of a Rez package to the root of the Rez package.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.NoDocumentationFound" title="rez_sphinx.core.exception.NoDocumentationFound"><strong>NoDocumentationFound</strong></a> – If any found <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> attributes ran, succeeded to run, but no
+    destination documentation could be found.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The root directories on-disk where all documentation was generated
+into. For typical users, this list contains only one value.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="rez_sphinx.commands.publish_run.get_all_publishers">
+<code class="sig-name descname">get_all_publishers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#get_all_publishers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.get_all_publishers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="rez_sphinx.commands.publish_run.is_publishing_enabled">
+<code class="sig-name descname">is_publishing_enabled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#is_publishing_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.is_publishing_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>bool: Check if the user’s current environment is capable of publishing.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rez_sphinx.commands.initer.html" class="btn btn-neutral float-left" title="rez_sphinx.commands.initer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx.commands.suggest.html" class="btn btn-neutral float-right" title="rez_sphinx.commands.suggest" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

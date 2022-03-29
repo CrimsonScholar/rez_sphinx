@@ -1,0 +1,7 @@
+rez\_sphinx.core.bootstrap
+--------------------------
+
+.. automodule:: rez_sphinx.core.bootstrap
+   :members:
+   :undoc-members:
+   :show-inheritance:

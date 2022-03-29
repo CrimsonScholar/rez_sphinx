@@ -1,0 +1,7 @@
+rez\_sphinx.core.path\_control
+------------------------------
+
+.. automodule:: rez_sphinx.core.path_control
+   :members:
+   :undoc-members:
+   :show-inheritance:

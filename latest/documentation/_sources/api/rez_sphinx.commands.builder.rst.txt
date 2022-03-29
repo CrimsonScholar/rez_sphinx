@@ -1,0 +1,14 @@
+rez\_sphinx.commands.builder
+============================
+
+.. toctree::
+   :maxdepth: 4
+
+   
+   inspector <rez_sphinx.commands.builder.inspector>
+   
+   runner <rez_sphinx.commands.builder.runner>
+.. automodule:: rez_sphinx.commands.builder
+   :members:
+   :undoc-members:
+   :show-inheritance:

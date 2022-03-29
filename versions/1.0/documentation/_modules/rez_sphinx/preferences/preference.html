@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.preferences.preference &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.preferences.preference</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.preferences.preference</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The module which managers user configuration settings.</span>
+
+<span class="sd">Most of these functions are just thin wraps around `rez-config`_ calls.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="kn">import</span> <span class="nn">schema</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">rez.config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">collections_abc</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>  <span class="c1"># Python 3.2+</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">backports.functools_lru_cache</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">exception</span><span class="p">,</span> <span class="n">generic</span><span class="p">,</span> <span class="n">schema_helper</span><span class="p">,</span> <span class="n">schema_optional</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">preference_configuration</span><span class="p">,</span> <span class="n">preference_help</span><span class="p">,</span> <span class="n">preference_init</span>
+
+<span class="n">_DOCUMENTATION_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;documentation&quot;</span>
+
+<span class="n">_BASIC_EXTENSIONS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;sphinx.ext.autodoc&quot;</span><span class="p">,</span>  <span class="c1"># Needed for auto-documentation generation later</span>
+    <span class="s2">&quot;sphinx.ext.intersphinx&quot;</span><span class="p">,</span>  <span class="c1"># Needed to find + load external Rez package Sphinx data</span>
+    <span class="s2">&quot;sphinx.ext.viewcode&quot;</span><span class="p">,</span>  <span class="c1"># Technically optional, but I think it&#39;s cool to always have</span>
+<span class="p">)</span>
+<span class="n">SPHINX_SEPARATE_SOURCE_AND_BUILD</span> <span class="o">=</span> <span class="s2">&quot;--sep&quot;</span>
+
+<span class="n">_API_TOCTREE_LINE</span> <span class="o">=</span> <span class="s2">&quot;api_toctree_line&quot;</span>
+<span class="n">_BUILD_KEY</span> <span class="o">=</span> <span class="s2">&quot;build_documentation_key&quot;</span>
+<span class="n">_CHECK_DEFAULT_FILES</span> <span class="o">=</span> <span class="s2">&quot;check_default_files&quot;</span>
+<span class="n">_DEFAULT_FILES</span> <span class="o">=</span> <span class="s2">&quot;default_files&quot;</span>
+<span class="n">_DOCUMENTATION_ROOT_KEY</span> <span class="o">=</span> <span class="s2">&quot;documentation_root&quot;</span>
+<span class="n">_EXTENSIONS_KEY</span> <span class="o">=</span> <span class="s2">&quot;sphinx_extensions&quot;</span>
+<span class="n">_INIT_KEY</span> <span class="o">=</span> <span class="s2">&quot;init_options&quot;</span>  <span class="c1"># TODO : Consider renaming to &quot;init_command&quot;</span>
+
+<span class="n">_ENABLE_APIDOC</span> <span class="o">=</span> <span class="s2">&quot;enable_apidoc&quot;</span>
+<span class="n">_ALLOW_APIDOC_TEMPLATES</span> <span class="o">=</span> <span class="s2">&quot;allow_apidoc_templates&quot;</span>
+<span class="n">_APIDOC</span> <span class="o">=</span> <span class="s2">&quot;sphinx-apidoc&quot;</span>
+<span class="n">_APIDOC_OPTIONS</span> <span class="o">=</span> <span class="s2">&quot;arguments&quot;</span>
+<span class="c1"># TODO : Change sphinx-quickstart to a dict too like sphinx-apidoc, maybe?</span>
+<span class="n">_QUICKSTART</span> <span class="o">=</span> <span class="s2">&quot;sphinx-quickstart&quot;</span>
+
+<span class="n">_HELP_PARENT_KEY</span> <span class="o">=</span> <span class="s2">&quot;auto_help&quot;</span>
+<span class="n">_HELP_FILTER</span> <span class="o">=</span> <span class="s2">&quot;filter_by&quot;</span>
+<span class="n">_HELP_SORT_ORDER</span> <span class="o">=</span> <span class="s2">&quot;sort_order&quot;</span>
+<span class="n">_MASTER_KEY</span> <span class="o">=</span> <span class="s2">&quot;rez_sphinx&quot;</span>
+<span class="n">_CONFIG_OVERRIDES</span> <span class="o">=</span> <span class="s2">&quot;sphinx_conf_overrides&quot;</span>
+<span class="n">_EXTRA_REQUIRES</span> <span class="o">=</span> <span class="s2">&quot;extra_requires&quot;</span>
+
+<span class="n">_INTERSPHINX_SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;intersphinx_settings&quot;</span>
+<span class="n">_PACKAGE_LINK_MAP</span> <span class="o">=</span> <span class="s2">&quot;package_link_map&quot;</span>
+
+
+<span class="c1"># TODO : Move _SPHINX_MODULE_KEY to a better place</span>
+<span class="n">_SPHINX_MODULE_KEY</span> <span class="o">=</span> <span class="s2">&quot;add_module_names&quot;</span>
+
+<span class="n">_DEFAULT_ENTRIES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">preference_init</span><span class="o">.</span><span class="n">DEFAULT_ENTRIES</span><span class="p">)</span>
+
+<span class="c1"># Reference: https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-485117471</span>
+<span class="n">_MASTER_DOC_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
+<span class="n">_MASTER_DOC</span> <span class="o">=</span> <span class="s2">&quot;master_doc&quot;</span>
+
+<span class="n">_MASTER_SCHEMA</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_BUILD_KEY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;build_documentation&quot;</span><span class="p">):</span> <span class="n">schema</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span>
+            <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span> <span class="p">[</span><span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_EXTENSIONS_KEY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">_BASIC_EXTENSIONS</span><span class="p">)):</span> <span class="p">[</span>
+            <span class="n">schema_helper</span><span class="o">.</span><span class="n">PYTHON_DOT_PATH</span>
+        <span class="p">],</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_INIT_KEY</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">_DEFAULT_FILES</span><span class="p">:</span> <span class="n">_DEFAULT_ENTRIES</span><span class="p">,</span>
+                <span class="n">_CHECK_DEFAULT_FILES</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">):</span> <span class="p">{</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_DEFAULT_FILES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_DEFAULT_ENTRIES</span><span class="p">):</span> <span class="p">[</span>
+                <span class="n">preference_init</span><span class="o">.</span><span class="n">FILE_ENTRY</span>
+            <span class="p">],</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_CHECK_DEFAULT_FILES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_API_TOCTREE_LINE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;API Documentation &lt;api/modules&gt;&quot;</span>
+        <span class="p">):</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">TOCTREE_LINE</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_QUICKSTART</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[]):</span> <span class="p">[],</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_HELP_PARENT_KEY</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">_HELP_FILTER</span><span class="p">:</span> <span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_FILTER</span><span class="p">,</span>
+                <span class="n">_HELP_SORT_ORDER</span><span class="p">:</span> <span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_SORT</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">):</span> <span class="p">{</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+                <span class="n">_HELP_FILTER</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_FILTER</span>
+            <span class="p">):</span> <span class="n">schema</span><span class="o">.</span><span class="n">Use</span><span class="p">(</span><span class="n">preference_help</span><span class="o">.</span><span class="n">validate_filter</span><span class="p">),</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+                <span class="n">_HELP_SORT_ORDER</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_SORT</span>
+            <span class="p">):</span> <span class="n">schema</span><span class="o">.</span><span class="n">Use</span><span class="p">(</span><span class="n">preference_help</span><span class="o">.</span><span class="n">validate_sort</span><span class="p">),</span>
+        <span class="p">},</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_CONFIG_OVERRIDES</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">_SPHINX_MODULE_KEY</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">_MASTER_DOC</span><span class="p">:</span> <span class="n">_MASTER_DOC_DEFAULT</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">):</span> <span class="p">{</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+                <span class="n">_MASTER_DOC</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_MASTER_DOC_DEFAULT</span>
+            <span class="p">):</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_SPHINX_MODULE_KEY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_APIDOC</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">_ALLOW_APIDOC_TEMPLATES</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">_ENABLE_APIDOC</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">):</span> <span class="p">{</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_ALLOW_APIDOC_TEMPLATES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_APIDOC_OPTIONS</span><span class="p">):</span> <span class="p">[],</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_ENABLE_APIDOC</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span>
+            <span class="n">_DOCUMENTATION_ROOT_KEY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_DOCUMENTATION_DEFAULT</span>
+        <span class="p">):</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_EXTRA_REQUIRES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[]):</span> <span class="p">[</span>
+            <span class="n">preference_configuration</span><span class="o">.</span><span class="n">REQUEST_STR</span>
+        <span class="p">],</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_INTERSPHINX_SETTINGS</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span> <span class="p">{</span>
+            <span class="n">_PACKAGE_LINK_MAP</span><span class="p">:</span> <span class="p">{</span><span class="nb">str</span><span class="p">:</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_package_link_map"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_package_link_map">[docs]</a><span class="k">def</span> <span class="nf">get_package_link_map</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;dict[str, str]: Each Rez package family name + its root documentation, if any.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">_INTERSPHINX_SETTINGS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rez_sphinx_settings</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_INTERSPHINX_SETTINGS</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_PACKAGE_LINK_MAP</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_special_preference_paths</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Query the currently-set preference values located at ``text``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str):</span>
+<span class="sd">            A dot-separated string indicating a :ref:`rez_sphinx` configuration</span>
+<span class="sd">            setting.  This text usually has dynamic content and is thus</span>
+<span class="sd">            &quot;special&quot;. e.g. ``&quot;intersphinx_settings.package_link_map&quot;``.  See</span>
+<span class="sd">            also: :func:`get_preference_from_path`</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError:</span>
+<span class="sd">            If ``text`` could not be handled. Add support for it, if needed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[str]: Each found preference path, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_dynamic_dict_keys</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="n">get_preference_from_path</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">ConfigurationError</span><span class="p">:</span>
+            <span class="c1"># The user hasn&#39;t defined it. Just ignore it.</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{path}</span><span class="s2">.</span><span class="si">{key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;sphinx_conf_overrides&quot;</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_dynamic_dict_keys</span><span class="p">(</span><span class="s2">&quot;sphinx_conf_overrides&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;intersphinx_settings.package_link_map&quot;</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_dynamic_dict_keys</span><span class="p">(</span><span class="s2">&quot;intersphinx_settings.package_link_map&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s1">&#39;Case &quot;</span><span class="si">{text}</span><span class="s1">&quot; is unknown. Need to write code for this.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_quick_start_overridable_options</span><span class="p">(</span><span class="n">overrides</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Get all `sphinx-quickstart`_ parameters which the user can modify.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        overrides (list[str], optional):</span>
+<span class="sd">            `sphinx-quickstart`_ user settings to prefer over the</span>
+<span class="sd">            defaults, if any. e.g. ``[&quot;--sep&quot;]``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]:</span>
+<span class="sd">            The resolved &quot;user + :ref:`rez_sphinx`&quot; settings for `sphinx-quickstart`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--sep&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--no-sep&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--language&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s2">&quot;-l&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="c1"># Assume English, if no language could be found.</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--language&quot;</span><span class="p">,</span> <span class="s2">&quot;en&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--makefile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s2">&quot;--no-makefile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--no-makefile&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--batchfile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s2">&quot;--no-batchfile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--batchfile&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--no-batchfile&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--quiet&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s2">&quot;-q&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="c1"># Note: This is purely optional. Sphinx tends to spit out a lot of</span>
+        <span class="c1"># content and we just don&#39;t need to see any of it unless there&#39;s errors.</span>
+        <span class="c1">#</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--quiet&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_api_options</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check ``options`` for issues which prevents `sphinx-apidoc`_ from running.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        options (container[str]):</span>
+<span class="sd">            User arguments to pass to `sphinx-apidoc`_. This could</span>
+<span class="sd">            be a combination of automated arguments or arguments which</span>
+<span class="sd">            the user manually provided, via `rez-config`_ or from</span>
+<span class="sd">            the :ref:`rez_sphinx init` CLI.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UserInputError: If there are any found errors.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;--output-dir&quot;</span> <span class="ow">in</span> <span class="n">options</span> <span class="ow">or</span> <span class="s2">&quot;-o&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s1">&#39;You are not allowed to pass &quot;--output-dir/-o&quot; to sphinx-apidoc.&#39;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_quick_start_options</span><span class="p">(</span><span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if the `sphinx-quickstart`_ settings are invalid.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UserInputError: If ``settings`` contains invalid or missing data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;--author&quot;</span> <span class="ow">in</span> <span class="n">settings</span> <span class="ow">or</span> <span class="s2">&quot;-a&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span><span class="s2">&quot;Do not provide any authors for rez-sphinx.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--project&quot;</span> <span class="ow">in</span> <span class="n">settings</span> <span class="ow">or</span> <span class="s2">&quot;-p&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span><span class="s2">&quot;Do not provide a project name for rez-sphinx.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--release&quot;</span> <span class="ow">in</span> <span class="n">settings</span> <span class="ow">or</span> <span class="s2">&quot;-r&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Do not provide a release version for rez-sphinx.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;-v&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Do not provide a project version for rez-sphinx.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--master&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s1">&#39;Do not provide a &quot;--master&quot; argument for rez-sphinx.&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;--suffix&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s1">&#39;Do not provide a &quot;--suffix&quot; argument for rez-sphinx.&#39;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_all</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_MASTER_SCHEMA</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="allow_apidoc_templates"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.allow_apidoc_templates">[docs]</a><span class="k">def</span> <span class="nf">allow_apidoc_templates</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;bool: Enable / Disable :ref:`rez_sphinx apidoc templates`.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">apidoc</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_APIDOC</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">apidoc</span><span class="p">[</span><span class="n">_ALLOW_APIDOC_TEMPLATES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="check_default_files"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.check_default_files">[docs]</a><span class="k">def</span> <span class="nf">check_default_files</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;bool: If True, :ref:`rez_sphinx build run` checks files for user edits.&quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_INIT_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">options</span><span class="p">[</span><span class="n">_CHECK_DEFAULT_FILES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="is_api_enabled"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.is_api_enabled">[docs]</a><span class="k">def</span> <span class="nf">is_api_enabled</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;bool: Check if the user will generate `sphinx-apidoc`_ ReST files.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">apidoc</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_APIDOC</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">apidoc</span><span class="p">[</span><span class="n">_ENABLE_APIDOC</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_api_options"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_api_options">[docs]</a><span class="k">def</span> <span class="nf">get_api_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Find all arguments to pass to `sphinx-apidoc`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        options (container[str]):</span>
+<span class="sd">            User arguments to pass to `sphinx-apidoc`_. These options come from</span>
+<span class="sd">            :ref:`rez_sphinx build run` CLI and may be valid or invalid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">apidoc</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_APIDOC</span><span class="p">]</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">apidoc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_APIDOC_OPTIONS</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;--separate&quot;</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_validate_api_options</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Error from rez-config: </span><span class="si">{error}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_validate_api_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Error from the terminal: </span><span class="si">{error}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">settings</span><span class="p">))</span></div>
+
+
+<span class="c1"># TODO : Is caching really necessary? Maybe remove it from these functions</span>
+<div class="viewcode-block" id="get_base_settings"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_base_settings">[docs]</a><span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">get_base_settings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;dict[str, object]: Get all :ref:`rez_sphinx` specific default settings.&quot;&quot;&quot;</span>
+    <span class="n">rez_user_options</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">optionvars</span>  <span class="c1"># pylint: disable=no-member</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">rez_user_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_MASTER_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_validate_all</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_build_documentation_keys"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_build_documentation_keys">[docs]</a><span class="k">def</span> <span class="nf">get_build_documentation_keys</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;list[str]: Get the `rez tests attribute`_ key for :ref:`rez_sphinx`.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_BUILD_KEY</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;build_documentation&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">keys</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">keys</span></div>
+
+
+<div class="viewcode-block" id="get_build_documentation_key"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_build_documentation_key">[docs]</a><span class="k">def</span> <span class="nf">get_build_documentation_key</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;str: Get the `rez tests attribute`_ key for :ref:`rez_sphinx`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_build_documentation_keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_documentation_root_name"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_documentation_root_name">[docs]</a><span class="k">def</span> <span class="nf">get_documentation_root_name</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;str: The name of the folder where all documentation-related files will go.&quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_DOCUMENTATION_ROOT_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_DOCUMENTATION_DEFAULT</span></div>
+
+
+<div class="viewcode-block" id="get_filter_method"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_filter_method">[docs]</a><span class="k">def</span> <span class="nf">get_filter_method</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get a function to process original / auto-generated `package help`_ values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable[</span>
+<span class="sd">            list[list[str, str]],</span>
+<span class="sd">            list[list[str, str]]</span>
+<span class="sd">        ] -&gt; tuple[</span>
+<span class="sd">            list[list[str, str]],</span>
+<span class="sd">            list[list[str, str]]</span>
+<span class="sd">        ]:</span>
+<span class="sd">            A function that takes two `package help`_ lists and may return</span>
+<span class="sd">            unique results from either of them.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_HELP_PARENT_KEY</span><span class="p">]</span>
+
+    <span class="n">caller</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">_HELP_FILTER</span><span class="p">]</span>
+
+    <span class="c1"># TODO : Consider simplifying this section</span>
+    <span class="k">if</span> <span class="n">caller</span> <span class="o">!=</span> <span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_FILTER</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">caller</span>
+
+    <span class="k">return</span> <span class="n">caller</span><span class="o">.</span><span class="n">_callable</span>  <span class="c1"># pylint: disable=protected-access</span></div>
+
+
+<div class="viewcode-block" id="get_help_label"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_help_label">[docs]</a><span class="k">def</span> <span class="nf">get_help_label</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;str: Get the `help`_ which connects with `intersphinx`_.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">rez_sphinx_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;help_label&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;rez_sphinx_objects_inv&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_initial_files_from_configuration"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_initial_files_from_configuration">[docs]</a><span class="k">def</span> <span class="nf">get_initial_files_from_configuration</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;list[Entry]: File data to write during :ref:`rez_sphinx init`.&quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_INIT_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">options</span><span class="p">[</span><span class="n">_DEFAULT_FILES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_init_default_entries"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_init_default_entries">[docs]</a><span class="k">def</span> <span class="nf">get_init_default_entries</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the documentation files to auto-generate during :ref:`rez_sphinx init`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[Entry]:</span>
+<span class="sd">            A description of each file&#39;s contents and where it should live,</span>
+<span class="sd">            on-disk, within the source documentation root.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">settings</span><span class="p">[</span><span class="n">_INIT_KEY</span><span class="p">][</span><span class="n">_DEFAULT_FILES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_master_api_documentation_line"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_master_api_documentation_line">[docs]</a><span class="k">def</span> <span class="nf">get_master_api_documentation_line</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;str: Get the line that typically is added to the main `index.rst`_.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_API_TOCTREE_LINE</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_master_document_name"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_master_document_name">[docs]</a><span class="k">def</span> <span class="nf">get_master_document_name</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Find the first .rst file `Sphinx`_ should point to.</span>
+
+<span class="sd">    Ideally this shouldn&#39;t be necessary but it looks like, while building</span>
+<span class="sd">    :ref:`rez_sphinx` in Python 2 + `sphinx-rtd-theme`_, the name of this file</span>
+<span class="sd">    gets swapped to &quot;contents.rst&quot;.</span>
+
+<span class="sd">    So we name it &quot;index.rst&quot;, for consistency.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-270577290</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The base name, without file extension, of the &quot;entry point&quot; for `Sphinx`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_sphinx_configuration_overrides</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">settings</span><span class="p">[</span><span class="n">_MASTER_DOC</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_preference_from_path"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_preference_from_path">[docs]</a><span class="k">def</span> <span class="nf">get_preference_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the dict value located at ``path``.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :func:`get_preference_paths` and :ref:`rez_sphinx config show --list-all`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            Some dot-separated dict key to query. e.g.</span>
+<span class="sd">            ``&quot;init_options.check_default_files&quot;``</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigurationError: If ``path`` isn&#39;t a valid setting.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: Whatever value ``path`` points to. It could be anything.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO : Make sure to incorporate the PWD package, as well</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rez_sphinx_settings</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">full</span><span class="p">:</span>
+            <span class="n">full</span> <span class="o">+=</span> <span class="s2">&quot;.</span><span class="si">{item}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">full</span> <span class="o">=</span> <span class="n">item</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">full</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">full</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">item</span>
+
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">ConfigurationError</span><span class="p">(</span>
+                <span class="s1">&#39;Path &quot;</span><span class="si">{text}</span><span class="s1">&quot; was not found. See --list-all for options.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">text</span><span class="o">=</span><span class="n">text</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">current</span></div>
+
+
+<div class="viewcode-block" id="get_preference_paths"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_preference_paths">[docs]</a><span class="k">def</span> <span class="nf">get_preference_paths</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;set[str]: All valid paths for :ref:`rez_sphinx config show`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">exceptional_cases</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">get_raw_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="o">.</span><span class="n">Use</span><span class="p">):</span>
+                <span class="c1"># We wouldn&#39;t really know how to handle this situation. Just ignore it.</span>
+                <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">collections_abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                    <span class="c1"># We wouldn&#39;t really know how to handle this situation.</span>
+                    <span class="c1"># Just ignore it.</span>
+                    <span class="c1">#</span>
+                    <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="n">inner_context</span> <span class="o">=</span> <span class="n">key</span>
+
+            <span class="k">if</span> <span class="n">context</span><span class="p">:</span>
+                <span class="n">inner_context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{context}</span><span class="s2">.</span><span class="si">{key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="n">inner_output</span><span class="p">,</span> <span class="n">extra_cases</span> <span class="o">=</span> <span class="n">_get_mapping</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">inner_context</span><span class="p">)</span>
+            <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra_cases</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">inner_key</span> <span class="ow">in</span> <span class="n">inner_output</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inner_key</span><span class="p">,</span> <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+                    <span class="n">inner_key</span> <span class="o">=</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">get_raw_key</span><span class="p">(</span><span class="n">inner_key</span><span class="p">)</span>
+
+                <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{key}</span><span class="s2">.</span><span class="si">{inner_key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">inner_key</span><span class="o">=</span><span class="n">inner_key</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">exceptional_cases</span>
+
+    <span class="n">output</span><span class="p">,</span> <span class="n">exceptional_cases</span> <span class="o">=</span> <span class="n">_get_mapping</span><span class="p">(</span>
+        <span class="n">_MASTER_SCHEMA</span><span class="o">.</span><span class="n">_schema</span><span class="p">,</span>  <span class="c1"># pylint: disable=protected-access</span>
+        <span class="n">context</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exceptional_cases</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">path</span>
+        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">exceptional_cases</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">_get_special_preference_paths</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="get_sort_method"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_sort_method">[docs]</a><span class="k">def</span> <span class="nf">get_sort_method</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;callable[list[str], str] -&gt; object: The sort function for `package help`_.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_HELP_PARENT_KEY</span><span class="p">]</span>
+
+    <span class="n">caller</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">_HELP_SORT_ORDER</span><span class="p">]</span>
+
+    <span class="c1"># TODO : Consider simplifying this section</span>
+    <span class="k">if</span> <span class="n">caller</span> <span class="o">!=</span> <span class="n">preference_help</span><span class="o">.</span><span class="n">DEFAULT_SORT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">caller</span>
+
+    <span class="k">return</span> <span class="n">caller</span><span class="o">.</span><span class="n">_callable</span>  <span class="c1"># Another schema member pylint: disable=protected-access</span></div>
+
+
+<div class="viewcode-block" id="get_sphinx_configuration_overrides"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_sphinx_configuration_overrides">[docs]</a><span class="k">def</span> <span class="nf">get_sphinx_configuration_overrides</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;dict[str, object]: Get all values to directly set within `Sphinx conf.py`_.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">rez_sphinx_settings</span><span class="p">[</span><span class="n">_CONFIG_OVERRIDES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_sphinx_extensions"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_sphinx_extensions">[docs]</a><span class="k">def</span> <span class="nf">get_sphinx_extensions</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;list[str]: All `Sphinx`_ optional add-ons to include in documentation.&quot;&quot;&quot;</span>
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">rez_sphinx_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_EXTENSIONS_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="n">_BASIC_EXTENSIONS</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_quick_start_options"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.get_quick_start_options">[docs]</a><span class="k">def</span> <span class="nf">get_quick_start_options</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Get the arguments `sphinx-quickstart`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (str):</span>
+<span class="sd">            The name of the Rez package family. e.g. &quot;python&quot;, &quot;Sphinx&quot;, etc.</span>
+<span class="sd">        options (list[str], optional):</span>
+<span class="sd">            User-provided arguments to consider while resolving</span>
+<span class="sd">            `sphinx-quickstart`_ values.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UserInputError:</span>
+<span class="sd">            If the user attempted to pass settings which may only be</span>
+<span class="sd">            edited by :ref:`rez_sphinx`, fail this function early.</span>
+<span class="sd">            Examples of &quot;reserved&quot; parameters are &quot;--project&quot;, which are</span>
+<span class="sd">            meant to be set by the Rez package name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: Any arguments to pass to sphinx-quickstart by default.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[</span>  <span class="c1"># These options are required to be part of the output</span>
+        <span class="s2">&quot;--author&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--ext-intersphinx&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--project&quot;</span><span class="p">,</span>
+        <span class="n">package</span><span class="p">,</span>
+        <span class="s2">&quot;--release&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--suffix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;.rst&quot;</span><span class="p">,</span>  <span class="c1"># Sphinx 1.8 needs this (for Python 2)</span>
+        <span class="s2">&quot;--master&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;index&quot;</span><span class="p">,</span>  <span class="c1"># Sphinx 1.8 needs this (for Python 2)</span>
+        <span class="s2">&quot;--dot=_&quot;</span><span class="p">,</span>  <span class="c1"># Sphinx 1.8 needs this (for Python 2)</span>
+    <span class="p">]</span>
+
+    <span class="n">rez_sphinx_settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">rez_sphinx_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_QUICKSTART</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_validate_quick_start_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Error from the terminal: </span><span class="si">{error}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_validate_quick_start_options</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">UserInputError</span><span class="p">(</span>
+            <span class="s2">&quot;Error from the rez-config: </span><span class="si">{error}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_get_quick_start_overridable_options</span><span class="p">(</span><span class="n">settings</span><span class="p">))</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="serialize_default_settings"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.serialize_default_settings">[docs]</a><span class="k">def</span> <span class="nf">serialize_default_settings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get all :ref:`rez_sphinx` default values.</span>
+
+<span class="sd">    This function can be very long. :func:`serialize_default_sparse_settings`</span>
+<span class="sd">    shows a briefer (but still valid) set of default settings.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, object]: A simple key / value pair dict.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_MASTER_SCHEMA</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">has_default</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">default</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;Key &quot;</span><span class="si">{key}</span><span class="s1">&quot; needs to be supported.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="serialize_default_sparse_settings"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.serialize_default_sparse_settings">[docs]</a><span class="k">def</span> <span class="nf">serialize_default_sparse_settings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the default settings for :ref:`rez_sphinx`.</span>
+
+<span class="sd">    These settings ignore nested content and just shows the simple, top-level data.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :func:`serialize_default_settings`</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, object]: A simple key / value pair dict.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_MASTER_SCHEMA</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">serialize_default_settings</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">generic</span><span class="o">.</span><span class="n">is_iterable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>  <span class="c1"># Probably not the best way to do this</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="serialize_override_settings"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.serialize_override_settings">[docs]</a><span class="k">def</span> <span class="nf">serialize_override_settings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get all user-set values, without any default schema values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, object]: The values, stripped of all default data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_base_settings</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">serialize_sparsely</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">_MASTER_SCHEMA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_base_settings"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.validate_base_settings">[docs]</a><span class="k">def</span> <span class="nf">validate_base_settings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Check if the user&#39;s settings won&#39;t cause :ref:`rez_sphinx` to break.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigurationError: Raised if a configuration-related issue is found.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">get_base_settings</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">schema</span><span class="o">.</span><span class="n">SchemaError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">ConfigurationError</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid rez-config settings were found. &quot;</span>
+            <span class="s2">&quot;See ``rez_sphinx config check`` for details. &quot;</span>
+            <span class="s1">&#39;Summary here: &quot;</span><span class="si">{error!s}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

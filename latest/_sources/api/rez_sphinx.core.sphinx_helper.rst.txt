@@ -1,0 +1,7 @@
+rez\_sphinx.core.sphinx\_helper
+-------------------------------
+
+.. automodule:: rez_sphinx.core.sphinx_helper
+   :members:
+   :undoc-members:
+   :show-inheritance:

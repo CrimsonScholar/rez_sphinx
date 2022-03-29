@@ -1,0 +1,20 @@
+rez\_sphinx
+===========
+
+.. toctree::
+   :maxdepth: 4
+
+   
+   api <rez_sphinx.api>
+   
+   cli <rez_sphinx.cli>
+   
+   commands <rez_sphinx.commands>
+   
+   core <rez_sphinx.core>
+   
+   preferences <rez_sphinx.preferences>
+.. automodule:: rez_sphinx
+   :members:
+   :undoc-members:
+   :show-inheritance:
