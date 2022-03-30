@@ -1,7 +1,0 @@
-rez\_sphinx.preferences.preference\_init
-----------------------------------------
-
-.. automodule:: rez_sphinx.preferences.preference_init
-   :members:
-   :undoc-members:
-   :show-inheritance:

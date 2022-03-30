@@ -1,7 +1,0 @@
-rez\_sphinx.commands.builder.inspector
---------------------------------------
-
-.. automodule:: rez_sphinx.commands.builder.inspector
-   :members:
-   :undoc-members:
-   :show-inheritance:

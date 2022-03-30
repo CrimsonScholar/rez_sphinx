@@ -1,7 +1,0 @@
-rez\_sphinx.core.exception
---------------------------
-
-.. automodule:: rez_sphinx.core.exception
-   :members:
-   :undoc-members:
-   :show-inheritance:

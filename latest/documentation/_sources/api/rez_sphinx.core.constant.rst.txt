@@ -1,7 +1,0 @@
-rez\_sphinx.core.constant
--------------------------
-
-.. automodule:: rez_sphinx.core.constant
-   :members:
-   :undoc-members:
-   :show-inheritance:

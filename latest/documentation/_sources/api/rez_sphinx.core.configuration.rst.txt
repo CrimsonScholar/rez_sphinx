@@ -1,7 +1,0 @@
-rez\_sphinx.core.configuration
-------------------------------
-
-.. automodule:: rez_sphinx.core.configuration
-   :members:
-   :undoc-members:
-   :show-inheritance:

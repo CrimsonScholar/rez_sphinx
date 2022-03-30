@@ -1,7 +1,0 @@
-rez\_sphinx.commands.builder.runner
------------------------------------
-
-.. automodule:: rez_sphinx.commands.builder.runner
-   :members:
-   :undoc-members:
-   :show-inheritance:

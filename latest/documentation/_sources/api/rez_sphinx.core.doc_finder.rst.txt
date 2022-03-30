@@ -1,7 +1,0 @@
-rez\_sphinx.core.doc\_finder
-----------------------------
-
-.. automodule:: rez_sphinx.core.doc_finder
-   :members:
-   :undoc-members:
-   :show-inheritance:

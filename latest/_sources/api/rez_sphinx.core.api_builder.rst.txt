@@ -1,7 +1,0 @@
-rez\_sphinx.core.api\_builder
------------------------------
-
-.. automodule:: rez_sphinx.core.api_builder
-   :members:
-   :undoc-members:
-   :show-inheritance:
