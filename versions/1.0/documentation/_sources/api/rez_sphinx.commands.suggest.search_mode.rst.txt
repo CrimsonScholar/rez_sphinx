@@ -1,7 +1,0 @@
-rez\_sphinx.commands.suggest.search\_mode
------------------------------------------
-
-.. automodule:: rez_sphinx.commands.suggest.search_mode
-   :members:
-   :undoc-members:
-   :show-inheritance:

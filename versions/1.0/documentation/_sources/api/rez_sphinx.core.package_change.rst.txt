@@ -1,7 +1,0 @@
-rez\_sphinx.core.package\_change
---------------------------------
-
-.. automodule:: rez_sphinx.core.package_change
-   :members:
-   :undoc-members:
-   :show-inheritance:

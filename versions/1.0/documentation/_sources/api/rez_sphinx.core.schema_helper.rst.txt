@@ -1,7 +1,0 @@
-rez\_sphinx.core.schema\_helper
--------------------------------
-
-.. automodule:: rez_sphinx.core.schema_helper
-   :members:
-   :undoc-members:
-   :show-inheritance:

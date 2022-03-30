@@ -1,7 +1,0 @@
-rez\_sphinx.commands.build\_orderer
------------------------------------
-
-.. automodule:: rez_sphinx.commands.build_orderer
-   :members:
-   :undoc-members:
-   :show-inheritance:

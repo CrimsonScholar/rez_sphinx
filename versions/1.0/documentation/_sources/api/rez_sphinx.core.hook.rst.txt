@@ -1,7 +1,0 @@
-rez\_sphinx.core.hook
----------------------
-
-.. automodule:: rez_sphinx.core.hook
-   :members:
-   :undoc-members:
-   :show-inheritance:

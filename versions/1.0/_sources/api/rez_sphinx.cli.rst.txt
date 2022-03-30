@@ -1,7 +1,0 @@
-rez\_sphinx.cli
----------------
-
-.. automodule:: rez_sphinx.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:

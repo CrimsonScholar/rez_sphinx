@@ -1,7 +1,0 @@
-rez\_sphinx.commands.publish\_run
----------------------------------
-
-.. automodule:: rez_sphinx.commands.publish_run
-   :members:
-   :undoc-members:
-   :show-inheritance:
