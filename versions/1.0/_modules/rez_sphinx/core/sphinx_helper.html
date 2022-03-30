@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.core.sphinx_helper &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.core.sphinx_helper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.core.sphinx_helper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A collection of functions for making dealing with `Sphinx`_ easier.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">rez.vendor.version</span> <span class="kn">import</span> <span class="n">version</span> <span class="k">as</span> <span class="n">version_</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">doc_finder</span><span class="p">,</span> <span class="n">exception</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_SPHINX_NAME</span> <span class="o">=</span> <span class="s2">&quot;conf.py&quot;</span>
+<span class="n">_MISSING_TOCTREE_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.. toctree::&quot;</span><span class="p">,</span> <span class="s2">&quot;   :max-depth: 1&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_empty</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``lines`` has no existing entries.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lines (iter[str]):</span>
+<span class="sd">            Some toctree text.</span>
+<span class="sd">            e.g. ``[&quot;.. toctree::&quot;, &quot;   :maxdepth: 2&quot;]`` would return True.</span>
+<span class="sd">            e.g. ``[&quot;.. toctree::&quot;, &quot;   :maxdepth: 2&quot;, &quot;&quot;, &quot;   something&quot;]``</span>
+<span class="sd">            would return False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``lines`` toctree has an existing entries.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_get_indent</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_get_indent</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;str: Get the whitespace text leading up to ``text``.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_toctree_indent</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the inner text indentation of a `toctree`_, using ``lines``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lines (iter[str]):</span>
+<span class="sd">            Some toctree text.</span>
+<span class="sd">            e.g. ``[&quot;.. toctree::&quot;, &quot;   :maxdepth: 2&quot;]`` would return &quot;   &quot;.</span>
+<span class="sd">            e.g. ``[&quot;.. toctree::&quot;, &quot;    :maxdepth: 2&quot;]`` would return &quot;    &quot;.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If no indentation could be found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found indentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">_get_indent</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">indent</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Lines &quot;</span><span class="si">{lines}</span><span class="s1">&quot; has no indentation.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="n">lines</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_add_links_to_a_tree</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the appropriate `toctree`_ to add ``line`` onto.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entries (list[str]): The documentation line to append to in ``tree``.</span>
+<span class="sd">        tree (list[str]): The toctree to modify.</span>
+<span class="sd">        data (str): The blob of text which ``trees`` are a part of.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If ``tree`` already contains ``toctree_line`` at least once.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The newly modified ``data``, which now includes ``line``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">end_line</span><span class="p">,</span> <span class="n">tree_lines</span> <span class="o">=</span> <span class="n">tree</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="n">_get_toctree_indent</span><span class="p">(</span><span class="n">tree_lines</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">_is_empty</span><span class="p">(</span><span class="n">tree_lines</span><span class="p">):</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">end_line</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">end_line</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">entries</span><span class="p">):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_make_new_tree</span><span class="p">(</span><span class="n">entries</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Make a brand new toctree, using ``entries``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entries (list[str]): The documentation line to append to in ``trees`` later.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The blob of toctree text.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="n">_get_indent</span><span class="p">(</span><span class="n">_MISSING_TOCTREE_TEMPLATE</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_MISSING_TOCTREE_TEMPLATE</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">indent</span> <span class="o">+</span> <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_scan_for_configuration_path</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Recursively look for the `Sphinx conf.py`_ or fail trying.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            A path on-disk to search within for the `Sphinx conf.py`_.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If no `Sphinx conf.py`_ could be found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The path on-disk to the `Sphinx conf.py`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">_SPHINX_NAME</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s1">&#39;Directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; has no inner conf.py file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_skip_existing_entries</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">trees</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter out ``entries`` if any exist in any of ``trees``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entries (list[str]): The documentation line to append to in ``trees`` later.</span>
+<span class="sd">        trees (list[list[str]]): Each toctree and its lines to search within.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: The ``entries`` which don&#39;t already exist in ``trees``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tree_lines</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">lines</span> <span class="o">=</span> <span class="n">tree</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">tree_lines</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tree_lines</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Link &quot;</span><span class="si">%s</span><span class="s1">&quot; already added in an existing tree. Skipping.&#39;</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<div class="viewcode-block" id="find_configuration_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.sphinx_helper.html#rez_sphinx.core.sphinx_helper.find_configuration_path">[docs]</a><span class="k">def</span> <span class="nf">find_configuration_path</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the `Sphinx conf.py`_ or fail trying.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root (str):</span>
+<span class="sd">            A directory on-disk to search within for the `Sphinx conf.py`_.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The path on-disk to the `Sphinx conf.py`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">doc_finder</span><span class="o">.</span><span class="n">get_source_from_directory</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoDocumentationFound</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Directory &quot;</span><span class="si">%s</span><span class="s1">&quot; had no known documentation.&#39;</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_scan_for_configuration_path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">_SPHINX_NAME</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">path</span>
+
+    <span class="k">return</span> <span class="n">_scan_for_configuration_path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_toctrees"><a class="viewcode-back" href="../../../api/rez_sphinx.core.sphinx_helper.html#rez_sphinx.core.sphinx_helper.get_toctrees">[docs]</a><span class="k">def</span> <span class="nf">get_toctrees</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get every `toctree`_ in ``path``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The absolute or relative path to a Sphinx .rst file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[tuple[int, int, list[str]]]: Each `toctree`_ as a list of lines.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_trim</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="p">))):</span>
+            <span class="k">if</span> <span class="n">tree</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="k">break</span>
+
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">tree</span><span class="p">[:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">count</span><span class="p">]</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">trees</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">last_indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.. toctree::&quot;</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">_get_indent</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">indent</span> <span class="o">&lt;</span> <span class="n">last_indent</span><span class="p">:</span>
+            <span class="n">last_indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">trimmed</span> <span class="o">=</span> <span class="n">_trim</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">trimmed</span><span class="p">)</span>
+            <span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">trimmed</span><span class="p">))</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">last_indent</span> <span class="o">=</span> <span class="n">indent</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">current</span><span class="p">:</span>
+        <span class="n">last_indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">trimmed</span> <span class="o">=</span> <span class="n">_trim</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">trimmed</span><span class="p">)</span>
+        <span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">trimmed</span><span class="p">))</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">trees</span></div>
+
+
+<div class="viewcode-block" id="add_links_to_a_tree"><a class="viewcode-back" href="../../../api/rez_sphinx.core.sphinx_helper.html#rez_sphinx.core.sphinx_helper.add_links_to_a_tree">[docs]</a><span class="k">def</span> <span class="nf">add_links_to_a_tree</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add ``entries`` as line items within a toctree in ``path``.</span>
+
+<span class="sd">    If ``path`` doesn&#39;t have at least one toctree defined, a new one will be</span>
+<span class="sd">    created and then ``entries`` is added to that.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        If ``entries`` are already in ``path``, this function does nothing.</span>
+<span class="sd">        Otherwise, ``path`` will be directly modified.</span>
+
+<span class="sd">    Todo:</span>
+<span class="sd">        - Make sure adding a brand-new tree works</span>
+<span class="sd">        - Make sure skipping works</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entries (list[str]): The documentation line to append to ``path``.</span>
+<span class="sd">        path (str): An absolute or relative file path to some ReST file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">trees</span> <span class="o">=</span> <span class="n">get_toctrees</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="n">new_data</span> <span class="o">=</span> <span class="n">_make_new_tree</span><span class="p">(</span><span class="n">entries</span><span class="o">=</span><span class="n">entries</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="n">original</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">_skip_existing_entries</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">trees</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Path &quot;</span><span class="si">%s</span><span class="s1">&quot; already has every Entry, &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">trees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_add_links_to_a_tree</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="n">original</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Skipped writing to path &quot;</span><span class="si">%s</span><span class="s1">&quot; because no changes were made.&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="htmlize_ref"><a class="viewcode-back" href="../../../api/rez_sphinx.core.sphinx_helper.html#rez_sphinx.core.sphinx_helper.htmlize_ref">[docs]</a><span class="k">def</span> <span class="nf">htmlize_ref</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert ``text`` to its HTML equivalent. Attach it to ``path``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The relative or absolute path to a HTML page. e.g. &quot;page.html&quot;.</span>
+<span class="sd">        text (str): A raw string which represents a HTML anchor. e.g. &quot;Some Thing&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The converted HTML link. e.g. &quot;page.html#some-thing&quot;.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO : Make this function cleaner, later. Preferably call whatever Sphinx calls</span>
+    <span class="n">htmlized</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{path}</span><span class="s2">#</span><span class="si">{htmlized}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">htmlized</span><span class="o">=</span><span class="n">htmlized</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="supports_apidoc_templates"><a class="viewcode-back" href="../../../api/rez_sphinx.core.sphinx_helper.html#rez_sphinx.core.sphinx_helper.supports_apidoc_templates">[docs]</a><span class="k">def</span> <span class="nf">supports_apidoc_templates</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;bool: Check if ``--templatedir`` is supported in `sphinx-apidoc`_.&quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">version_</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;REZ_SPHINX_VERSION&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">version</span> <span class="o">&gt;</span> <span class="n">version_</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s2">&quot;2.2&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

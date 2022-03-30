@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.core.schema_optional &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.core.schema_optional</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.core.schema_optional</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Dealing with :class:`schema.Optional` objects.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">schema</span> <span class="k">as</span> <span class="nn">schema_</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">collections_abc</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">generic</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_non_default_values</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get every non-default value within ``data``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (object):</span>
+<span class="sd">            An iterable array, map, or non-iterable object to consider.</span>
+<span class="sd">        optional (:class:`schema.Optional`):</span>
+<span class="sd">            A schema-aware type which contextualizes ``data``. It should</span>
+<span class="sd">            contain what the &quot;known default&quot; value should be if ``data`` has</span>
+<span class="sd">            undefined parts.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If nothing was set to a non-default value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`schema.Optional` or dict or list:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_default</span><span class="p">(</span><span class="n">optional</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Nothing was changed.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">generic</span><span class="o">.</span><span class="n">is_iterable</span><span class="p">(</span><span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">collections_abc</span><span class="o">.</span><span class="n">MutableMapping</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="n">new</span> <span class="o">=</span> <span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span> <span class="ow">in</span> <span class="n">optional</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+            <span class="n">raw_key</span> <span class="o">=</span> <span class="n">get_raw_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">new</span><span class="p">[</span><span class="n">raw_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_non_default_values</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">raw_key</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="n">recorded_value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">recorded_value</span> <span class="o">==</span> <span class="n">default_value</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s1">&#39;Key &quot;</span><span class="si">%s</span><span class="s1">&quot; has the same value, &quot;</span><span class="si">%s</span><span class="s1">&quot;. Skipping.&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span>
+            <span class="p">)</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">new</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">recorded_value</span>
+
+    <span class="k">return</span> <span class="n">new</span>
+
+
+<span class="k">def</span> <span class="nf">_get_real_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find a matching schema key from a raw, data ``key``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (str): An example dict key to check within ``schema``.</span>
+<span class="sd">        schema (:class:`schema.Schema`):</span>
+<span class="sd">            A description of the required and optional data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`schema.Optional` or NoneType: The found key or nothing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">real_key</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">_schema</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># pylint: disable=protected-access</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">real_key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">real_key</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">real_key</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="has_default"><a class="viewcode-back" href="../../../api/rez_sphinx.core.schema_optional.html#rez_sphinx.core.schema_optional.has_default">[docs]</a><span class="k">def</span> <span class="nf">has_default</span><span class="p">(</span><span class="n">optional</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``optional`` has a default value assigned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        optional (:class:`schema.Optional`): The object to consider.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If there&#39;s a default, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">optional</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_raw_key"><a class="viewcode-back" href="../../../api/rez_sphinx.core.schema_optional.html#rez_sphinx.core.schema_optional.get_raw_key">[docs]</a><span class="k">def</span> <span class="nf">get_raw_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reduce any potential schema object to its builtin, hashable Python object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (:class:`schema.Optional` or object):</span>
+<span class="sd">            Any schema object is converted. Any built-in is ignored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: (Usually this is a ``str``) - The converted object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;key&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="n">key</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;_schema&quot;</span><span class="p">):</span>
+        <span class="c1"># When you make a ``schema.Optional(&quot;foo&quot;), with no ``default=``</span>
+        <span class="c1"># parameter, schema won&#39;t set the key attribute properly. Very annoying</span>
+        <span class="c1"># but at least the work around it&#39;s hard.</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">_schema</span><span class="p">)</span>  <span class="c1"># pylint: disable=protected-access</span>
+
+    <span class="k">return</span> <span class="n">key</span></div>
+
+
+<div class="viewcode-block" id="serialize_sparsely"><a class="viewcode-back" href="../../../api/rez_sphinx.core.schema_optional.html#rez_sphinx.core.schema_optional.serialize_sparsely">[docs]</a><span class="k">def</span> <span class="nf">serialize_sparsely</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Strip all default values from ``settings``, using ``schema``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        settings (dict):</span>
+<span class="sd">            The base, raw data to traverse and return.</span>
+<span class="sd">        schema (:class:`schema.Schema`):</span>
+<span class="sd">            A description of the required and optional data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The stripped, non-default data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">real_key</span> <span class="o">=</span> <span class="n">_get_real_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">real_key</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+            <span class="k">continue</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_non_default_values</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">real_key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

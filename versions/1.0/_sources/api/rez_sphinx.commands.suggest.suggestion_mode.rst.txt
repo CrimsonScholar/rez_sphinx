@@ -1,0 +1,7 @@
+rez\_sphinx.commands.suggest.suggestion\_mode
+---------------------------------------------
+
+.. automodule:: rez_sphinx.commands.suggest.suggestion_mode
+   :members:
+   :undoc-members:
+   :show-inheritance:

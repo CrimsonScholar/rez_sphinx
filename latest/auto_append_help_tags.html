@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto-Append Help Tags &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rez_sphinx As A Release Hook" href="rez_sphinx_as_a_release_hook.html" />
+    <link rel="prev" title="Configuring rez_sphinx" href="configuring_rez_sphinx.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#all-commands">All Commands</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="user_documentation.html#advanced-topics">Advanced Topics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="using_sphinx_rtd_theme.html">Using sphinx-rtd-theme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adding_extra_interlinking.html">Adding Extra Interlinking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuring_rez_sphinx.html">Configuring rez_sphinx</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Auto-Append Help Tags</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuring-auto-help-linking">Configuring auto-help linking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-documentation-automatically">Adding Documentation Automatically</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx_as_a_release_hook.html">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html">Linking rez_sphinx With Other Documentation Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="user_documentation.html">User Documentation</a> &raquo;</li>
+      <li>Auto-Append Help Tags</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/auto_append_help_tags.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="auto-append-help-tags">
+<span id="rez-sphinx-tag"></span><h1>Auto-Append Help Tags<a class="headerlink" href="#auto-append-help-tags" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> is capable of auto-connecting dependency packages together.
+However, this functionality isn’t enable by default. It has to be configured
+but it’s easy and only needs to be done once.</p>
+<section id="configuring-auto-help-linking">
+<h2>Configuring auto-help linking<a class="headerlink" href="#configuring-auto-help-linking" title="Permalink to this headline">¶</a></h2>
+<section id="adding-rez-sphinx-as-a-preprocess">
+<h3>Adding rez_sphinx as a preprocess<a class="headerlink" href="#adding-rez-sphinx-as-a-preprocess" title="Permalink to this headline">¶</a></h3>
+<p>Once you’ve built <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>, you’ll want to add the following to your
+<a class="reference external" href="https://github.com/nerdvegas/rez/blob/fa3fff6f0b7b4b53bbb9baa4357ab42117d06356/src/rez/rezconfig.py">rezconfig.py</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">package_definition_build_python_paths</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;/path/to/your/installed/rez_sphinx/1.0.0/python-3/python/rez_sphinx/preprocess&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">package_preprocess_function</span> <span class="o">=</span> <span class="s2">&quot;preprocess_entry_point.run&quot;</span>
+</pre></div>
+</div>
+<p>Now whenever you build a Rez package, if it has <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+documentation, the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> attribute will get auto-appended based on what
+<a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> can find.</p>
+<p>If you only plan to publish documentation locally, you can skip the next
+section.  However if you want to <strong>publish</strong> your documentation (to your
+network or on the Internet), you need an extra plug-in called <code class="docutils literal notranslate"><span class="pre">rez_docbot</span></code>,
+which is explained in the next section.</p>
+</section>
+<section id="adding-rez-docbot-as-a-preprocess">
+<h3>Adding rez_docbot as a preprocess<a class="headerlink" href="#adding-rez-docbot-as-a-preprocess" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">rez_docbot</span></code> is a documentation publisher tool for Rez. There’s a page called
+<span class="xref std std-ref">rez_docbot:getting_started</span> which can help get you set up. Just in case
+that page goes down, I’ll summarize the steps here:</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>These steps assume you’re using <a class="reference external" href="https://pages.github.com">GitHub Pages</a> (or GitHub Enterprise).
+If you want to see <strong>other</strong> set-ups, <span class="xref std std-ref">rez_docbot:getting_started</span>
+goes over those in-depth.</p>
+</div>
+<p>Add this to your <a class="reference external" href="https://github.com/nerdvegas/rez/blob/fa3fff6f0b7b4b53bbb9baa4357ab42117d06356/src/rez/rezconfig.py">rezconfig.py</a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rez_docbot&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;publishers&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;authentication&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;YourUserName&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;some_access_token_here&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;github&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="s2">&quot;gh-pages&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;repository_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;git@github.com:SomeUserOrOrganization/</span><span class="si">{package.name}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;view_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://SomeUserOrOrganization.github.io/</span><span class="si">{package.name}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The important details are:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">view_url</span></code> is what will be auto-added into your Rez package.py <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a>
+attribute. Make sure it’s correct!</p></li>
+<li><p>You can publish your documentation to multiple places. However only the first
+found publisher is used during the auto-help generation step. So again, make
+sure the first publisher’s <code class="docutils literal notranslate"><span class="pre">view_url</span></code> is correct!</p></li>
+<li><p>You don’t have to hard-code an access token into your config, since that’s
+not great OpSec. Again, see <span class="xref std std-ref">rez_docbot:getting_started</span> to learn how to
+do that.</p></li>
+</ul>
+<p>Once you’ve added that, your rez_docbot configuration should be reading properly.
+You can double-check that by running <a class="reference internal" href="view_command.html#rez-sphinx-view-publish-url"><span class="std std-ref">rez_sphinx view publish-url</span></a>.</p>
+</section>
+</section>
+<section id="adding-documentation-automatically">
+<h2>Adding Documentation Automatically<a class="headerlink" href="#adding-documentation-automatically" title="Permalink to this headline">¶</a></h2>
+<p>By default, the <a class="reference internal" href="configuring_rez_sphinx.html#default-file-entries"><span class="std std-ref">init_options.default_files</span></a>, <code class="docutils literal notranslate"><span class="pre">user_documentation</span></code> and
+<code class="docutils literal notranslate"><span class="pre">developer_documentation</span></code> are added to your package.py <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> attribute each
+time the Rez package is built using <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Getting-Started#building-your-first-package">rez-build</a>.</p>
+<p>If you want to add other files to the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> during <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Getting-Started#building-your-first-package">rez-build</a>,</p>
+<p>you’ve got two options:</p>
+<ul class="simple">
+<li><p>Let <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> add your files for you</p></li>
+<li><p>Define the paths to the files manually.</p></li>
+</ul>
+<section id="let-rez-sphinx-write-to-help-for-your">
+<span id="automated-auto-help-appending"></span><h3>Let <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> write to <code class="docutils literal notranslate"><span class="pre">help</span></code> for your<a class="headerlink" href="#let-rez-sphinx-write-to-help-for-your" title="Permalink to this headline">¶</a></h3>
+<p>Simply add this snippet into any of your .rst files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
+    <span class="n">rez_sphinx_help</span><span class="p">:</span><span class="n">Optional</span> <span class="n">Label</span>
+</pre></div>
+</div>
+<p>Including “rez_sphinx_help:Optional Label” adds this to your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> attribute
+on-build:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">help</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;Existing documentation&quot;</span><span class="p">,</span> <span class="s2">&quot;README.md&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Optional Label&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{root}</span><span class="s2">/file_path.html&quot;</span><span class="p">],</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>And later the {root} gets replaced by your publisher documentation URL, using
+<code class="docutils literal notranslate"><span class="pre">view_url</span></code>.</p>
+<p>The found “Optional Label” logic goes like this:</p>
+<ul class="simple">
+<li><p>If there’s a label defined after like <code class="docutils literal notranslate"><span class="pre">rez_sphinx_help:Foo</span></code>, use it</p></li>
+<li><p>If not, get the current file’s header text</p></li>
+<li><p>If no found header, use the file’s name, instead.</p></li>
+</ul>
+</section>
+<section id="write-the-html-yourself">
+<h3>Write the .html, yourself<a class="headerlink" href="#write-the-html-yourself" title="Permalink to this headline">¶</a></h3>
+<p>You can always write the path to the .html that your .rst files generates by-hand.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">help</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;Existing documentation&quot;</span><span class="p">,</span> <span class="s2">&quot;README.md&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Hand Written Entry Here&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{root}</span><span class="s2">/file_path.html&quot;</span><span class="p">],</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>If you have a .rst file located at <code class="docutils literal notranslate"><span class="pre">{rez_package_root}/documentation/file_path.rst</span></code>,
+then you’d want to write <code class="docutils literal notranslate"><span class="pre">&quot;{root}/file_path.html&quot;</span></code>.</p>
+<p>This isn’t super recommended though because what if you move, rename or delete
+your file_path.rst file later? Then the next time documentation builds, <code class="docutils literal notranslate"><span class="pre">Hand</span>
+<span class="pre">Written</span> <span class="pre">Entry</span> <span class="pre">Here</span></code> will point to nothing. It’s better to use the automated
+<a class="reference internal" href="#automated-auto-help-appending"><span class="std std-ref">Let rez_sphinx write to help for your</span></a> method, instead.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configuring_rez_sphinx.html" class="btn btn-neutral float-left" title="Configuring rez_sphinx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx_as_a_release_hook.html" class="btn btn-neutral float-right" title="rez_sphinx As A Release Hook" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.preferences.preference_init &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rez_sphinx.preprocess" href="rez_sphinx.preprocess.html" />
+    <link rel="prev" title="rez_sphinx.preferences.preference_help_" href="rez_sphinx.preferences.preference_help_.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rez_sphinx.html">rez_sphinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.api.html">api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.cli.html">cli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.commands.html">commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.core.html">core</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.preferences.html">preferences</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference.html">preference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_configuration.html">preference_configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_help.html">preference_help</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_help_.html">preference_help_</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">preference_init</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">python</a> &raquo;</li>
+          <li><a href="rez_sphinx.html">rez_sphinx</a> &raquo;</li>
+          <li><a href="rez_sphinx.preferences.html">rez_sphinx.preferences</a> &raquo;</li>
+      <li>rez_sphinx.preferences.preference_init</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/rez_sphinx.preferences.preference_init.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rez_sphinx.preferences.preference_init">
+<span id="rez-sphinx-preferences-preference-init"></span><h1>rez_sphinx.preferences.preference_init<a class="headerlink" href="#module-rez_sphinx.preferences.preference_init" title="Permalink to this headline">¶</a></h1>
+<p>Some Sphinx files may be generated during <a class="reference internal" href="../init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>.</p>
+<p>This module is in charge of describing those files. e.g. what the file name is,
+its file content, how will Rez / Sphinx refer to that file, etc.</p>
+<p>This module is a companion module for <a class="reference internal" href="rez_sphinx.preferences.preference.html#module-rez_sphinx.preferences.preference" title="rez_sphinx.preferences.preference"><code class="xref py py-mod docutils literal notranslate"><span class="pre">preference</span></code></a>.</p>
+<dl class="py attribute">
+<dt id="rez_sphinx.preferences.preference_init.FILE_ENTRY">
+<code class="sig-name descname">FILE_ENTRY</code><a class="headerlink" href="#rez_sphinx.preferences.preference_init.FILE_ENTRY" title="Permalink to this definition">¶</a></dt>
+<dd><p>“base_text” (str): “The documentation text bodynto write to this file.”
+“path” (str): “inner/folder/some_file_name_without_an_extension”
+“add_tag” (bool, optional): If True, a <a class="reference internal" href="../auto_append_help_tags.html#rez-sphinx-tag"><span class="std std-ref">Auto-Append Help Tags</span></a> is added.
+“check_pre_build” (bool, optional): If True, ensure “path” has edits, pre-build.
+“title” (str, optional): “Custom title name if you want”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">schema.Schema</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="rez_sphinx.preferences.preference_init.Entry">
+<em class="property">class </em><code class="sig-name descname">Entry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A description for Sphinx files to generate during <a class="reference internal" href="../init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>.</p>
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.check_pre_build">
+<code class="sig-name descname">check_pre_build</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.check_pre_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.check_pre_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, make sure users have manually filled out the documentation.</p>
+<p>In short, check if the found documentation on-disk matches
+<a class="reference internal" href="#rez_sphinx.preferences.preference_init.Entry.get_default_text" title="rez_sphinx.preferences.preference_init.Entry.get_default_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Entry.get_default_text()</span></code></a>. If it’s the same then we know that the
+user hasn’t updated the documentation yet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>If True, run the check prior to Sphinx builds. If False, don’t.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.get_default_text">
+<code class="sig-name descname">get_default_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.get_default_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.get_default_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: The generated Sphinx documentation text body.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.get_relative_path">
+<code class="sig-name descname">get_relative_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.get_relative_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.get_relative_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: Get the path to this file, relative to the documentation source root.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.get_toctree_line">
+<code class="sig-name descname">get_toctree_line</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.get_toctree_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.get_toctree_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: The text to add into a Sphinx toctree which refers to this instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.validate_data">
+<em class="property">classmethod </em><code class="sig-name descname">validate_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.validate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.validate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if <code class="docutils literal notranslate"><span class="pre">data</span></code> is valid and, if so, create a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a><em>]</em>) – All content which describes the current instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The created instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#rez_sphinx.preferences.preference_init.Entry" title="rez_sphinx.preferences.preference_init.Entry">Entry</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rez_sphinx.preferences.preference_init.Entry.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#Entry.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.Entry.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write this instance to disk, starting at <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p>
+<p>This method may make inner directories as needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A directory to start writing the file within. Usually this is
+the documentation source root.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="rez_sphinx.preferences.preference_init.find_tags">
+<code class="sig-name descname">find_tags</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_init.html#find_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_init.find_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse <code class="docutils literal notranslate"><span class="pre">lines</span></code> for <a class="reference internal" href="../auto_append_help_tags.html#rez-sphinx-tag"><span class="std std-ref">rez_sphinx tags</span></a>.</p>
+<p>An expected tag looks like this:</p>
+<dl class="simple">
+<dt>::</dt><dd></dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lines</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The source-code lines of some Sphinx ReST file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Each hard-coded label + “destination”, if any.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rez_sphinx.preferences.preference_help_.html" class="btn btn-neutral float-left" title="rez_sphinx.preferences.preference_help_" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx.preprocess.html" class="btn btn-neutral float-right" title="rez_sphinx.preprocess" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

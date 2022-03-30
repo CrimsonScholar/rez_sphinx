@@ -1,0 +1,7 @@
+rez\_sphinx.core.environment
+----------------------------
+
+.. automodule:: rez_sphinx.core.environment
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.core.bootstrap &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.core.bootstrap</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.core.bootstrap</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Connect `Sphinx`_ to :ref:`rez_sphinx`.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
+
+<span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exception</span><span class="p">,</span> <span class="n">package_query</span><span class="p">,</span> <span class="n">path_control</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_REZ_SPHINX_BOOTSTRAP_LINES</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    # -- rez-sphinx start --</span>
+<span class="sd">    # -- DO NOT TOUCH --</span>
+<span class="sd">    #</span>
+<span class="sd">    # These lines are needed for rez-sphinx to work</span>
+<span class="sd">    #</span>
+<span class="sd">    from rez_sphinx import api</span>
+
+<span class="sd">    locals().update(api.bootstrap(locals()))</span>
+<span class="sd">    #</span>
+<span class="sd">    # If you want to add extra user customizations, please feel free to add any</span>
+<span class="sd">    # of them BELOW this line.</span>
+<span class="sd">    #</span>
+<span class="sd">    # -- rez-sphinx end --</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="p">)</span>
+<span class="n">_INTERSPHINX_MAPPING_KEY</span> <span class="o">=</span> <span class="s2">&quot;intersphinx_mapping&quot;</span>
+<span class="n">_REZ_REQUIRES_KEY</span> <span class="o">=</span> <span class="s2">&quot;requires&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_intersphinx_candidates</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Search dependencies of ``package`` for a `objects.inv`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            A Rez package which the user is attempting to build documentation for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[str]:</span>
+<span class="sd">            All Rez package family name requests which the user needs in</span>
+<span class="sd">            order to build their documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_filter_generic_requests</span><span class="p">(</span><span class="n">requests</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">ephemeral</span><span class="p">:</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot; ephemeral request.&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">weak</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_in_resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot; weak request.&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">weak</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">conflict</span><span class="p">:</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot; excluded request.&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+                <span class="c1"># If the user defines a package requirement in more than one</span>
+                <span class="c1"># place, that&#39;s okay because a Rez resolve will only get one</span>
+                <span class="c1"># single Package version. Just skip the duplicate requirement.</span>
+                <span class="c1">#</span>
+                <span class="k">continue</span>
+
+            <span class="n">output</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_filter_generic_requests</span><span class="p">(</span><span class="n">package_query</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+
+    <span class="n">test_name</span> <span class="o">=</span> <span class="n">_get_test_environment</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">test_name</span><span class="p">:</span>
+        <span class="c1"># If a test exists, we expect these to be in the resolve</span>
+        <span class="n">test_requires</span> <span class="o">=</span> <span class="n">_get_tests_requires_by_name</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">test_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If a test doesn&#39;t exist, we have to guess</span>
+        <span class="n">test_requires</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">request</span>
+            <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">_get_tests_requires</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_in_resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="n">test_requires</span> <span class="o">=</span> <span class="n">_filter_generic_requests</span><span class="p">(</span><span class="n">test_requires</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">test_requires</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">def</span> <span class="nf">_in_resolve</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``name`` is a Rez package family which is in the current resolve.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): A Rez package name. e.g. &quot;python&quot;, &quot;Sphinx&quot;, etc.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``name`` has a root path.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">path_control</span><span class="o">.</span><span class="n">get_installed_root</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">EnvironmentError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="c1"># TODO : Cache this result</span>
+<span class="k">def</span> <span class="nf">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a Sphinx-friendly copyright statement for some Rez ``package``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.package.Package): The source / install package to query from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found year or year + author name, if there is any author.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">authors</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">authors</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+
+    <span class="n">primary</span> <span class="o">=</span> <span class="n">authors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{year}</span><span class="s2">, </span><span class="si">{primary}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">primary</span><span class="o">=</span><span class="n">primary</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_environment_package</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find a Rez package describing ``name``.</span>
+
+<span class="sd">    Important:</span>
+<span class="sd">        This function assumes that ``name`` is in the current Rez resolve.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            The Rez package family name to search for. e.g. &quot;rez&quot;,</span>
+<span class="sd">            &quot;Sphinx&quot;, &quot;python&quot;, etc.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        EnvironmentError:</span>
+<span class="sd">            If ``name`` is not listed in your Rez environment.</span>
+<span class="sd">        RuntimeError:</span>
+<span class="sd">            If for some reason ``name`` exists but has no Rez valid Rez</span>
+<span class="sd">            package. If this happens, it&#39;s almost 100% some kind of Rez</span>
+<span class="sd">            build / release issue, caused by **user** error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        rez.packages.Package: The found package.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">path_control</span><span class="o">.</span><span class="n">get_installed_root</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">package</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">package</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s1">&#39;Found directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; for Rez package &quot;</span><span class="si">{name}</span><span class="s1">&quot; but no Rez package. &#39;</span>
+        <span class="s2">&quot;This should not happen.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_intersphinx_mappings</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every :ref`:objects.inv` file for each dependency of ``package``.</span>
+
+<span class="sd">    The found `objects.inv`_ will be used to populate a</span>
+<span class="sd">    `intersphinx_mapping`_ for ``package``. This enables</span>
+<span class="sd">    cross-linking between external Rez packages, as long as they were</span>
+<span class="sd">    also built by Sphinx.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The searched Rez packages by default are</span>
+
+<span class="sd">        - `requires`_</span>
+<span class="sd">        - :ref:`build_documentation_key`</span>
+
+<span class="sd">        If you want to search for other requests for your package, like</span>
+<span class="sd">        `private_build_requires`_ or `build_requires`_, consider</span>
+<span class="sd">        setting that using `rez-config`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            A Rez package which the user is attempting to build documentation for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, tuple[str] or str]: A suitable `intersphinx_mapping`_ for `Sphinx`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">_get_intersphinx_candidates</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="n">_get_environment_package</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">_get_package_objects_inv</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">def</span> <span class="nf">_get_package_objects_inv</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the path to a Rez package&#39;s `objects.inv`_ file.</span>
+
+<span class="sd">    The package may have a locally installed `objects.inv`_ or it</span>
+<span class="sd">    may be pointing to an Internet URL.  Either way, return the string</span>
+<span class="sd">    there.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            A Rez package which we assume may have built :ref:`rez_sphinx`</span>
+<span class="sd">            documentation and thus also has a `objects.inv`_ file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str:</span>
+<span class="sd">            The Internet URL or the absolute path for a directory</span>
+<span class="sd">            containing the &quot;objects.inv&quot; file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">help_</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">help</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">help_label</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_help_label</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; has no help. No &quot;</span><span class="si">%s</span><span class="s1">&quot; help found.&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">help_label</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; has single-line help. No &quot;</span><span class="si">%s</span><span class="s1">&quot; help found.&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">help_label</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="n">help_label</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Found: Package &quot;</span><span class="si">%s</span><span class="s1">&quot; has &quot;</span><span class="si">%s</span><span class="s1">&quot; defined.&#39;</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">help_label</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">path</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; has tests but no &quot;</span><span class="si">%s</span><span class="s1">&quot; is defined.&#39;</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">help_label</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_test_environment</span><span class="p">():</span>
+    <span class="c1"># TODO : Make this real</span>
+    <span class="c1"># Reference: https://github.com/nerdvegas/rez/issues/1261</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;REZ_CURRENT_TEST_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_tests_requires</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every requested requirement of ``package``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The Rez package which the user is trying to generate Sphinx</span>
+<span class="sd">            documentation for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[rez.utils.formatting.PackageRequest]:</span>
+<span class="sd">            All requests which the user needs in order to build their</span>
+<span class="sd">            documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tests</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tests</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># TODO : I need to add a way to get the exact tests being ran. And if this</span>
+    <span class="c1"># this function is called outside of a testing context, THEN fallback to</span>
+    <span class="c1"># the current logic that&#39;s below.  Ideally, the current test should be</span>
+    <span class="c1"># queriable by name. See the reference issue.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Reference: https://github.com/nerdvegas/rez/issues/1261</span>
+    <span class="c1">#</span>
+    <span class="c1"># Worse case scenario, fallback to using REZ_USED_REQUEST, instead.</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_keys</span><span class="p">():</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">tests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="c1"># It&#39;s a rez-test like ``tests = {&quot;build_documentation&quot;: &quot;bar&quot;}``.</span>
+        <span class="c1"># It defines no extra requirements so we can skip it.</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">request</span> <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_REZ_REQUIRES_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]}</span>
+
+
+<span class="k">def</span> <span class="nf">_get_tests_requires_by_name</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">test_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span><span class="p">:</span>
+        <span class="c1"># TODO : finish later</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;We expected package to have&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="c1"># TODO : finish</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;We expected package to have&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">_REZ_REQUIRES_KEY</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="c1"># This happens if ``test`` is like ``tests = {&quot;foo&quot;: &quot;bar&quot;}``,</span>
+        <span class="c1"># where no ``&quot;requires&quot;`` key is provided. Just ignore it, if that</span>
+        <span class="c1"># is the case.</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_get_major_minor_version</span><span class="p">(</span><span class="n">version</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert ``version`` into a &quot;major.minor&quot; string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        version (:class:`rez.vendor.version.version.Version`): The object to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The major + minor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO : We need to handle non-semantic versions here</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{version.major}</span><span class="s2">.</span><span class="si">{version.minor}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_nearest_caller_package</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Find the Rez package which called this function.</span>
+
+<span class="sd">    Important:</span>
+<span class="sd">        This function is fragile. Don&#39;t use it outside of the context of</span>
+<span class="sd">        :func:`bootstrap`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NoPackageFound: If no Rez package could be found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        rez.packages.Package: The found package.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">extract_stack</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">):</span>
+        <span class="n">caller_path</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">filename</span>  <span class="c1"># In Python 3, ``frame`` is :class:`FrameSummary`</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">caller_path</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># In Python 2, ``frame`` is a tuple</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found caller &quot;</span><span class="si">%s</span><span class="s1">&quot; file path.&#39;</span><span class="p">,</span> <span class="n">caller_path</span><span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">caller_path</span><span class="p">)</span>
+
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">package</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">package</span>
+
+    <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoPackageFound</span><span class="p">(</span>
+        <span class="s1">&#39;Directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; has no Rez package. &#39;</span>
+        <span class="s2">&quot;This exception is almost certainly a bug. &quot;</span>
+        <span class="s2">&quot;Please contact rez_sphinx maintainers.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_merge_intersphinx_maps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find and combine all links found within ``data`` and ``package``.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - All documentation exported directly from Rez packages</span>
+<span class="sd">          :ref:`rez_sphinx` will be preferred over what the user has previously set.</span>
+<span class="sd">        - However if a resolved Rez package has no found documentation and</span>
+<span class="sd">          there&#39;s an entry in</span>
+<span class="sd">          :ref:`rez_sphinx.intersphinx_settings.package_link_map`, that will be</span>
+<span class="sd">          used instead.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict[str, object]):</span>
+<span class="sd">            Incoming ``locals()`` data from an existing `Sphinx conf.py`_.</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The package to query from and extend ``data`` with extra</span>
+<span class="sd">            information. If no package is given, the package is</span>
+<span class="sd">            determined automatically from the caller&#39;s site.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, tuple[str] or str]: A suitable `intersphinx_mapping`_ for `Sphinx`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">existing_mapping</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_INTERSPHINX_MAPPING_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">existing_mapping</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Prefer intersphinx maps we&#39;ve found using Rez packages</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_intersphinx_mappings</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+
+    <span class="c1"># Use any known package paths</span>
+    <span class="c1">#</span>
+    <span class="c1"># - If the package is in the current resolve</span>
+    <span class="c1"># - There is no existing value</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">fallback_key</span><span class="p">,</span> <span class="n">fallback_link</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_package_link_map</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">_in_resolve</span><span class="p">(</span><span class="n">fallback_key</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fallback_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">fallback_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fallback_link</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<div class="viewcode-block" id="append_bootstrap_lines"><a class="viewcode-back" href="../../../api/rez_sphinx.core.bootstrap.html#rez_sphinx.api.append_bootstrap_lines">[docs]</a><span class="k">def</span> <span class="nf">append_bootstrap_lines</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Append :ref:`rez_sphinx` specific commands to a `Sphinx`_ conf.py file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            The absolute path to a conf.py which `Sphinx`_ uses to source</span>
+<span class="sd">            and build the user&#39;s documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">_REZ_SPHINX_BOOTSTRAP_LINES</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="bootstrap"><a class="viewcode-back" href="../../../api/rez_sphinx.core.bootstrap.html#rez_sphinx.api.bootstrap">[docs]</a><span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Gather Rez package information for `Sphinx`_.</span>
+
+<span class="sd">    This data is returned and used to auto-fill-out the values for</span>
+<span class="sd">    `Sphinx conf.py`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict[str, object]):</span>
+<span class="sd">            Incoming ``locals()`` data from an existing `Sphinx conf.py`_.</span>
+<span class="sd">        package (rez.packages.Package, optional):</span>
+<span class="sd">            The package to query from and extend ``data`` with extra</span>
+<span class="sd">            information. If no package is given, the package is</span>
+<span class="sd">            determined automatically from the caller&#39;s site.</span>
+<span class="sd">        skip (set[str], optional):</span>
+<span class="sd">            Any variable which you do not want :ref:`rez_sphinx build run` to</span>
+<span class="sd">            set.  This includes both the built-in variables, such as</span>
+<span class="sd">            ``&quot;intersphinx_mapping&quot;`` and even dynamic variables set using</span>
+<span class="sd">            :ref:`rez_sphinx.sphinx_conf_overrides`</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, object]: All Rez data to send to the `Sphinx conf.py`_.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">package</span> <span class="ow">or</span> <span class="n">_get_nearest_caller_package</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;author&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># Note: Not sure if &quot;, &quot; separation is expected. I couldn&#39;t find</span>
+        <span class="c1"># documentation about Sphinx on what the expected format is.</span>
+        <span class="c1">#</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">authors</span> <span class="ow">or</span> <span class="p">[])</span>
+
+    <span class="k">if</span> <span class="s2">&quot;copyright&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;copyright&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;extensions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">extensions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extensions&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="n">extensions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preference</span><span class="o">.</span><span class="n">get_sphinx_extensions</span><span class="p">())</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;extensions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">_INTERSPHINX_MAPPING_KEY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_INTERSPHINX_MAPPING_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">_merge_intersphinx_maps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;master_doc&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># Reference: https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-485117471</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;master_doc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_master_document_name</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;index&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;project&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">if</span> <span class="s2">&quot;project_copyright&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># An alias for &quot;copyright&quot;. It&#39;s only Sphinx 3.5+ but it&#39;s harmless in</span>
+        <span class="c1"># older Sphinx versions so we leave it in, regardless.</span>
+        <span class="c1">#</span>
+        <span class="c1"># Reference: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-project_copyright</span>
+        <span class="c1">#</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project_copyright&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;release&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># Confusingly, `Sphinx`_ treats `version`_ as a major.minor release.</span>
+        <span class="c1"># And `release`_ is the full version name.</span>
+        <span class="c1">#</span>
+        <span class="c1"># So a Rez version -&gt; Sphinx release</span>
+        <span class="c1"># So a Sphinx version -&gt; Nothing in Rez</span>
+        <span class="c1">#</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;release&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># Confusingly, `Sphinx`_ treats `version`_ as a major.minor release.</span>
+        <span class="c1"># And `release`_ is the full version name.</span>
+        <span class="c1">#</span>
+        <span class="c1"># So a Rez version -&gt; Sphinx release</span>
+        <span class="c1"># So a Sphinx version -&gt; Nothing in Rez</span>
+        <span class="c1">#</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_major_minor_version</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="n">overrides</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">value</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_sphinx_configuration_overrides</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span>
+    <span class="p">}</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Got extra conf.py overrides &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">overrides</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

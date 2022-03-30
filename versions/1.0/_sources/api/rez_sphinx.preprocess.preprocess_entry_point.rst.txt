@@ -1,0 +1,7 @@
+rez\_sphinx.preprocess.preprocess\_entry\_point
+-----------------------------------------------
+
+.. automodule:: rez_sphinx.preprocess.preprocess_entry_point
+   :members:
+   :undoc-members:
+   :show-inheritance:

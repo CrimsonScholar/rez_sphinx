@@ -1,0 +1,7 @@
+rez\_sphinx.preprocess.hook
+---------------------------
+
+.. automodule:: rez_sphinx.preprocess.hook
+   :members:
+   :undoc-members:
+   :show-inheritance:

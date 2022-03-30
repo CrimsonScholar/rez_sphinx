@@ -1,0 +1,7 @@
+rez\_sphinx.core.print\_format
+------------------------------
+
+.. automodule:: rez_sphinx.core.print_format
+   :members:
+   :undoc-members:
+   :show-inheritance:

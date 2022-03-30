@@ -1,0 +1,40 @@
+rez\_sphinx.core
+================
+
+.. toctree::
+   :maxdepth: 4
+
+   
+   api_builder <rez_sphinx.core.api_builder>
+   
+   bootstrap <rez_sphinx.core.bootstrap>
+   
+   configuration <rez_sphinx.core.configuration>
+   
+   constant <rez_sphinx.core.constant>
+   
+   doc_finder <rez_sphinx.core.doc_finder>
+   
+   environment <rez_sphinx.core.environment>
+   
+   exception <rez_sphinx.core.exception>
+   
+   generic <rez_sphinx.core.generic>
+   
+   package_change <rez_sphinx.core.package_change>
+   
+   package_query <rez_sphinx.core.package_query>
+   
+   path_control <rez_sphinx.core.path_control>
+   
+   print_format <rez_sphinx.core.print_format>
+   
+   schema_helper <rez_sphinx.core.schema_helper>
+   
+   schema_optional <rez_sphinx.core.schema_optional>
+   
+   sphinx_helper <rez_sphinx.core.sphinx_helper>
+.. automodule:: rez_sphinx.core
+   :members:
+   :undoc-members:
+   :show-inheritance:

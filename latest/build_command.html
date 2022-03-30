@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx build &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rez_sphinx config" href="config_command.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="user_documentation.html#all-commands">All Commands</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">build</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-build-run">rez_sphinx build run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a-note-about-python-2-3">A note about Python 2 / 3</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="config_command.html">config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="init_command.html">init</a></li>
+<li class="toctree-l3"><a class="reference internal" href="publish_command.html">rez_sphinx publish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="publish_command.html#rez-sphinx-publish-run">rez_sphinx publish run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="suggest_command.html">suggest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="view_command.html">view</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#advanced-topics">Advanced Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="user_documentation.html">User Documentation</a> &raquo;</li>
+      <li>rez_sphinx build</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/build_command.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rez-sphinx-build">
+<span id="id1"></span><h1>rez_sphinx build<a class="headerlink" href="#rez-sphinx-build" title="Permalink to this headline">¶</a></h1>
+<p>This parent command includes building documentation but also things like
+inspecting the built documentation and any other possible future commands.</p>
+<p>Another related command, <span class="xref std std-ref">rez_sphinx view sphinx-config</span>, is very useful
+for debugging builds.</p>
+<section id="rez-sphinx-build-run">
+<span id="id2"></span><h2>rez_sphinx build run<a class="headerlink" href="#rez-sphinx-build-run" title="Permalink to this headline">¶</a></h2>
+<p>This command takes documentation built using <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a> and
+generates .html. The basic steps go as follows</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Check that all <a class="reference internal" href="configuring_rez_sphinx.html#default-file-entries"><span class="std std-ref">init_options.default_files</span></a> have hand-written documentation</dt><dd><ul>
+<li><p>This check is disabled via <a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-init-options-check-default-files"><span class="std std-ref">init_options.check_default_files</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>As long as <code class="docutils literal notranslate"><span class="pre">--no-apidoc</span></code> isn’t specified and API generation is allowed</dt><dd><ul>
+<li><p>Auto-create .rst files using <code class="docutils literal notranslate"><span class="pre">sphinx-apidoc</span></code>.</p></li>
+<li><p>Add the root <a class="reference external" href="https://stackoverflow.com/questions/62822605/sphinx-modules-rst-warning-document-isnt-included-in-any-toctree">modules.rst</a> to the master <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/step-1">index.rst</a> file.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code></p></li>
+</ul>
+<p>The documentation is either available in <code class="docutils literal notranslate"><span class="pre">{root}/documentation/build</span></code> (the
+default location) or <code class="docutils literal notranslate"><span class="pre">{root}/build/documentation</span></code> if you passed you passed
+<code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">init</span> <span class="pre">--quickstart-arguments=&quot;--no-sep&quot;</span></code>.</p>
+</section>
+<section id="a-note-about-python-2-3">
+<span id="rez-sphinx-apidoc-templates"></span><h2>A note about Python 2 / 3<a class="headerlink" href="#a-note-about-python-2-3" title="Permalink to this headline">¶</a></h2>
+<p>The default toctree generated for the API documentation is super ugly.</p>
+<img alt="_images/python_2_api_toctree.png" src="_images/python_2_api_toctree.png" />
+<p>Starting from Sphinx 2.2+, which requires Python 3, the same toctree looks like this:</p>
+<img alt="_images/python_3_api_toctree.png" src="_images/python_3_api_toctree.png" />
+<p>So in short, if you want a pretty toctree, run <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> in Python 3.
+If you prefer the default tree, this behavior can be disabled using
+<a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-sphinx-apidoc-allow-apidoc-templates"><span class="std std-ref">sphinx-apidoc.allow_apidoc_templates</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config_command.html" class="btn btn-neutral float-right" title="rez_sphinx config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

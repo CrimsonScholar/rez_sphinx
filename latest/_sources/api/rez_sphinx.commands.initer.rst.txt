@@ -1,0 +1,7 @@
+rez\_sphinx.commands.initer
+---------------------------
+
+.. automodule:: rez_sphinx.commands.initer
+   :members:
+   :undoc-members:
+   :show-inheritance:
