@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.commands.initer &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.commands.initer &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -59,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -91,24 +94,28 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.commands.initer">
-<span id="rez-sphinx-commands-initer"></span><h1>rez_sphinx.commands.initer<a class="headerlink" href="#module-rez_sphinx.commands.initer" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-commands-initer"></span><h1>rez_sphinx.commands.initer<a class="headerlink" href="#module-rez_sphinx.commands.initer" title="Permalink to this headline"></a></h1>
 <p>The module which handles the <a class="reference internal" href="../init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a> command.</p>
 <dl class="py function">
-<dt id="rez_sphinx.commands.initer.init">
-<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package</span></em>, <em class="sig-param"><span class="n">quick_start_options</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/initer.html#init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.initer.init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connect the Rez package at <code class="docutils literal notranslate"><span class="pre">directory</span></code> to <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.commands.initer.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quick_start_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/initer.html#init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.initer.init" title="Permalink to this definition"></a></dt>
+<dd><p>Connect a Rez source <code class="docutils literal notranslate"><span class="pre">package</span></code> to <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This function generates many files directly underneath
-<code class="docutils literal notranslate"><span class="pre">directory</span></code> as well as changes your source Rez package.py
-file.  Save your work first before running this function!</p>
+<code class="docutils literal notranslate"><span class="pre">package</span></code> as well as changes your source Rez package.py
+file. Save your work first before running this function!</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)"><em>rez.packages.Package</em></a>) – The Rez package to apply documentation onto.</p></li>
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – The Rez package to apply documentation onto.</p></li>
 <li><p><strong>quick_start_options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – User-provided arguments to consider while resolving
 <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-quickstart.html">sphinx-quickstart</a> values.</p></li>
+<li><p><strong>skip_existing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If False, check for documentation and error if existing
+documentation is found. If True, instead of erroring, do nothing
+and return early.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, show <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-quickstart.html">sphinx-quickstart</a> output.</p></li>
 </ul>
 </dd>
 </dl>

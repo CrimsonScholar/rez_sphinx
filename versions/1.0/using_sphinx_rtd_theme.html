@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Using sphinx-rtd-theme &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Using sphinx-rtd-theme &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -48,12 +50,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#modifying-your-sphinx-theme">Modifying Your Sphinx Theme</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#globally-choosing-a-sphinx-theme">Globally Choosing A Sphinx Theme</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#locally-choosing-a-sphinx-theme">Locally Choosing A Sphinx Theme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parting-thoughts">Parting Thoughts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="adding_extra_interlinking.html">Adding Extra Interlinking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuring_rez_sphinx.html">Configuring rez_sphinx</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Auto-Append Help Tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Adding Documentation Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enable_external_website_publishing.html">Enabling External Website Publishing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enabling_rez_help_integration.html">Enabling rez-help Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx_as_a_release_hook.html">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch_publish_documentation.html">Batch-Publish Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html">Linking rez_sphinx With Other Documentation Tools</a></li>
 </ul>
 </li>
@@ -89,9 +95,7 @@
            <div itemprop="articleBody">
              
   <section id="using-sphinx-rtd-theme">
-<h1>Using sphinx-rtd-theme<a class="headerlink" href="#using-sphinx-rtd-theme" title="Permalink to this headline">¶</a></h1>
-<p>TODO make sure the tutorials in this page work
-TODO make sure that scope(“config”) doesn’t accidentally apply to downstream Rez packages</p>
+<h1>Using sphinx-rtd-theme<a class="headerlink" href="#using-sphinx-rtd-theme" title="Permalink to this headline"></a></h1>
 <p><a class="reference external" href="https://docs.readthedocs.io/en/stable/">readthedocs.io</a> has been a huge boon for the Python community. Its website
 front end for hosting documentation is a fantastic resource. It also open
 sourced a <a class="reference external" href="https://sphinx-themes.org/">sphinx theme</a> called <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>.</p>
@@ -99,19 +103,25 @@ sourced a <a class="reference external" href="https://sphinx-themes.org/">sphinx
 <img alt="_images/alabaster_example_page.png" src="_images/alabaster_example_page.png" />
 <p>And here’s the same page, using <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>.</p>
 <img alt="_images/sphinx_rtd_theme_example_page.png" src="_images/sphinx_rtd_theme_example_page.png" />
-<p><a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> supports changing your documentation theme on the fly.</p>
+<p>Most prefer the latter, <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span></code>, there’s three ways to apply <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>. All three
+methods apply during <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a>.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#globally-choosing-a-sphinx-theme"><span class="std std-ref">Globally Choosing A Sphinx Theme</span></a>, for all packages</p></li>
+<li><p><a class="reference internal" href="#locally-choosing-a-sphinx-theme"><span class="std std-ref">Locally Choosing A Sphinx Theme</span></a>, per-user, using rezconfig</p></li>
+<li><p><a class="reference internal" href="#define-a-scoped-package-config"><span class="std std-ref">Define a scoped package config</span></a>, per-package for all users</p></li>
+</ul>
 <section id="modifying-your-sphinx-theme">
-<h2>Modifying Your Sphinx Theme<a class="headerlink" href="#modifying-your-sphinx-theme" title="Permalink to this headline">¶</a></h2>
+<h2>Modifying Your Sphinx Theme<a class="headerlink" href="#modifying-your-sphinx-theme" title="Permalink to this headline"></a></h2>
 <p>Themes can be editted globally, across all Rez packages, or modified within
 individual Rez packages. Here’s how.</p>
 </section>
 <section id="globally-choosing-a-sphinx-theme">
-<span id="id1"></span><h2>Globally Choosing A Sphinx Theme<a class="headerlink" href="#globally-choosing-a-sphinx-theme" title="Permalink to this headline">¶</a></h2>
-<p>TODO make sure this tutorial works</p>
+<span id="id1"></span><h2>Globally Choosing A Sphinx Theme<a class="headerlink" href="#globally-choosing-a-sphinx-theme" title="Permalink to this headline"></a></h2>
 <p>Define a <a class="reference external" href="https://github.com/nerdvegas/rez/blob/fa3fff6f0b7b4b53bbb9baa4357ab42117d06356/src/rez/rezconfig.py">rezconfig.py</a> like you normally would and add this block into it.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;extra_requires&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sphinx_rtd_theme-1+&lt;2&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;extra_requires&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sphinx_rtd_theme-1&quot;</span><span class="p">],</span>
         <span class="s2">&quot;sphinx_conf_overrides&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;html_theme&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinx_rtd_theme&quot;</span><span class="p">,</span>
         <span class="p">},</span>
@@ -131,12 +141,13 @@ command:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rez-test your_package_name_here build_documentation
 </pre></div>
 </div>
-<p>Now your documentation should be running the <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>.</p>
+<p>This package, <code class="docutils literal notranslate"><span class="pre">your_package_name_here</span></code>, as well as all other packages that
+you build from now on will build with <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>!</p>
 </section>
 <section id="locally-choosing-a-sphinx-theme">
-<span id="id2"></span><h2>Locally Choosing A Sphinx Theme<a class="headerlink" href="#locally-choosing-a-sphinx-theme" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Locally Choosing A Sphinx Theme<a class="headerlink" href="#locally-choosing-a-sphinx-theme" title="Permalink to this headline"></a></h2>
 <section id="use-a-local-rezconfig-py">
-<h3>Use A Local rezconfig.py<a class="headerlink" href="#use-a-local-rezconfig-py" title="Permalink to this headline">¶</a></h3>
+<h3>Use A Local rezconfig.py<a class="headerlink" href="#use-a-local-rezconfig-py" title="Permalink to this headline"></a></h3>
 <p>If you want a theme on a specific Rez package and you don’t want enforce it
 across all users, you have two options:</p>
 <ul class="simple">
@@ -148,40 +159,54 @@ your local user anywhere. Like <code class="docutils literal notranslate"><span 
 </ul>
 </section>
 <section id="define-a-scoped-package-config">
-<span id="id3"></span><h3>Define a scoped package config<a class="headerlink" href="#define-a-scoped-package-config" title="Permalink to this headline">¶</a></h3>
-<p>TODO : Make sure this works!</p>
+<span id="id3"></span><h3>Define a scoped package config<a class="headerlink" href="#define-a-scoped-package-config" title="Permalink to this headline"></a></h3>
 <p>If you don’t like all that typing (I don’t blame you) or want something more
 permanent that persists on a Rez package, there’s another option. In your
 <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a> add this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">scope</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config</span><span class="p">:</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">optionvars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;extra_requires&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sphinx_rtd_theme-1+&lt;2&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;sphinx_conf_overrides&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;html_theme&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinx_rtd_theme&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-            <span class="p">},</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;your_package_name_here&quot;</span>
+
+<span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="c1"># You can also just add this directly to your ``{root}/documentation/conf.py``.</span>
+<span class="c1">#</span>
+<span class="c1"># ``html_theme = &quot;sphinx_rtd_theme&quot;``.</span>
+<span class="c1">#</span>
+<span class="c1"># In which case, omit ``rez_sphinx_configuration``</span>
+<span class="c1">#</span>
+<span class="n">rez_sphinx_configuration</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;sphinx_conf_overrides&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;html_theme&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinx_rtd_theme&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">tests</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;rez_sphinx build run&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;requires&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;rez_sphinx-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sphinx_rtd_theme-1&quot;</span><span class="p">,</span>  <span class="c1"># &lt;-- Add this here, manually</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Now you can just run <code class="docutils literal notranslate"><span class="pre">rez-test</span> <span class="pre">your_package_name_here</span> <span class="pre">build_documentation</span></code>
-without worry. Even if someone else builds the Rez package, this will still work.</p>
+without worry. No <a class="reference external" href="https://github.com/nerdvegas/rez/blob/fa3fff6f0b7b4b53bbb9baa4357ab42117d06356/src/rez/rezconfig.py">rezconfig.py</a> necessary. And even if someone else other
+than you builds the Rez package, this will still work.</p>
+</section>
+</section>
 <section id="parting-thoughts">
-<h4>Parting Thoughts<a class="headerlink" href="#parting-thoughts" title="Permalink to this headline">¶</a></h4>
+<h2>Parting Thoughts<a class="headerlink" href="#parting-thoughts" title="Permalink to this headline"></a></h2>
 <p>If you can define the theme globally, <a class="reference internal" href="#globally-choosing-a-sphinx-theme"><span class="std std-ref">Globally Choosing A Sphinx Theme</span></a>
 is usually the best option. However if you need a local solution, I highly
-recommend <a class="reference internal" href="#define-a-scoped-package-config"><span class="std std-ref">Define a scoped package config</span></a> over
-<a class="reference internal" href="#locally-choosing-a-sphinx-theme"><span class="std std-ref">Locally Choosing A Sphinx Theme</span></a> because it has the most consistent
+recommend <span class="xref std std-ref">define_a_scoped_package_config</span> over
+<span class="xref std std-ref">locally_choosing_a_sphinx_theme</span> because it has the most consistent
 results across multiple users. Albeit at the expense of more hard-coding into
 the Rez package.</p>
 <p>That’s a lot to know. The lengths mankind goes just for a few pretty colors,
 am I right?</p>
-<p>Anyway, <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> actually has a ton of configuration settings like
+<p>Anyway, <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> actually has a ton of configuration settings like
 this one. To learn more, see <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a>.</p>
-</section>
-</section>
 </section>
 </section>
 

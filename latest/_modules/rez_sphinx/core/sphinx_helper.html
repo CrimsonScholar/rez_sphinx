@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.sphinx_helper &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.sphinx_helper &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -75,10 +77,9 @@
 
 <span class="kn">from</span> <span class="nn">rez.vendor.version</span> <span class="kn">import</span> <span class="n">version</span> <span class="k">as</span> <span class="n">version_</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">doc_finder</span><span class="p">,</span> <span class="n">exception</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constant</span><span class="p">,</span> <span class="n">doc_finder</span><span class="p">,</span> <span class="n">exception</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">_SPHINX_NAME</span> <span class="o">=</span> <span class="s2">&quot;conf.py&quot;</span>
 <span class="n">_MISSING_TOCTREE_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.. toctree::&quot;</span><span class="p">,</span> <span class="s2">&quot;   :max-depth: 1&quot;</span><span class="p">)</span>
 
 
@@ -201,7 +202,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">_SPHINX_NAME</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">constant</span><span class="o">.</span><span class="n">SPHINX_CONF_NAME</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -259,7 +260,7 @@
 
         <span class="k">return</span> <span class="n">_scan_for_configuration_path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">_SPHINX_NAME</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">constant</span><span class="o">.</span><span class="n">SPHINX_CONF_NAME</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">path</span>
@@ -396,7 +397,6 @@
 <span class="sd">        str: The converted HTML link. e.g. &quot;page.html#some-thing&quot;.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO : Make this function cleaner, later. Preferably call whatever Sphinx calls</span>
     <span class="n">htmlized</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{path}</span><span class="s2">#</span><span class="si">{htmlized}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">htmlized</span><span class="o">=</span><span class="n">htmlized</span><span class="p">)</span></div>

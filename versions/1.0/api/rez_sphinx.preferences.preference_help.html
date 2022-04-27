@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preferences.preference_help &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preferences.preference_help &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -17,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="rez_sphinx.preferences.preference_help_" href="rez_sphinx.preferences.preference_help_.html" />
-    <link rel="prev" title="rez_sphinx.preferences.preference_configuration" href="rez_sphinx.preferences.preference_configuration.html" /> 
+    <link rel="prev" title="rez_sphinx.preferences.preference_environment" href="rez_sphinx.preferences.preference_environment.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -51,14 +53,17 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.preferences.html">preferences</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference.html">preference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_configuration.html">preference_configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_environment.html">preference_environment</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">preference_help</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_help_.html">preference_help_</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_init.html">preference_init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.validator.html">validator</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -91,11 +96,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.preferences.preference_help">
-<span id="rez-sphinx-preferences-preference-help"></span><h1>rez_sphinx.preferences.preference_help<a class="headerlink" href="#module-rez_sphinx.preferences.preference_help" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-preferences-preference-help"></span><h1>rez_sphinx.preferences.preference_help<a class="headerlink" href="#module-rez_sphinx.preferences.preference_help" title="Permalink to this headline"></a></h1>
 <p>A module to determine how new Rez help entries may be added to <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a>.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.preferences.preference_help.OPTIONS">
-<code class="sig-name descname">OPTIONS</code><a class="headerlink" href="#rez_sphinx.preferences.preference_help.OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference_help.OPTIONS">
+<span class="sig-name descname"><span class="pre">OPTIONS</span></span><a class="headerlink" href="#rez_sphinx.preferences.preference_help.OPTIONS" title="Permalink to this definition"></a></dt>
 <dd><p>A special function for sorting and a string key to refer to it.
 See <a class="reference internal" href="#rez_sphinx.preferences.preference_help.validate_sort" title="rez_sphinx.preferences.preference_help.validate_sort"><code class="xref py py-func docutils literal notranslate"><span class="pre">validate_sort()</span></code></a> for details.</p>
 <dl class="field-list simple">
@@ -106,8 +111,8 @@ See <a class="reference internal" href="#rez_sphinx.preferences.preference_help.
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference_help.validate_filter">
-<code class="sig-name descname">validate_filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_help.html#validate_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_help.validate_filter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference_help.validate_filter">
+<span class="sig-name descname"><span class="pre">validate_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_help.html#validate_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_help.validate_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Check if <code class="docutils literal notranslate"><span class="pre">item</span></code> is a viable filter type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -134,8 +139,8 @@ unique results from either of them.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference_help.validate_sort">
-<code class="sig-name descname">validate_sort</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_help.html#validate_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_help.validate_sort" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference_help.validate_sort">
+<span class="sig-name descname"><span class="pre">validate_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference_help.html#validate_sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference_help.validate_sort" title="Permalink to this definition"></a></dt>
 <dd><p>Check if <code class="docutils literal notranslate"><span class="pre">item</span></code> is a viable sort type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -161,7 +166,7 @@ kind of sort category.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rez_sphinx.preferences.preference_configuration.html" class="btn btn-neutral float-left" title="rez_sphinx.preferences.preference_configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx.preferences.preference_environment.html" class="btn btn-neutral float-left" title="rez_sphinx.preferences.preference_environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="rez_sphinx.preferences.preference_help_.html" class="btn btn-neutral float-right" title="rez_sphinx.preferences.preference_help_" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

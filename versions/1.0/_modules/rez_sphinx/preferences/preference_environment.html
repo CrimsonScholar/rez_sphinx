@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.preferences.preference_environment &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.preferences.preference_environment</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.preferences.preference_environment</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A preference module which specializes in parsing environment variables.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">schema</span> <span class="k">as</span> <span class="nn">schema_</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">collections_abc</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">schema_optional</span>
+
+<span class="n">_ENVIRONMENT_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;REZ_SPHINX_&quot;</span>
+<span class="n">_ENVIRONMENT_SEPARATOR</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+<span class="n">SEPARATOR</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_default</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the recorded, default value in ``schema``, at ``location``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        location (iter[str]): The dict keys to look within ``schema`` for.</span>
+<span class="sd">        schema (dict[str, dict[str, object] or object]): A nested dictionary.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError:</span>
+<span class="sd">            If dict key is found which we don&#39;t know how to process yet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object:</span>
+<span class="sd">            A class or an instance of a class. It could be any value.  If</span>
+<span class="sd">            ``location`` is the start or middle of a nested dict, then this</span>
+<span class="sd">            function always returns a class type. But if it&#39;s a &quot;leaf&quot; end of a</span>
+<span class="sd">            dict, it could be a class or instance of anything.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_guess_real_key</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">part</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">get_raw_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="n">part</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">return</span> <span class="n">key</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="o">.</span><span class="n">Use</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;Key &quot;</span><span class="si">{key}</span><span class="s1">&quot; is currently unsupported.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">current</span> <span class="o">=</span> <span class="n">schema</span>
+
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">location</span><span class="p">:</span>
+        <span class="n">real_key</span> <span class="o">=</span> <span class="n">_guess_real_key</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="n">real_key</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">current</span>
+
+
+<span class="k">def</span> <span class="nf">_to_environment_variable</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a dot-separated dict location to an environment variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            Some preferences path to check for. The list of possible values can</span>
+<span class="sd">            be queried using :ref:`rez_sphinx config show-all`.</span>
+<span class="sd">            e.g. ``&quot;sphinx-apidoc.allow_apidoc_templates&quot;``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str:</span>
+<span class="sd">            The equivalent environment variable for ``path``. e.g.</span>
+<span class="sd">            ``&quot;REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES&quot;``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="c1"># Preference paths may be named &quot;sphinx-apidoc.allow_api_doc_templates&quot;.</span>
+    <span class="c1"># We must convert &quot;- / .&quot; -&gt; &quot;_&quot; so we get the environment variable.</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">character</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">SEPARATOR</span><span class="p">]:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">character</span><span class="p">,</span> <span class="n">_ENVIRONMENT_SEPARATOR</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_ENVIRONMENT_PREFIX</span> <span class="o">+</span> <span class="n">path</span>
+
+
+<span class="k">def</span> <span class="nf">_create_parent_defaults</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a nested Python structure for ``parts``.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        ``context`` will be directly mutated by this function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parts (iter[str]):</span>
+<span class="sd">            The address to generate objects towards. e.g. ``[&quot;sphinx-apidoc&quot;]``.</span>
+<span class="sd">        schema (dict[str, dict[str, object] or object]):</span>
+<span class="sd">            A nested dictionary. This object&#39;s nested types will be &quot;mirrored&quot;</span>
+<span class="sd">            across to ``context``.</span>
+<span class="sd">        context (dict[str, dict[str, object] or object]):</span>
+<span class="sd">            The object which will have new entries added by this function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object:</span>
+<span class="sd">            The leaf location, that represents the end of ``parts``, which was</span>
+<span class="sd">            just created if it didn&#39;t already exist.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">context</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">location</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="n">class_type</span> <span class="o">=</span> <span class="n">_get_default</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="n">current</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">class_type</span><span class="p">())</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">context</span>
+
+
+<span class="k">def</span> <span class="nf">_read_variable</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">type_context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse and read the environment variable.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        $ export REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES=0</span>
+
+<span class="sd">        &gt;&gt;&gt; _read_variable(&quot;REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES&quot;, bool)</span>
+<span class="sd">        # Result: False</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        variable (str):</span>
+<span class="sd">            An environment variable to query. e.g.</span>
+<span class="sd">            ``&quot;REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES&quot;``.</span>
+<span class="sd">        type_context (callable or :class:`schema.Schema` or :class:`schema.Use`):</span>
+<span class="sd">            The object needed to &quot;interpret&quot; the returned variable value.  For</span>
+<span class="sd">            example, a user might set an environment variable as ``&quot;0&quot;``.  How</span>
+<span class="sd">            do we know that&#39;s meant to be a raw string or a bool (whose value</span>
+<span class="sd">            is meant to be ``False``).  The only way to tell for sure is to</span>
+<span class="sd">            pass ``bool`` to ``type_context``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError: If we don&#39;t know how to use ``type_context``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: The parsed output.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># This may happen if the user sets a string environment variable</span>
+        <span class="c1"># without wrapping it in &quot;&quot;s. This is pretty common so we should just</span>
+        <span class="c1"># escape the string for them.</span>
+        <span class="c1">#</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_context</span><span class="p">,</span> <span class="s2">&quot;validate&quot;</span><span class="p">):</span>  <span class="c1"># Types from :mod:`schema` use this method</span>
+        <span class="k">return</span> <span class="n">parsed</span>
+
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">type_context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">type_context</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s1">&#39;Context &quot;</span><span class="si">{type_context}</span><span class="s1">&quot; is not written yet. Please add it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">type_context</span><span class="o">=</span><span class="n">type_context</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_overrides"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_environment.html#rez_sphinx.preferences.preference_environment.get_overrides">[docs]</a><span class="k">def</span> <span class="nf">get_overrides</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every override which comes from the user&#39;s environment variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (dict[str, dict[str, object] or object]):</span>
+<span class="sd">            A nested dictionary used to discover and read environment variable data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, dict[str, object] or object]:</span>
+<span class="sd">            All found overrides, if any. Most of the time, this will be an</span>
+<span class="sd">            empty dict. Most people probably won&#39;t set overrides via</span>
+<span class="sd">            environment variables.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">paths</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_paths</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+    <span class="n">overrides</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">variable</span> <span class="o">=</span> <span class="n">_to_environment_variable</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Get parent / context information, for later</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">SEPARATOR</span><span class="p">)</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">type_context</span> <span class="o">=</span> <span class="n">_get_default</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_context</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Use</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span>
+            <span class="n">type_context</span>
+        <span class="p">):</span>
+            <span class="n">type_context</span> <span class="o">=</span> <span class="n">type_context</span><span class="o">.</span><span class="vm">__class__</span>
+
+        <span class="c1"># Construct the parent location and read the environment variable</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">_create_parent_defaults</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">overrides</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">_read_variable</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">type_context</span><span class="p">)</span>
+
+        <span class="c1"># Set ``overrides`` as needed</span>
+        <span class="k">if</span> <span class="n">tail</span><span class="p">:</span>
+            <span class="n">parent</span><span class="p">[</span><span class="n">tail</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parent</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">overrides</span></div>
+
+
+<div class="viewcode-block" id="get_paths"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_environment.html#rez_sphinx.preferences.preference_environment.get_paths">[docs]</a><span class="k">def</span> <span class="nf">get_paths</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get every preference path that depends on a schema.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (dict[str, dict[str, object] or object]): A nested dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[set[str], set[str]]:</span>
+<span class="sd">            Every preference path, split into two sets. The first set contains</span>
+<span class="sd">            &quot;normal&quot; preference paths which have no dynamic content. The second</span>
+<span class="sd">            set has at least some content that must be provided by the user in</span>
+<span class="sd">            order to fully resolve.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">exceptional_cases</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">get_raw_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Use</span><span class="p">):</span>
+                <span class="c1"># We wouldn&#39;t really know how to handle this situation. Just ignore it.</span>
+                <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">collections_abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                    <span class="c1"># We wouldn&#39;t really know how to handle this situation.</span>
+                    <span class="c1"># Just ignore it.</span>
+                    <span class="c1">#</span>
+                    <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+                <span class="k">continue</span>
+
+            <span class="n">inner_context</span> <span class="o">=</span> <span class="n">key</span>
+
+            <span class="k">if</span> <span class="n">context</span><span class="p">:</span>
+                <span class="n">inner_context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{context}{SEPARATOR}{key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+                    <span class="n">SEPARATOR</span><span class="o">=</span><span class="n">SEPARATOR</span><span class="p">,</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">inner_output</span><span class="p">,</span> <span class="n">extra_cases</span> <span class="o">=</span> <span class="n">_get_mapping</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">inner_context</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inner_output</span><span class="p">:</span>
+                <span class="c1"># When this happens, it&#39;s because a nested object is empty by</span>
+                <span class="c1"># default. We still want the context key, in this case.</span>
+                <span class="c1">#</span>
+                <span class="c1"># e.g. &quot;intersphinx_settings.package_link_map&quot;</span>
+                <span class="c1">#</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">extra_cases</span><span class="p">:</span>
+                <span class="c1"># Though child extra (exceptional) cases were found, they</span>
+                <span class="c1"># **parent** key is not an exception case! Since ``key`` is the</span>
+                <span class="c1"># parent in this situation, we must add it.</span>
+                <span class="c1">#</span>
+                <span class="c1"># e.g. &quot;intersphinx_settings.package_link_map&quot; is an</span>
+                <span class="c1"># exceptional case and here, we&#39;re adding</span>
+                <span class="c1"># &quot;intersphinx_settings&quot;.</span>
+                <span class="c1">#</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="n">exceptional_cases</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra_cases</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">inner_key</span> <span class="ow">in</span> <span class="n">inner_output</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inner_key</span><span class="p">,</span> <span class="n">schema_</span><span class="o">.</span><span class="n">Optional</span><span class="p">):</span>
+                    <span class="n">inner_key</span> <span class="o">=</span> <span class="n">schema_optional</span><span class="o">.</span><span class="n">get_raw_key</span><span class="p">(</span><span class="n">inner_key</span><span class="p">)</span>
+
+                <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{key}{SEPARATOR}{inner_key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+                        <span class="n">SEPARATOR</span><span class="o">=</span><span class="n">SEPARATOR</span><span class="p">,</span>
+                        <span class="n">inner_key</span><span class="o">=</span><span class="n">inner_key</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">exceptional_cases</span>
+
+    <span class="k">return</span> <span class="n">_get_mapping</span><span class="p">(</span>
+        <span class="n">schema</span><span class="p">,</span>
+        <span class="n">context</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

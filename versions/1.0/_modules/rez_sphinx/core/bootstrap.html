@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.bootstrap &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.bootstrap &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -70,7 +72,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;Connect `Sphinx`_ to :ref:`rez_sphinx`.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">textwrap</span>
@@ -81,7 +82,7 @@
 <span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
 
 <span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exception</span><span class="p">,</span> <span class="n">package_query</span><span class="p">,</span> <span class="n">path_control</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exception</span><span class="p">,</span> <span class="n">generic</span><span class="p">,</span> <span class="n">package_query</span><span class="p">,</span> <span class="n">path_control</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_REZ_SPHINX_BOOTSTRAP_LINES</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
@@ -101,8 +102,24 @@
 <span class="sd">    # -- rez-sphinx end --</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <span class="p">)</span>
-<span class="n">_INTERSPHINX_MAPPING_KEY</span> <span class="o">=</span> <span class="s2">&quot;intersphinx_mapping&quot;</span>
+
 <span class="n">_REZ_REQUIRES_KEY</span> <span class="o">=</span> <span class="s2">&quot;requires&quot;</span>
+
+<span class="n">_AUTHOR</span> <span class="o">=</span> <span class="s2">&quot;author&quot;</span>
+<span class="n">_COPYRIGHT</span> <span class="o">=</span> <span class="s2">&quot;copyright&quot;</span>
+<span class="n">_EXTENSIONS</span> <span class="o">=</span> <span class="s2">&quot;extensions&quot;</span>
+<span class="n">_INTERSPHINX_MAPPING_KEY</span> <span class="o">=</span> <span class="s2">&quot;intersphinx_mapping&quot;</span>
+<span class="n">_LATEX_DOCUMENTS</span> <span class="o">=</span> <span class="s2">&quot;latex_documents&quot;</span>
+<span class="n">_MAN_PAGES</span> <span class="o">=</span> <span class="s2">&quot;man_pages&quot;</span>
+<span class="n">_MASTER_DOC</span> <span class="o">=</span> <span class="s2">&quot;master_doc&quot;</span>
+<span class="n">_PROJECT</span> <span class="o">=</span> <span class="s2">&quot;project&quot;</span>
+<span class="n">_PROJECT_COPYRIGHT</span> <span class="o">=</span> <span class="s2">&quot;project_copyright&quot;</span>
+<span class="n">_RELEASE</span> <span class="o">=</span> <span class="s2">&quot;release&quot;</span>
+<span class="n">_VERSION</span> <span class="o">=</span> <span class="s2">&quot;version&quot;</span>
+
+<span class="n">_LATEX_FILE_EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;.tex&quot;</span>
+<span class="n">_LATEX_AUTHOR_SEPARATOR</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="se">\\</span><span class="s2">and &quot;</span>  <span class="c1"># Reference: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-latex_documents</span>
+<span class="n">_LATEX_THEME</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">_get_intersphinx_candidates</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
@@ -186,12 +203,11 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="c1"># TODO : Cache this result</span>
 <span class="k">def</span> <span class="nf">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get a Sphinx-friendly copyright statement for some Rez ``package``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        package (rez.package.Package): The source / install package to query from.</span>
+<span class="sd">        package (rez.packages.Package): The source / install package to query from.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The found year or year + author name, if there is any author.</span>
@@ -255,7 +271,7 @@
 <span class="sd">        The searched Rez packages by default are</span>
 
 <span class="sd">        - `requires`_</span>
-<span class="sd">        - :ref:`build_documentation_key`</span>
+<span class="sd">        - :ref:`build_documentation_key&#39;s requires &lt;rez_sphinx.build_documentation_key&gt;`</span>
 
 <span class="sd">        If you want to search for other requests for your package, like</span>
 <span class="sd">        `private_build_requires`_ or `build_requires`_, consider</span>
@@ -269,7 +285,7 @@
 <span class="sd">        dict[str, tuple[str] or str]: A suitable `intersphinx_mapping`_ for `Sphinx`_.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">_get_intersphinx_candidates</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
         <span class="n">package</span> <span class="o">=</span> <span class="n">_get_environment_package</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -336,8 +352,11 @@
 
 
 <span class="k">def</span> <span class="nf">_get_test_environment</span><span class="p">():</span>
-    <span class="c1"># TODO : Make this real</span>
+    <span class="sd">&quot;&quot;&quot;str: Get the current Rez test which is executing, if any.&quot;&quot;&quot;</span>
+    <span class="c1"># This environment variable will maybe one day make it into Rez.</span>
+    <span class="c1">#</span>
     <span class="c1"># Reference: https://github.com/nerdvegas/rez/issues/1261</span>
+    <span class="c1">#</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;REZ_CURRENT_TEST_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
 
@@ -355,23 +374,14 @@
 <span class="sd">            documentation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tests</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">tests</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span> <span class="ow">or</span> <span class="p">{}</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">tests</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="c1"># TODO : I need to add a way to get the exact tests being ran. And if this</span>
-    <span class="c1"># this function is called outside of a testing context, THEN fallback to</span>
-    <span class="c1"># the current logic that&#39;s below.  Ideally, the current test should be</span>
-    <span class="c1"># queriable by name. See the reference issue.</span>
-    <span class="c1">#</span>
-    <span class="c1"># Reference: https://github.com/nerdvegas/rez/issues/1261</span>
-    <span class="c1">#</span>
-    <span class="c1"># Worse case scenario, fallback to using REZ_USED_REQUEST, instead.</span>
-    <span class="c1">#</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_keys</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_keys</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">):</span>
         <span class="n">test</span> <span class="o">=</span> <span class="n">tests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
@@ -385,19 +395,38 @@
         <span class="c1">#</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="n">request</span> <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_REZ_REQUIRES_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]}</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_REZ_REQUIRES_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
 
 
 <span class="k">def</span> <span class="nf">_get_tests_requires_by_name</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">test_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find all `requires`_ from a given Rez test.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package): The Rez package to query from.</span>
+<span class="sd">        test_name (str): The `tests`_ key to get requires from.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If ``package`` has no defined `tests`_.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        set[rez.utils.formatting.PackageRequest]:</span>
+<span class="sd">            All found `requires`_ for ``test_name``, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span><span class="p">:</span>
-        <span class="c1"># TODO : finish later</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;We expected package to have&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">{package}</span><span class="s1">&quot; has no defined tests.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">test</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="c1"># TODO : finish</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;We expected package to have&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">{package}</span><span class="s1">&quot; has no defined &quot;</span><span class="si">{test_name}</span><span class="s1">&quot; test.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span>
+                <span class="n">test_name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
@@ -422,8 +451,16 @@
 <span class="sd">        str: The major + minor.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO : We need to handle non-semantic versions here</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{version.major}</span><span class="s2">.</span><span class="si">{version.minor}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{version.major}</span><span class="s2">.</span><span class="si">{version.minor}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># If there&#39;s no major / minor version, it means the package is not following SemVer.</span>
+        <span class="c1">#</span>
+        <span class="c1"># Reference: https://semver.org</span>
+        <span class="c1">#</span>
+        <span class="c1"># Just assume the user knows what they&#39;re doing and use the version, as-is.</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_nearest_caller_package</span><span class="p">():</span>
@@ -487,7 +524,7 @@
 <span class="sd">        dict[str, tuple[str] or str]: A suitable `intersphinx_mapping`_ for `Sphinx`_.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">existing_mapping</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_INTERSPHINX_MAPPING_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">existing_mapping</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_INTERSPHINX_MAPPING_KEY</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">existing_mapping</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="c1"># Prefer intersphinx maps we&#39;ve found using Rez packages</span>
@@ -498,7 +535,9 @@
     <span class="c1"># - If the package is in the current resolve</span>
     <span class="c1"># - There is no existing value</span>
     <span class="c1">#</span>
-    <span class="k">for</span> <span class="n">fallback_key</span><span class="p">,</span> <span class="n">fallback_link</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_package_link_map</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">fallback_key</span><span class="p">,</span> <span class="n">fallback_link</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_package_link_map</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="n">package</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">_in_resolve</span><span class="p">(</span><span class="n">fallback_key</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fallback_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
             <span class="n">output</span><span class="p">[</span><span class="n">fallback_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fallback_link</span>
 
@@ -515,7 +554,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
-        <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">_REZ_SPHINX_BOOTSTRAP_LINES</span><span class="p">)</span></div>
+        <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">generic</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">_REZ_SPHINX_BOOTSTRAP_LINES</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="bootstrap"><a class="viewcode-back" href="../../../api/rez_sphinx.core.bootstrap.html#rez_sphinx.api.bootstrap">[docs]</a><span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">()):</span>
@@ -542,64 +581,85 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">package</span> <span class="o">=</span> <span class="n">package</span> <span class="ow">or</span> <span class="n">_get_nearest_caller_package</span><span class="p">()</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">authors</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">master_document</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_master_document_name</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;index&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{package.name}</span><span class="s2"> Documentation&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="s2">&quot;</span><span class="si">{package.name}</span><span class="s2"> Documentation&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">=</span><span class="n">package</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;author&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_AUTHOR</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
         <span class="c1"># Note: Not sure if &quot;, &quot; separation is expected. I couldn&#39;t find</span>
         <span class="c1"># documentation about Sphinx on what the expected format is.</span>
         <span class="c1">#</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">authors</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_AUTHOR</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">authors</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;copyright&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;copyright&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_COPYRIGHT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_COPYRIGHT</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;extensions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
-        <span class="n">extensions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extensions&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">_EXTENSIONS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">extensions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_EXTENSIONS</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">())</span>
         <span class="n">extensions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preference</span><span class="o">.</span><span class="n">get_sphinx_extensions</span><span class="p">())</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;extensions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_EXTENSIONS</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">_INTERSPHINX_MAPPING_KEY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
         <span class="n">data</span><span class="p">[</span><span class="n">_INTERSPHINX_MAPPING_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">_merge_intersphinx_maps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;master_doc&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
-        <span class="c1"># Reference: https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-485117471</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;master_doc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_master_document_name</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;index&quot;</span>
+    <span class="k">if</span> <span class="n">_LATEX_DOCUMENTS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_LATEX_DOCUMENTS</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="n">master_document</span><span class="p">,</span>
+                <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">_LATEX_FILE_EXTENSION</span><span class="p">,</span>
+                <span class="n">title</span><span class="p">,</span>
+                <span class="n">_LATEX_AUTHOR_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">authors</span><span class="p">),</span>
+                <span class="n">_LATEX_THEME</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
 
-    <span class="k">if</span> <span class="s2">&quot;project&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">_MAN_PAGES</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">section_index</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_MAN_PAGES</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">master_document</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">authors</span><span class="p">,</span> <span class="n">section_index</span><span class="p">)</span>
+        <span class="p">]</span>
 
-    <span class="k">if</span> <span class="s2">&quot;project_copyright&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_MASTER_DOC</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="c1"># Reference:</span>
+        <span class="c1"># https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-485117471</span>
+        <span class="c1">#</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_MASTER_DOC</span><span class="p">]</span> <span class="o">=</span> <span class="n">master_document</span>
+
+    <span class="k">if</span> <span class="n">_PROJECT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_PROJECT</span><span class="p">]</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">if</span> <span class="n">_PROJECT_COPYRIGHT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
         <span class="c1"># An alias for &quot;copyright&quot;. It&#39;s only Sphinx 3.5+ but it&#39;s harmless in</span>
         <span class="c1"># older Sphinx versions so we leave it in, regardless.</span>
         <span class="c1">#</span>
-        <span class="c1"># Reference: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-project_copyright</span>
+        <span class="c1"># Reference:</span>
+        <span class="c1"># https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-project_copyright</span>
         <span class="c1">#</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project_copyright&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_PROJECT_COPYRIGHT</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_copyright</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;release&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_RELEASE</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
         <span class="c1"># Confusingly, `Sphinx`_ treats `version`_ as a major.minor release.</span>
         <span class="c1"># And `release`_ is the full version name.</span>
         <span class="c1">#</span>
         <span class="c1"># So a Rez version -&gt; Sphinx release</span>
         <span class="c1"># So a Sphinx version -&gt; Nothing in Rez</span>
         <span class="c1">#</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;release&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_RELEASE</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_VERSION</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
         <span class="c1"># Confusingly, `Sphinx`_ treats `version`_ as a major.minor release.</span>
         <span class="c1"># And `release`_ is the full version name.</span>
         <span class="c1">#</span>
         <span class="c1"># So a Rez version -&gt; Sphinx release</span>
         <span class="c1"># So a Sphinx version -&gt; Nothing in Rez</span>
         <span class="c1">#</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_major_minor_version</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">_VERSION</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_major_minor_version</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 
-    <span class="n">overrides</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">key</span><span class="p">:</span> <span class="n">value</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_sphinx_configuration_overrides</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip</span>
-    <span class="p">}</span>
-    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Got extra conf.py overrides &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">overrides</span><span class="p">)</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">merge_with_sphinx_overrides</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>

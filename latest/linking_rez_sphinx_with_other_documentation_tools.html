@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linking rez_sphinx With Other Documentation Tools &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Linking rez_sphinx With Other Documentation Tools &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -17,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Developer Documentation" href="developer_documentation.html" />
-    <link rel="prev" title="rez_sphinx As A Release Hook" href="rez_sphinx_as_a_release_hook.html" /> 
+    <link rel="prev" title="Batch-Publish Documentation" href="batch_publish_documentation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -47,8 +49,11 @@
 <li class="toctree-l3"><a class="reference internal" href="using_sphinx_rtd_theme.html">Using sphinx-rtd-theme</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adding_extra_interlinking.html">Adding Extra Interlinking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuring_rez_sphinx.html">Configuring rez_sphinx</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Auto-Append Help Tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Adding Documentation Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enable_external_website_publishing.html">Enabling External Website Publishing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enabling_rez_help_integration.html">Enabling rez-help Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx_as_a_release_hook.html">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch_publish_documentation.html">Batch-Publish Documentation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Linking rez_sphinx With Other Documentation Tools</a></li>
 </ul>
 </li>
@@ -84,14 +89,14 @@
            <div itemprop="articleBody">
              
   <section id="linking-rez-sphinx-with-other-documentation-tools">
-<h1>Linking rez_sphinx With Other Documentation Tools<a class="headerlink" href="#linking-rez-sphinx-with-other-documentation-tools" title="Permalink to this headline">¶</a></h1>
+<h1>Linking rez_sphinx With Other Documentation Tools<a class="headerlink" href="#linking-rez-sphinx-with-other-documentation-tools" title="Permalink to this headline"></a></h1>
 <p>Imagine you have 2 packages</p>
 <ul class="simple">
 <li><p>Your package</p></li>
 <li><p>Another package</p></li>
 </ul>
 <p>And you want to link that “Another package” to Your package. “Another package”
-is built with <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>, but not <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>. Can you still link the two?</p>
+is built with <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>, but not <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>. Can you still link the two?</p>
 <p>Yes. But it requires a small tweak to “Another package”. You need to add a
 “rez_sphinx objects.inv” key to its <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a> attribute:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;another_package&quot;</span>
@@ -109,14 +114,14 @@ is built with <a class="reference external" href="https://www.sphinx-doc.org/en/
 <p>Where <code class="docutils literal notranslate"><span class="pre">&quot;http://www.company-documentation.com/another_package/latest&quot;</span></code>
 is the top-level root of the built Sphinx documentation. And of course, it
 doesn’t have to be a URL. It could point to a directory on-disk instead.</p>
-<p>As long as that’s added, <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> mingles with existing documentation easily!</p>
+<p>As long as that’s added, <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> mingles with existing documentation easily!</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rez_sphinx_as_a_release_hook.html" class="btn btn-neutral float-left" title="rez_sphinx As A Release Hook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="batch_publish_documentation.html" class="btn btn-neutral float-left" title="Batch-Publish Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="developer_documentation.html" class="btn btn-neutral float-right" title="Developer Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.commands.builder.runner &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.commands.builder.runner &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -59,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -92,11 +95,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.commands.builder.runner">
-<span id="rez-sphinx-commands-builder-runner"></span><h1>rez_sphinx.commands.builder.runner<a class="headerlink" href="#module-rez_sphinx.commands.builder.runner" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-commands-builder-runner"></span><h1>rez_sphinx.commands.builder.runner<a class="headerlink" href="#module-rez_sphinx.commands.builder.runner" title="Permalink to this headline"></a></h1>
 <p>The module which handles the <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> command.</p>
 <dl class="py function">
-<dt id="rez_sphinx.commands.builder.runner.build">
-<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">api_mode</span><span class="o">=</span><span class="default_value">'full-auto'</span></em>, <em class="sig-param"><span class="n">api_options</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">no_api_doc</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.build" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.commands.builder.runner.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full-auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_api_doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.build" title="Permalink to this definition"></a></dt>
 <dd><p>Generate .html files from the Sphinx documentation in <code class="docutils literal notranslate"><span class="pre">directory</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -108,38 +111,46 @@ For example, should it be generated or not? See
 <li><p><strong>api_options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – User-provided arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>.</p></li>
 <li><p><strong>no_api_doc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, don’t build any API documentation. If False, API .rst
 files will be auto-generated just before <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a> is ran.</p></li>
+<li><p><strong>quiet</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, don’t print the directory where documentation is built to.
+If False, print it.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.NoPackageFound" title="rez_sphinx.core.exception.NoPackageFound"><strong>NoPackageFound</strong></a> – If <code class="docutils literal notranslate"><span class="pre">directory</span></code> is invalid.</p></li>
-<li><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.SphinxExecutionError" title="rez_sphinx.core.exception.SphinxExecutionError"><strong>SphinxExecutionError</strong></a> – If <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a> failed midway before it could be completed.</p></li>
-</ul>
+<dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.SphinxExecutionError" title="rez_sphinx.core.exception.SphinxExecutionError"><strong>SphinxExecutionError</strong></a> – If <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a> failed midway before it could be completed.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The directory on-disk where the built documentation now lives.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.commands.builder.runner.get_documentation_build">
-<code class="sig-name descname">get_documentation_build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#get_documentation_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.get_documentation_build" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.commands.builder.runner.get_documentation_build">
+<span class="sig-name descname"><span class="pre">get_documentation_build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#get_documentation_build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.get_documentation_build" title="Permalink to this definition"></a></dt>
 <dd><p>Find the directory where documentation must be built into.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The parent directory of <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The found path on-disk where documentation must be
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">source</span></code> was queried but it isn’t in a Rez package.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The found path on-disk where documentation must be
 built. This path does not need to exist (yet).</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.commands.builder.runner.get_documentation_source">
-<code class="sig-name descname">get_documentation_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#get_documentation_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.get_documentation_source" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.commands.builder.runner.get_documentation_source">
+<span class="sig-name descname"><span class="pre">get_documentation_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/builder/runner.html#get_documentation_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.builder.runner.get_documentation_source" title="Permalink to this definition"></a></dt>
 <dd><p>Find the directory which contains <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> or fail trying.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -149,10 +160,10 @@ built. This path does not need to exist (yet).</p>
 <dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.NoDocumentationFound" title="rez_sphinx.core.exception.NoDocumentationFound"><strong>NoDocumentationFound</strong></a> – If <code class="docutils literal notranslate"><span class="pre">root</span></code> needs to initialize some documentation.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The parent directory of <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>.</p>
+<dd class="field-odd"><p>Rez package + The parent directory of <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)">rez.packages.Package</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>

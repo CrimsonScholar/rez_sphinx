@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.package_query &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.package_query &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.configuration.html">configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.constant.html">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,24 +105,24 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.package_query">
-<span id="rez-sphinx-core-package-query"></span><h1>rez_sphinx.core.package_query<a class="headerlink" href="#module-rez_sphinx.core.package_query" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-core-package-query"></span><h1>rez_sphinx.core.package_query<a class="headerlink" href="#module-rez_sphinx.core.package_query" title="Permalink to this headline"></a></h1>
 <p>Find anything within Rez packages more easily.</p>
 <dl class="py function">
-<dt id="rez_sphinx.core.package_query.get_dependencies">
-<code class="sig-name descname">get_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/package_query.html#get_dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.package_query.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.package_query.get_dependencies">
+<span class="sig-name descname"><span class="pre">get_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/package_query.html#get_dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.package_query.get_dependencies" title="Permalink to this definition"></a></dt>
 <dd><p>Get the packages which <code class="docutils literal notranslate"><span class="pre">package</span></code> depends upon.</p>
-<p>This list doesn’t return all dependencies. Just the ones that <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+<p>This list doesn’t return all dependencies. Just the ones that <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>
 requires in order to function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)"><em>rez.packages.Package</em></a>) – A Rez package to check.</p>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – A Rez package to check.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Each package or “variant of a package” which <code class="docutils literal notranslate"><span class="pre">package</span></code> needs
 during documentation-building.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)">rez.packages.Package</a> or <a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Variant" title="(in Rez v2.106)">rez.packages.Variant</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)">rez.packages.Package</a> or <a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Variant" title="(in Rez v2.109)">rez.packages.Variant</a>]</p>
 </dd>
 </dl>
 </dd></dl>

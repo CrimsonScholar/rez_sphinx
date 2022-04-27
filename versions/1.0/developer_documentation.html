@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developer Documentation &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Developer Documentation &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,11 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="how_rez_and_sphinx_are_linked.html">How Rez And Sphinx Are Linked</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_interlinking_works.html">How interlinking works</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
@@ -73,8 +76,8 @@
            <div itemprop="articleBody">
              
   <section id="developer-documentation">
-<h1>Developer Documentation<a class="headerlink" href="#developer-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This page is for people who are interested in how <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> ticks.
+<h1>Developer Documentation<a class="headerlink" href="#developer-documentation" title="Permalink to this headline"></a></h1>
+<p>This page is for people who are interested in how <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> ticks.
 It’s a pretty simple tool but there’s a couple places that deserve extra
 attention because there’s a bit complex or assume things about the user’s
 environment.</p>
@@ -82,8 +85,8 @@ environment.</p>
 <ul class="simple">
 <li><p>The <a class="reference internal" href="how_rez_and_sphinx_are_linked.html"><span class="doc">generated conf.py file</span></a></p></li>
 <li><p>The <a class="reference internal" href="api/rez_sphinx.preprocess.preprocess_entry_point.html#module-rez_sphinx.preprocess.preprocess_entry_point" title="rez_sphinx.preprocess.preprocess_entry_point"><code class="xref py py-mod docutils literal notranslate"><span class="pre">preprocess_entry_point</span></code></a> module, which is used to make auto-help
-<a class="reference internal" href="auto_append_help_tags.html"><span class="doc">Auto-Append Help Tags</span></a> work</p></li>
-<li><p>Understanding the fact that <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> has no publishing capabilities
+<a class="reference internal" href="auto_append_help_tags.html"><span class="doc">Adding Documentation Automatically</span></a> work</p></li>
+<li><p>Understanding the fact that <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> has no publishing capabilities
 by default and instead delegates all of that work to an optional dependency,
 <span class="xref std std-ref">rez_docbot</span>.</p></li>
 <li><p>TODO Add details once we have a release plugin. Describe that here.</p>
@@ -96,6 +99,7 @@ works and how to set that up</p></li>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="how_rez_and_sphinx_are_linked.html">How Rez And Sphinx Are Linked</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_interlinking_works.html">How interlinking works</a></li>
 </ul>
 </div>
 </section>

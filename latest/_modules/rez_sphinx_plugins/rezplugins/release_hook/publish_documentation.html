@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx_plugins.rezplugins.release_hook.publish_documentation &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx_plugins.rezplugins.release_hook.publish_documentation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx_plugins.rezplugins.release_hook.publish_documentation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The main module for defining pre-release and post-release behavior.</span>
+
+<span class="sd">See :class:`PublishDocumentation` for details.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">from</span> <span class="nn">rez</span> <span class="kn">import</span> <span class="n">exceptions</span><span class="p">,</span> <span class="n">packages</span><span class="p">,</span> <span class="n">release_hook</span><span class="p">,</span> <span class="n">resolved_context</span>
+<span class="kn">from</span> <span class="nn">rez.config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">rez.vendor.schema</span> <span class="kn">import</span> <span class="n">schema</span>
+
+<span class="n">_REZ_SPHINX_PACKAGE_FAMILY_NAME</span> <span class="o">=</span> <span class="s2">&quot;rez_sphinx&quot;</span>
+
+<span class="n">_DEFAULT_LABEL</span> <span class="o">=</span> <span class="s2">&quot;Home Page&quot;</span>
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># TODO : Make sure this plugin passes gracefully if it is run on a package that</span>
+<span class="c1"># has no rez_sphinx documentation created</span>
+
+
+<div class="viewcode-block" id="PublishDocumentation"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.PublishDocumentation">[docs]</a><span class="k">class</span> <span class="nc">PublishDocumentation</span><span class="p">(</span><span class="n">release_hook</span><span class="o">.</span><span class="n">ReleaseHook</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The class which runs pre-release / post-release methods.</span>
+
+<span class="sd">    - On pre-release: Add help keys (See :ref:`auto_append_help_tags`).</span>
+<span class="sd">    - On post-release: Publish the documentation to remote (See</span>
+<span class="sd">      :ref:`rez_sphinx publish run`).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PublishDocumentation.name"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.PublishDocumentation.name">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: The name to refer to this plug-in class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;publish_documentation&quot;</span></div>
+
+<div class="viewcode-block" id="PublishDocumentation.pre_release"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.PublishDocumentation.pre_release">[docs]</a>    <span class="k">def</span> <span class="nf">pre_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">install_path</span><span class="p">,</span> <span class="n">variants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modify the `help`_ attribute, if needed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user (str):</span>
+<span class="sd">                The current user name. e.g. ``$USER``.</span>
+<span class="sd">            install_str (str):</span>
+<span class="sd">                The directory on-disk where the package and its variants will</span>
+<span class="sd">                be released to.</span>
+<span class="sd">            variants (list[rez.packages.Variant], optional):</span>
+<span class="sd">                The specific variant(s) to release. If no variant was</span>
+<span class="sd">                specified, this parameter is passed ``None``, implying that all</span>
+<span class="sd">                variants will be released.</span>
+<span class="sd">            **kwargs (dict[str, object], optional):</span>
+<span class="sd">                Extra options to include in the release, if any.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO : This code is cursed. Find a better way to do this. Seriously.</span>
+        <span class="c1"># Easily the worst code I&#39;ve ever written.</span>
+        <span class="c1">#</span>
+        <span class="n">current_frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span>
+        <span class="n">caller_frame</span> <span class="o">=</span> <span class="n">current_frame</span><span class="o">.</span><span class="n">f_back</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">code_context</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span><span class="p">(</span>
+            <span class="n">caller_frame</span>
+        <span class="p">)</span>
+
+        <span class="c1"># f_locals is the local namespace seen by the frame</span>
+        <span class="n">caller_instance</span> <span class="o">=</span> <span class="n">caller_frame</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">caller_instance</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_has_rez_sphinx_documentation</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">replace_help</span><span class="p">(</span><span class="n">caller_instance</span><span class="o">.</span><span class="n">package</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PublishDocumentation.post_release"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.PublishDocumentation.post_release">[docs]</a>    <span class="k">def</span> <span class="nf">post_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">install_path</span><span class="p">,</span> <span class="n">variants</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send the built documentation to remote server(s), if needed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user (str):</span>
+<span class="sd">                The current user name. e.g. ``$USER``.</span>
+<span class="sd">            install_str (str):</span>
+<span class="sd">                The directory on-disk where the installed (released) Rez</span>
+<span class="sd">                package and its variants were built to.</span>
+<span class="sd">            variants (list[rez.packages.Variant], optional):</span>
+<span class="sd">                The specific variant(s) which were released. If no variant was</span>
+<span class="sd">                specified, this parameter is passed ``None``, implying that all</span>
+<span class="sd">                variants were released.</span>
+<span class="sd">            **kwargs (dict[str, object], optional):</span>
+<span class="sd">                Extra options to include in the release, if any.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO : Make this real</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;POST RELEASE&quot;</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_get_configured_rez_sphinx</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Find the Rez package pointing to our installation of :ref:`rez_sphinx`.</span>
+
+<span class="sd">    Since part of :ref:`adding_rez_sphinx_as_a_preprocess` tells the user to</span>
+<span class="sd">    add to `plugin_path`_, we **assume** that this is defined somewhere.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`rez.developer_package.DeveloperPackage` or None: The found package.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">plugin_path</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="n">_get_nearest_rez_package</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">package</span> <span class="ow">and</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">_REZ_SPHINX_PACKAGE_FAMILY_NAME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">package</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_get_help_line</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the line within ``text`` that has the JSON content to decode.</span>
+
+<span class="sd">    Important:</span>
+<span class="sd">        This function assumes that the JSON dict in ``text`` does not span</span>
+<span class="sd">        multiple lines!</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Raw command output to parse.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If nothing in ``text`` matches the expected dict line.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found line.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">line</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Text &quot;</span><span class="si">{text}</span><span class="s1">&quot; has no expected dict.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_get_nearest_rez_package</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assuming that `directory` is on or inside a Rez package, find the nearest Rez package.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            The absolute path to a folder on disk. This folder should be</span>
+<span class="sd">            a sub-folder inside of a Rez package to the root of the Rez package.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`rez.developer_package.DeveloperPackage` or None: The found package.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="c1"># It could be a Python wheel / egg file or something.</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="n">previous</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">original</span> <span class="o">=</span> <span class="n">directory</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">directory</span> <span class="ow">and</span> <span class="n">previous</span> <span class="o">!=</span> <span class="n">directory</span><span class="p">:</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">directory</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">packages</span><span class="o">.</span><span class="n">get_developer_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span>
+            <span class="c1"># This happens if the package in `directory` is missing required data</span>
+            <span class="n">exceptions</span><span class="o">.</span><span class="n">PackageMetadataError</span><span class="p">,</span>
+            <span class="c1"># This happens if the package in `directory` is written incorrectly</span>
+            <span class="n">schema</span><span class="o">.</span><span class="n">SchemaError</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Directory &quot;</span><span class="si">%s</span><span class="s1">&quot; found an invalid Rez package.&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s1">&#39;Directory &quot;</span><span class="si">%s</span><span class="s1">&quot; is either inaccessible or is not part of a Rez package.&#39;</span><span class="p">,</span>
+        <span class="n">original</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_get_resolved_help</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find and auto-generated a `help`_ attribute for our Rez package.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context (rez.resolved_context.ResolvedContext):</span>
+<span class="sd">            The context which contains :ref:`rez_sphinx` and :ref:`rez_docbot`.</span>
+<span class="sd">            (We need :ref:`rez_sphinx` at minimum. But :ref:`rez_docbot` is</span>
+<span class="sd">            needed for getting network publishing information).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: The found `help`_ values, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent_environment</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;REZ_CONFIG_FILE&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">parent_environment</span><span class="p">[</span><span class="s2">&quot;REZ_CONFIG_FILE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;REZ_CONFIG_FILE&quot;</span><span class="p">]</span>
+
+    <span class="n">process</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+        <span class="n">command</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">parent_environ</span><span class="o">=</span><span class="n">parent_environment</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stdout</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Got raw `help` attribute, &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">stdout</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_get_help_line</span><span class="p">(</span><span class="n">stdout</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_get_sphinx_context</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get a Rez context for ``rez_sphinx``, if possible.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        rez.packages.Package or None:</span>
+<span class="sd">            If the context cannot be found, cannot be solved, or as some other</span>
+<span class="sd">            kind of issue, this function returns nothing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO : Prevent this from being called recursively, if possible</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">_get_configured_rez_sphinx</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="p">:</span>
+        <span class="c1"># TODO : Consider replacing the log calls in this function with print,</span>
+        <span class="c1"># since `foo` is called without logger handlers?</span>
+        <span class="c1">#</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;Skipping preprocessor because rez_sphinx wasn&#39;t set up properly. &quot;</span>
+            <span class="s1">&#39;Please set &quot;plugin_path&quot; and try again.&#39;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># TODO : Also I think we need to detect if docbot is needed and only</span>
+    <span class="c1"># include it if needed (e.g. have some mechanism so users can build</span>
+    <span class="c1"># locally, if the explicitly want that)</span>
+    <span class="c1">#</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;.rez_sphinx.feature.docbot_plugin==1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{package.name}</span><span class="s2">==</span><span class="si">{package.version}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="n">resolved_context</span><span class="o">.</span><span class="n">ResolvedContext</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">context</span>
+
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Request &quot;</span><span class="si">%s</span><span class="s1">&quot; failed to resolve. Cannot continue&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="expand_help"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.expand_help">[docs]</a><span class="k">def</span> <span class="nf">expand_help</span><span class="p">(</span><span class="n">help_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert ``help_`` into a list of lists.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        help_ (list[str] or str or None): The found Rez package help, if any.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: Each found label + documentation entry, if any.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">help_</span>
+
+    <span class="k">return</span> <span class="p">[[</span><span class="n">_DEFAULT_LABEL</span><span class="p">,</span> <span class="n">help_</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="replace_help"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.replace_help">[docs]</a><span class="k">def</span> <span class="nf">replace_help</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Replace the `package help`_ in ``data`` with auto-found Sphinx documentation.</span>
+
+<span class="sd">    If no :ref:`rez_sphinx tags &lt;rez_sphinx tag&gt;` are found, this function will</span>
+<span class="sd">    exit early and do nothing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source Rez package whose `help`_ attribute will be queried and changed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">_get_sphinx_context</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">help_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">expand_help</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">help</span><span class="p">))</span>
+
+    <span class="n">package_source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;rez_sphinx suggest preprocess-help &#39;</span><span class="si">{package_source_root}</span><span class="s2">&#39; &#39;</span><span class="si">{help_}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">package_source_root</span><span class="o">=</span><span class="n">package_source_root</span><span class="p">,</span>
+            <span class="n">help_</span><span class="o">=</span><span class="n">help_</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Executing command &quot;</span><span class="si">%s</span><span class="s1">&quot; in the rez_sphinx environment.&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+
+    <span class="n">package</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_resolved_help</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">package</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_has_rez_sphinx_documentation</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Need to write this&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="register_plugin"><a class="viewcode-back" href="../../../../api/rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.html#rez_sphinx_plugins.rezplugins.release_hook.publish_documentation.register_plugin">[docs]</a><span class="k">def</span> <span class="nf">register_plugin</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;PublishDocumentation: Add this plug-in to Rez.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">PublishDocumentation</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

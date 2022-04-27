@@ -4,19 +4,21 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuring rez_sphinx &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Configuring rez_sphinx &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Auto-Append Help Tags" href="auto_append_help_tags.html" />
+    <link rel="next" title="Adding Documentation Automatically" href="auto_append_help_tags.html" />
     <link rel="prev" title="Adding Extra Interlinking" href="adding_extra_interlinking.html" /> 
 </head>
 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -49,27 +51,16 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Configuring rez_sphinx</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#how-to-configure-all-rez-packages">How To Configure All Rez Packages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#per-package-configuration">Per-Package Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#api-toctree-line">api_toctree_line</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#auto-help-filter-by">auto_help.filter_by</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#auto-help-sort-order">auto_help.sort_order</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#build-documentation-key">build_documentation_key</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#documentation-root">documentation_root</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#extra-requires">extra_requires</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#init-options-check-default-files">init_options.check_default_files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#init-options-default-files">init_options.default_files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#intersphinx-settings-package-link-map">intersphinx_settings.package_link_map</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-apidoc-allow-apidoc-templates">sphinx-apidoc.allow_apidoc_templates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-apidoc-arguments">sphinx-apidoc.arguments</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-apidoc-enable-apidoc">sphinx-apidoc.enable_apidoc</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-quickstart">sphinx-quickstart</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-conf-overrides">sphinx_conf_overrides</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-conf-overrides-add-module-names">sphinx_conf_overrides.add_module_names</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-conf-overrides-master-doc">sphinx_conf_overrides.master_doc</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sphinx-extensions">sphinx_extensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-variable-configuration">Environment Variable Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#all-options">All Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#disabling-build-documentation-key">Disabling build_documentation_key</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Auto-Append Help Tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Adding Documentation Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enable_external_website_publishing.html">Enabling External Website Publishing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enabling_rez_help_integration.html">Enabling rez-help Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx_as_a_release_hook.html">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch_publish_documentation.html">Batch-Publish Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html">Linking rez_sphinx With Other Documentation Tools</a></li>
 </ul>
 </li>
@@ -105,21 +96,24 @@
            <div itemprop="articleBody">
              
   <section id="configuring-rez-sphinx">
-<h1>Configuring rez_sphinx<a class="headerlink" href="#configuring-rez-sphinx" title="Permalink to this headline">¶</a></h1>
-<p>All <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> commands and flags have many ways to be changed for your
+<h1>Configuring rez_sphinx<a class="headerlink" href="#configuring-rez-sphinx" title="Permalink to this headline"></a></h1>
+<p>All <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> commands and flags have many ways to be changed for your
 needs.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Every setting here can be queried at any time using the <a class="reference internal" href="config_command.html#rez-sphinx-config-show-list-all"><span class="std std-ref">rez_sphinx config show –list-all</span></a> command.</p>
+<p>Every setting here can be queried at any time using the <a class="reference internal" href="config_command.html#rez-sphinx-config-show-all"><span class="std std-ref">rez_sphinx config show-all</span></a> command.</p>
 </div>
-<p>There’s two main ways to configure documentation:</p>
+<p>There’s 3 ways to configure documentation:</p>
+<p>(This list is “weakest to strongest order”. Global is weakest, environment
+variable is strongest)</p>
 <ul class="simple">
 <li><p>Globally, using <a class="reference internal" href="#global-configuration"><span class="std std-ref">How To Configure All Rez Packages</span></a></p></li>
 <li><p>Within an individual package, using <a class="reference internal" href="#per-package-configuration"><span class="std std-ref">Per-Package Configuration</span></a></p></li>
+<li><p>Using <a class="reference internal" href="#environment-variable-configuration"><span class="std std-ref">Environment Variable Configuration</span></a></p></li>
 </ul>
 <p>Which method you choose will depend on what your intended effect is and your
 pipeline’s constraints. This page serves as a guide to both explain every
-<a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> setting and also why you may want one approach, versus
+<a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> setting and also why you may want one approach, versus
 another.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -128,9 +122,9 @@ another.</p>
 “per-package” counterpart very easily.</p>
 </div>
 <section id="how-to-configure-all-rez-packages">
-<span id="global-configuration"></span><h2>How To Configure All Rez Packages<a class="headerlink" href="#how-to-configure-all-rez-packages" title="Permalink to this headline">¶</a></h2>
+<span id="global-configuration"></span><h2>How To Configure All Rez Packages<a class="headerlink" href="#how-to-configure-all-rez-packages" title="Permalink to this headline"></a></h2>
 <p>Rez allows configuration files to influence how it behaves. You can read about
-that more at <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#overview">Configuring Rez</a>. <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> works the same way. It
+that more at <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#overview">Configuring Rez</a>. <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> works the same way. It
 simply places its settings under <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#optionvars">optionvars</a>, which is a dedicated
 configuration space for “custom” settings.</p>
 <p>Anything you set here will be applied to all Rez packages. It also applies
@@ -138,14 +132,13 @@ to those packages immediately. Care and caution should be taken when
 rolling out any change using <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#optionvars">optionvars</a>.</p>
 </section>
 <section id="per-package-configuration">
-<span id="id1"></span><h2>Per-Package Configuration<a class="headerlink" href="#per-package-configuration" title="Permalink to this headline">¶</a></h2>
-<p>As mentioned in other sections, this page assumes that you’re changing <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+<span id="id1"></span><h2>Per-Package Configuration<a class="headerlink" href="#per-package-configuration" title="Permalink to this headline"></a></h2>
+<p>As mentioned in other sections, this page assumes that you’re changing <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>
 configuration settings at the “global” level, using <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#optionvars">optionvars</a>. But you can
 also apply it on an individual Rez package, like so:</p>
-<p>TODO : Make sure this tutorial works</p>
 <ul class="simple">
-<li><p>Define a new attribute called <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span></code> in your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a></p></li>
-<li><p>Add your settings to this <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span></code> variable like you normally would.</p></li>
+<li><p>Define a new attribute called <code class="docutils literal notranslate"><span class="pre">rez_sphinx_configuration</span></code> in your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a></p></li>
+<li><p>Add your settings to this variable like you normally would.</p></li>
 </ul>
 <p>So if this is the “global” approach:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
@@ -158,17 +151,52 @@ also apply it on an individual Rez package, like so:</p>
 </pre></div>
 </div>
 <p>This is what the equivalent would look like, in a <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rez_sphinx</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rez_sphinx_configuration</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;sphinx-apidoc&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;allow_apidoc_templates&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>and that’s it. All sections in this page can be converted this way.</p>
+<p>and that’s it. All settings in this page can be defined this way.</p>
 </section>
+<section id="environment-variable-configuration">
+<span id="id2"></span><h2>Environment Variable Configuration<a class="headerlink" href="#environment-variable-configuration" title="Permalink to this headline"></a></h2>
+<p>When you want to apply a setting temporarily to all packages, the best way to
+do it is to use an environment variable. It’s surprisingly useful, in fact
+<a class="reference internal" href="batch_publish_documentation.html"><span class="doc">Batch-Publish Documentation</span></a> shows how to temporarily disable
+<a class="reference internal" href="#rez-sphinx-init-options-check-default-files"><span class="std std-ref">init_options.check_default_files</span></a>.</p>
+<p>For any configuration path in this page below, for example,
+<a class="reference internal" href="#rez-sphinx-sphinx-apidoc-allow-apidoc-templates"><span class="std std-ref">sphinx-apidoc.allow_apidoc_templates</span></a></p>
+<ul class="simple">
+<li><p>Convert all text to CAPITAL_CASE</p></li>
+<li><p>Replace any “-” and “.” with “_”</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">REZ_SPHINX_</span></code> to the beginning.</p></li>
+</ul>
+<p><strong>Configuration value</strong>: <code class="docutils literal notranslate"><span class="pre">sphinx-apidoc.allow_apidoc_templates</span></code></p>
+<p><strong>Environment variable</strong>: <code class="docutils literal notranslate"><span class="pre">REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES</span></code></p>
+<p>Then set it as you normally would:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">REZ_SPHINX_SPHINX_APIDOC_ALLOW_APIDOC_TEMPLATES</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>To confirm that it worked, use <a class="reference internal" href="config_command.html#rez-sphinx-config-show"><span class="std std-ref">rez_sphinx config show</span></a>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rez_sphinx config show sphinx_apidoc.allow_apidoc_templates
+<span class="c1"># False</span>
+</pre></div>
+</div>
+<p>Setting complex types like list and dictionaries is also okay. Here’s another
+example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">REZ_SPHINX_SPHINX_CONF_OVERRIDES_EXTENSIONS</span><span class="o">=</span><span class="s2">&quot;[&#39;foo&#39;, &#39;bar&#39;, &#39;thing&#39;]&quot;</span>
+</pre></div>
+</div>
+<p>And that’s it. As mentioned, environment variables are useful for quick edits
+and scripting but likely shouldn’t be relied upon to make simple, reproducable
+builds. To do that, prefer <a class="reference internal" href="#global-configuration"><span class="std std-ref">How To Configure All Rez Packages</span></a> or <a class="reference internal" href="#per-package-configuration"><span class="std std-ref">Per-Package Configuration</span></a>.</p>
+</section>
+<section id="all-options">
+<h2>All Options<a class="headerlink" href="#all-options" title="Permalink to this headline"></a></h2>
 <section id="api-toctree-line">
-<span id="rez-sphinx-api-toctree-line"></span><h2>api_toctree_line<a class="headerlink" href="#api-toctree-line" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-api-toctree-line"></span><h3>api_toctree_line<a class="headerlink" href="#api-toctree-line" title="Permalink to this headline"></a></h3>
 <p>When API documentation is built during <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a>, this
 setting controls what get’s added to your documentation’s <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html">toctree</a>.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">&quot;API</span> <span class="pre">Documentation</span> <span class="pre">&lt;api/modules&gt;&quot;</span></code></p>
@@ -181,11 +209,10 @@ the <code class="docutils literal notranslate"><span class="pre">&lt;api/modules
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>TODO : Make unittest for this</p>
 </section>
 <section id="auto-help-filter-by">
-<span id="rez-sphinx-auto-help-filter-by"></span><h2>auto_help.filter_by<a class="headerlink" href="#auto-help-filter-by" title="Permalink to this headline">¶</a></h2>
-<p>Part of <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>’s features is that it can auto-generate your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package
+<span id="rez-sphinx-auto-help-filter-by"></span><h3>auto_help.filter_by<a class="headerlink" href="#auto-help-filter-by" title="Permalink to this headline"></a></h3>
+<p>Part of <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>’s features is that it can auto-generate your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package
 help</a> automatically. If you have an existing <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> attribute already
 defined, an auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> may conflict with what already exists.</p>
 <p>This preference controls which keys should be kept. Your original keys or the
@@ -193,9 +220,9 @@ auto-generated ones.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">&quot;prefer_generated&quot;</span></code></p>
 <p>Options:</p>
 <ul class="simple">
-<li><p>“none”: Keep both your original and the auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys.</p></li>
-<li><p>“prefer_generated”: Replace original keys with the auto-generated keys.</p></li>
-<li><p>“prefer_original”: Replace auto-generated keys with the original keys.</p></li>
+<li><p><strong>“none”</strong>: Keep both your original and the auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys.</p></li>
+<li><p><strong>“prefer_generated”</strong>: Replace original keys with the auto-generated keys.</p></li>
+<li><p><strong>“prefer_original”</strong>: Replace auto-generated keys with the original keys.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -208,17 +235,17 @@ auto-generated ones.</p>
 </div>
 </section>
 <section id="auto-help-sort-order">
-<span id="rez-sphinx-auto-help-sort-order"></span><h2>auto_help.sort_order<a class="headerlink" href="#auto-help-sort-order" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-auto-help-sort-order"></span><h3>auto_help.sort_order<a class="headerlink" href="#auto-help-sort-order" title="Permalink to this headline"></a></h3>
 <p>This setting is similar to <a class="reference internal" href="#rez-sphinx-auto-help-filter-by"><span class="std std-ref">auto_help.filter_by</span></a>. However
-<a class="reference internal" href="#rez-sphinx-auto-help-filter-by"><span class="std std-ref">auto_help.filter_by</span></a> defines what <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> should do
+<a class="reference internal" href="#rez-sphinx-auto-help-filter-by"><span class="std std-ref">auto_help.filter_by</span></a> defines what <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> should do
 when it encounters conflicting <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys. But for all other, non-conflicting
 <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys, <a class="reference internal" href="#rez-sphinx-auto-help-sort-order"><span class="std std-ref">auto_help.sort_order</span></a> is used instead.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">&quot;alphabetical&quot;</span></code></p>
 <p>Options:</p>
 <ul class="simple">
-<li><p>“alphabetical”: Mix auto-generated and original <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys together, in ascending order.</p></li>
-<li><p>“prefer_generated”: List the auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys first, then originals.</p></li>
-<li><p>“prefer_original”: List the original <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys first, then auto-generated.</p></li>
+<li><p><strong>“alphabetical”</strong>: Mix auto-generated and original <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys together, in ascending order.</p></li>
+<li><p><strong>“prefer_generated”</strong>: List the auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys first, then originals.</p></li>
+<li><p><strong>“prefer_original”</strong>: List the original <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> keys first, then auto-generated.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -231,17 +258,26 @@ when it encounters conflicting <a class="reference external" href="https://githu
 </div>
 </section>
 <section id="build-documentation-key">
-<span id="rez-sphinx-build-documentation-key"></span><h2>build_documentation_key<a class="headerlink" href="#build-documentation-key" title="Permalink to this headline">¶</a></h2>
-<p>Whenever you run <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>, a new key is added to <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests
+<span id="rez-sphinx-build-documentation-key"></span><h3>build_documentation_key<a class="headerlink" href="#build-documentation-key" title="Permalink to this headline"></a></h3>
+<p>Whenever you run <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>, a new key is added to the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests
 attribute</a>, <code class="docutils literal notranslate"><span class="pre">build_documentation</span></code>. As mentioned in many other documentation
-pages, this key is used to find, build, and even publish documentation. It’s a
-very important part of how <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> works so a good name is important.</p>
-<p>This setting allows you to change the name of the key, if you’d prefer to call
-it something else.</p>
+pages, this key is used to find, build, and even publish documentation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;some_package&quot;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+<span class="n">tests</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;rez_sphinx build run&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;requires&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rez_sphinx-1&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you don’t like they default key name, you can use this
+<code class="docutils literal notranslate"><span class="pre">build_documentation_key</span></code> setting to change it to something else.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">&quot;build_documentation&quot;</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;build_documentation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;build_documentation&quot;</span><span class="p">,</span>  <span class="c1"># Default value</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
@@ -255,7 +291,6 @@ it something else.</p>
 </pre></div>
 </div>
 <p>However if you do, you must keep in mind the following details:</p>
-<p>TODO: Revisit this. Make sure we don’t get from the current user environment</p>
 <ul>
 <li><p>The first key is always used whenever you call <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a> in a package.</p></li>
 <li><p>During <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> when the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">intersphinx_mapping</a> is generated,
@@ -269,8 +304,24 @@ extra package “requires”.</p>
 </li>
 </ul>
 </section>
+</section>
+<section id="disabling-build-documentation-key">
+<span id="id3"></span><h2>Disabling build_documentation_key<a class="headerlink" href="#disabling-build-documentation-key" title="Permalink to this headline"></a></h2>
+<p>Some users may prefer to not touch source Rez package <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> attribute at all.
+To do that, simply define an empty <code class="docutils literal notranslate"><span class="pre">&quot;build_documentation_key&quot;</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> key in general is there as a convenience to the user and is
+optional. However note that without a valid <code class="docutils literal notranslate"><span class="pre">&quot;build_documentation_key&quot;</span></code>,
+users won’t be able to define documentation-only interlinking. See
+<a class="reference internal" href="adding_extra_interlinking.html#adding-extra-documentation-interlinks"><span class="std std-ref">Add To build_documentation</span></a> for details.</p>
 <section id="documentation-root">
-<span id="rez-sphinx-documentation-root"></span><h2>documentation_root<a class="headerlink" href="#documentation-root" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-documentation-root"></span><h3>documentation_root<a class="headerlink" href="#documentation-root" title="Permalink to this headline"></a></h3>
 <p>When you run <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>, we need a preferred folder name where the
 initial documentation files will be placed into. This setting controls the name
 of that folder.</p>
@@ -284,14 +335,13 @@ of that folder.</p>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Several other places in <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> use this folder name while
-querying things about your documentation. But in general, <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+<p>Several other places in <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> use this folder name while
+querying things about your documentation. But in general, <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>
 tries to not assume what the documentation is called, when it can.</p>
 </div>
-<p>TODO: Add unittest</p>
 </section>
 <section id="extra-requires">
-<span id="rez-sphinx-extra-requires"></span><h2>extra_requires<a class="headerlink" href="#extra-requires" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-extra-requires"></span><h3>extra_requires<a class="headerlink" href="#extra-requires" title="Permalink to this headline"></a></h3>
 <p>If you want to use <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a> to make your documentation pretty, In
 order for Rez to “see” it, you would need to add it to every Rez resolve where
 you build documentation.  In practical terms, it means updating all of your Rez
@@ -322,8 +372,8 @@ bring them along, automatically.</p>
 example, see <a class="reference internal" href="using_sphinx_rtd_theme.html"><span class="doc">Using sphinx-rtd-theme</span></a> for details.</p>
 </section>
 <section id="init-options-check-default-files">
-<span id="rez-sphinx-init-options-check-default-files"></span><h2>init_options.check_default_files<a class="headerlink" href="#init-options-check-default-files" title="Permalink to this headline">¶</a></h2>
-<p>In general, <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> tries to get out of the user’s way and make
+<span id="rez-sphinx-init-options-check-default-files"></span><h3>init_options.check_default_files<a class="headerlink" href="#init-options-check-default-files" title="Permalink to this headline"></a></h3>
+<p>In general, <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> tries to get out of the user’s way and make
 documentation as fast as possible.  The one exception to that is a pre-build
 check during <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a>.</p>
 <p>If you have default files defined
@@ -331,7 +381,7 @@ check during <a class="reference internal" href="build_command.html#rez-sphinx-b
 add handmade documentation to those files or delete the files completely.</p>
 <p>If you don’t, <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> fails to run.</p>
 <p>This check may rub some users the wrong way but the intent is to ensure people
-are using <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> to write quality documentation and checking their
+are using <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> to write quality documentation and checking their
 work.  As very often, poor documentation is be worse than no documentation.</p>
 <p>That said, if you really don’t like this check, it can be disabled.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
@@ -346,9 +396,9 @@ work.  As very often, poor documentation is be worse than no documentation.</p>
 files. You can do that, using <a class="reference internal" href="#rez-sphinx-init-options-default-files"><span class="std std-ref">init_options.default_files</span></a>.</p>
 </section>
 <section id="init-options-default-files">
-<span id="default-file-entries"></span><span id="rez-sphinx-init-options-default-files"></span><h2>init_options.default_files<a class="headerlink" href="#init-options-default-files" title="Permalink to this headline">¶</a></h2>
+<span id="default-file-entries"></span><span id="rez-sphinx-init-options-default-files"></span><h3>init_options.default_files<a class="headerlink" href="#init-options-default-files" title="Permalink to this headline"></a></h3>
 <p>By default, <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-quickstart.html">sphinx-quickstart</a> adds a <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/step-1">index.rst</a> when your project is first
-generated. <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> does a little extra and adds a
+generated. <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> does a little extra and adds a
 <code class="docutils literal notranslate"><span class="pre">user_documentation.rst</span></code> and <code class="docutils literal notranslate"><span class="pre">developer_documentation.rst</span></code> file.</p>
 <p>This is for 2 reasons:</p>
 <ul class="simple">
@@ -389,8 +439,51 @@ different default files, you can define them like so:</p>
 <p>If you like the files but don’t want the validation check, see
 <a class="reference internal" href="#rez-sphinx-init-options-check-default-files"><span class="std std-ref">init_options.check_default_files</span></a>.</p>
 </section>
+<section id="default-entry-options">
+<h3>Default Entry Options<a class="headerlink" href="#default-entry-options" title="Permalink to this headline"></a></h3>
+<p>Each entry in <a class="reference internal" href="#rez-sphinx-init-options-default-files"><span class="std std-ref">init_options.default_files</span></a> has a set of options
+you can tweak. Not every option will be explained here. For full
+documentation, check out <a class="reference internal" href="api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry" title="rez_sphinx.preferences.preference_init.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a>. However we’ll explain any options
+here which are particularly important.</p>
+<section id="check-pre-build">
+<span id="id4"></span><h4>check_pre_build<a class="headerlink" href="#check-pre-build" title="Permalink to this headline"></a></h4>
+<p>default: True</p>
+<p>When you set <a class="reference internal" href="#rez-sphinx-init-options-check-default-files"><span class="std std-ref">init_options.check_default_files</span></a> to False, you
+tell <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> to not check any file for documentation and
+build the documentation. What if you want to have one file be checked but not
+another?  That’s what <a class="reference internal" href="#check-pre-build"><span class="std std-ref">check_pre_build</span></a> is for.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;init_options&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default_files&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;base_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Some default text&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;check_pre_build&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;inner_folder/developer_documentation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Developer Documentation&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;base_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Another default file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;check_pre_build&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;user_documentation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;User Documentation&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With the configuration above,
+<code class="docutils literal notranslate"><span class="pre">{rez_package_root}/documentation/user_documentation.rst</span></code> is required to have
+documentation. However
+<code class="docutils literal notranslate"><span class="pre">{rez_package_root}/documentation/developer_documentation.rst</span></code> will not be
+checked.</p>
+<p>Again, for more explanation on your options, check out <a class="reference internal" href="api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry" title="rez_sphinx.preferences.preference_init.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a>.</p>
+</section>
+</section>
 <section id="intersphinx-settings-package-link-map">
-<span id="rez-sphinx-intersphinx-settings-package-link-map"></span><h2>intersphinx_settings.package_link_map<a class="headerlink" href="#intersphinx-settings-package-link-map" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-intersphinx-settings-package-link-map"></span><h3>intersphinx_settings.package_link_map<a class="headerlink" href="#intersphinx-settings-package-link-map" title="Permalink to this headline"></a></h3>
 <p>If you’re trying to link your Rez package to another Rez package, but that
 package cannot be editted (it could be a third-party PyPI package or
 something), you can use this option to help <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> find
@@ -413,7 +506,7 @@ doesn’t define the documentation properly,
 <code class="docutils literal notranslate"><span class="pre">https://schema.readthedocs.io/en/latest</span></code> is used as a fallback.</p>
 </section>
 <section id="sphinx-apidoc-allow-apidoc-templates">
-<span id="rez-sphinx-sphinx-apidoc-allow-apidoc-templates"></span><h2>sphinx-apidoc.allow_apidoc_templates<a class="headerlink" href="#sphinx-apidoc-allow-apidoc-templates" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-apidoc-allow-apidoc-templates"></span><h3>sphinx-apidoc.allow_apidoc_templates<a class="headerlink" href="#sphinx-apidoc-allow-apidoc-templates" title="Permalink to this headline"></a></h3>
 <p>This is already covered in <a class="reference internal" href="build_command.html#rez-sphinx-apidoc-templates"><span class="std std-ref">A note about Python 2 / 3</span></a> but basically, in
 Python 3+, there’s an option to make the Sphinx’s <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html">toctree</a> look much cleaner.
 If you prefer the default display, use this option to get it back:</p>
@@ -430,7 +523,7 @@ If you prefer the default display, use this option to get it back:</p>
 Sphinx 2.2+. Adding this setting in Python 2 does nothing.</p>
 </section>
 <section id="sphinx-apidoc-arguments">
-<span id="rez-sphinx-sphinx-apidoc-arguments"></span><h2>sphinx-apidoc.arguments<a class="headerlink" href="#sphinx-apidoc-arguments" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-apidoc-arguments"></span><h3>sphinx-apidoc.arguments<a class="headerlink" href="#sphinx-apidoc-arguments" title="Permalink to this headline"></a></h3>
 <p>Raw terminal arguments you can pass directly to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>. These
 arguments get referenced and called during <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a>, just
 before <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a> gets called.</p>
@@ -447,10 +540,9 @@ details about that.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>TODO Add unittest</p>
 </section>
 <section id="sphinx-apidoc-enable-apidoc">
-<span id="rez-sphinx-sphinx-apidoc-enable-apidoc"></span><h2>sphinx-apidoc.enable_apidoc<a class="headerlink" href="#sphinx-apidoc-enable-apidoc" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-apidoc-enable-apidoc"></span><h3>sphinx-apidoc.enable_apidoc<a class="headerlink" href="#sphinx-apidoc-enable-apidoc" title="Permalink to this headline"></a></h3>
 <p>Just before documentation is built, <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> generates API
 documentation .rst files based on the Python files for your package that it
 could find.</p>
@@ -468,9 +560,20 @@ files), you can disable this option.</p>
 </pre></div>
 </div>
 </section>
+<section id="sphinx-build">
+<span id="rez-sphinx-sphinx-build"></span><h3>sphinx-build<a class="headerlink" href="#sphinx-build" title="Permalink to this headline"></a></h3>
+<p>If you want to pass arguments to <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a>, you can use this setting.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rez_sphinx&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sphinx-build&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-W&quot;</span><span class="p">],</span>  <span class="c1"># Treat warnings as errors</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 <section id="sphinx-quickstart">
-<span id="sphinx-quickstart-customization"></span><span id="rez-sphinx-sphinx-quickstart"></span><h2>sphinx-quickstart<a class="headerlink" href="#sphinx-quickstart" title="Permalink to this headline">¶</a></h2>
-<p>TODO: Make this consistent with other options</p>
+<span id="sphinx-quickstart-customization"></span><span id="rez-sphinx-sphinx-quickstart"></span><h3>sphinx-quickstart<a class="headerlink" href="#sphinx-quickstart" title="Permalink to this headline"></a></h3>
 <p>Like <a class="reference internal" href="#rez-sphinx-sphinx-apidoc-arguments"><span class="std std-ref">sphinx-apidoc.arguments</span></a>, which allows you to pass
 arguments directly to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>, this setting customizes the arguments
 passed to <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code>.</p>
@@ -483,10 +586,9 @@ using <code class="docutils literal notranslate"><span class="pre">[&quot;--ext-
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>TODO Add unittest</p>
 </section>
 <section id="sphinx-conf-overrides">
-<span id="rez-sphinx-sphinx-conf-overrides"></span><h2>sphinx_conf_overrides<a class="headerlink" href="#sphinx-conf-overrides" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-conf-overrides"></span><h3>sphinx_conf_overrides<a class="headerlink" href="#sphinx-conf-overrides" title="Permalink to this headline"></a></h3>
 <p>This setting allows you to change in a <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>. See <cite>conf.py
 customization</cite> for a full list of the supported variables and what each of them do.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
@@ -500,7 +602,7 @@ customization</cite> for a full list of the supported variables and what each of
 </div>
 </section>
 <section id="sphinx-conf-overrides-add-module-names">
-<span id="rez-sphinx-sphinx-conf-overrides-add-module-names"></span><h2>sphinx_conf_overrides.add_module_names<a class="headerlink" href="#sphinx-conf-overrides-add-module-names" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-conf-overrides-add-module-names"></span><h3>sphinx_conf_overrides.add_module_names<a class="headerlink" href="#sphinx-conf-overrides-add-module-names" title="Permalink to this headline"></a></h3>
 <p>When you document with <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> it prefers to render API function names with
 the full namespace, like this:</p>
 <p><code class="docutils literal notranslate"><span class="pre">some_package_root.inner_folder.another_folder.core.you.get.the.point.my_function</span></code></p>
@@ -522,13 +624,13 @@ on your <a class="reference external" href="https://www.sphinx-doc.org/en/master
 </div>
 </section>
 <section id="sphinx-conf-overrides-master-doc">
-<span id="rez-sphinx-sphinx-conf-overrides-master-doc"></span><h2>sphinx_conf_overrides.master_doc<a class="headerlink" href="#sphinx-conf-overrides-master-doc" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-sphinx-conf-overrides-master-doc"></span><h3>sphinx_conf_overrides.master_doc<a class="headerlink" href="#sphinx-conf-overrides-master-doc" title="Permalink to this headline"></a></h3>
 <p>When you open documentation in <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>, one .rst file must serve as the
 “starting point” that all other documentation is based on. In web terms, you
 might call this the “landing page”.</p>
 <p>While well intentioned, this setting causes problems when <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> and its
 extensions <a class="reference external" href="https://github.com/readthedocs/readthedocs.org/issues/2569">disagree on what the master_doc name should be called</a>. To make
-<a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> more bullet-proof, the name is set for you by default so you
+<a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> more bullet-proof, the name is set for you by default so you
 don’t get burned by this issue by accident later.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">&quot;index&quot;</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
@@ -541,9 +643,6 @@ don’t get burned by this issue by accident later.</p>
 </pre></div>
 </div>
 </section>
-<section id="sphinx-extensions">
-<span id="rez-sphinx-sphinx-extensions"></span><h2>sphinx_extensions<a class="headerlink" href="#sphinx-extensions" title="Permalink to this headline">¶</a></h2>
-<p>TODO move this to sphinx_conf_overrides and make sure there’s unittests for it.</p>
 </section>
 </section>
 
@@ -552,7 +651,7 @@ don’t get burned by this issue by accident later.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="adding_extra_interlinking.html" class="btn btn-neutral float-left" title="Adding Extra Interlinking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="auto_append_help_tags.html" class="btn btn-neutral float-right" title="Auto-Append Help Tags" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="auto_append_help_tags.html" class="btn btn-neutral float-right" title="Adding Documentation Automatically" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -4,18 +4,21 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preprocess.preprocess_entry_point &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preprocess.preprocess_entry_point &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rez_sphinx_plugins" href="rez_sphinx_plugins.html" />
     <link rel="prev" title="rez_sphinx.preprocess.hook" href="rez_sphinx.preprocess.hook.html" /> 
 </head>
 
@@ -37,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -55,6 +58,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -87,14 +91,19 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.preprocess.preprocess_entry_point">
-<span id="rez-sphinx-preprocess-preprocess-entry-point"></span><h1>rez_sphinx.preprocess.preprocess_entry_point<a class="headerlink" href="#module-rez_sphinx.preprocess.preprocess_entry_point" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-preprocess-preprocess-entry-point"></span><h1>rez_sphinx.preprocess.preprocess_entry_point<a class="headerlink" href="#module-rez_sphinx.preprocess.preprocess_entry_point" title="Permalink to this headline"></a></h1>
+<p>The module needed to add <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> as a preprocess function.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../enabling_rez_help_integration.html#adding-rez-sphinx-as-a-preprocess"><span class="std std-ref">Adding rez_sphinx as a preprocess</span></a></p>
+</div>
 <dl class="py function">
-<dt id="rez_sphinx.preprocess.preprocess_entry_point.expand_help">
-<code class="sig-name descname">expand_help</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">help_</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/preprocess_entry_point.html#expand_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preprocess.preprocess_entry_point.expand_help" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preprocess.preprocess_entry_point.expand_help">
+<span class="sig-name descname"><span class="pre">expand_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">help_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/preprocess_entry_point.html#expand_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preprocess.preprocess_entry_point.expand_help" title="Permalink to this definition"></a></dt>
 <dd><p>Convert <code class="docutils literal notranslate"><span class="pre">help_</span></code> into a list of lists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>help</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>NoneType</em>) – The found Rez package help, if any.</p>
+<dd class="field-odd"><p><strong>help</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – The found Rez package help, if any.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Each found label + documentation entry, if any.</p>
@@ -106,9 +115,21 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preprocess.preprocess_entry_point.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">this</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/preprocess_entry_point.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preprocess.preprocess_entry_point.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="rez_sphinx.preprocess.preprocess_entry_point.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">this</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/preprocess_entry_point.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preprocess.preprocess_entry_point.run" title="Permalink to this definition"></a></dt>
+<dd><p>Replace the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a> in <code class="docutils literal notranslate"><span class="pre">data</span></code> with auto-found Sphinx documentation.</p>
+<p>If no <a class="reference internal" href="../enabling_rez_help_integration.html#rez-sphinx-tag"><span class="std std-ref">rez_sphinx tags</span></a> are found, this function will
+exit early and do nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – The installed (built) Rez package. This package is mostly read-only.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a><em>]</em>) – The contents of <code class="docutils literal notranslate"><span class="pre">this</span></code>. Changing this instance will have an
+effect on the Rez package which is written to-disk.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -117,6 +138,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="rez_sphinx.preprocess.hook.html" class="btn btn-neutral float-left" title="rez_sphinx.preprocess.hook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx_plugins.html" class="btn btn-neutral float-right" title="rez_sphinx_plugins" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

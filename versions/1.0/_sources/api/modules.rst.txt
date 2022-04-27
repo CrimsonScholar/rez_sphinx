@@ -5,3 +5,4 @@ python
    :maxdepth: 4
 
    rez_sphinx
+   rez_sphinx_plugins

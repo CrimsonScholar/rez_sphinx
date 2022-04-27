@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How interlinking works &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="python" href="api/modules.html" />
+    <link rel="prev" title="How Rez And Sphinx Are Linked" href="how_rez_and_sphinx_are_linked.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="how_rez_and_sphinx_are_linked.html">How Rez And Sphinx Are Linked</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How interlinking works</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="developer_documentation.html">Developer Documentation</a> &raquo;</li>
+      <li>How interlinking works</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/how_interlinking_works.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-interlinking-works">
+<h1>How interlinking works<a class="headerlink" href="#how-interlinking-works" title="Permalink to this headline"></a></h1>
+<p>As mentioned in <a class="reference internal" href="adding_extra_interlinking.html"><span class="doc">Adding Extra Interlinking</span></a>, it’s possible for any Rez package
+to refer to the documentation in another Rez package automatically.</p>
+<p>Every time a documentation project is built, Sphinx creates an
+<span class="xref std std-ref">objects.inv</span> file. This is true not just for <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> but any
+Sphinx-built documentation. Even Python’s documentation works the same way. If
+you visit
+[<a class="reference external" href="https://docs.python.org/3/objects.inv](https://docs.python.org/3/objects.inv">https://docs.python.org/3/objects.inv](https://docs.python.org/3/objects.inv</a>),
+it’ll directly download objects.inv to your machine. <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> takes advantage of this file to do the interlinking.</p>
+<p>Any Rez package built with <code class="docutils literal notranslate"><span class="pre">rez-sphinx</span></code> exports the location of your
+“objects.inv” file so that other Rez packages may use it. And any Rez package
+whose dependencies have an “objects.inv” are automatically cross linked, using
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">sphinx.ext.intersphinx</a>. And that’s the basis for how <code class="docutils literal notranslate"><span class="pre">rez-sphinx</span></code> works.
+All other features are basically to just enhance the user experience.</p>
+<p>For more details on how <code class="docutils literal notranslate"><span class="pre">rez-sphinx</span></code> internals works, see
+<span class="xref std std-doc">rez_sphinx_internals</span>. Otherwise, head over to <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a> to
+try <code class="docutils literal notranslate"><span class="pre">rez-sphinx</span></code> for yourself!</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="how_rez_and_sphinx_are_linked.html" class="btn btn-neutral float-left" title="How Rez And Sphinx Are Linked" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/modules.html" class="btn btn-neutral float-right" title="python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

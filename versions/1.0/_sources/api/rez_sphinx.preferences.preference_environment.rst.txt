@@ -1,0 +1,7 @@
+rez\_sphinx.preferences.preference\_environment
+-----------------------------------------------
+
+.. automodule:: rez_sphinx.preferences.preference_environment
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,12 @@
+rez\_sphinx\_plugins.rezplugins.release\_hook
+=============================================
+
+.. toctree::
+   :maxdepth: 4
+
+   publish_documentation <rez_sphinx_plugins.rezplugins.release_hook.publish_documentation>
+
+.. automodule:: rez_sphinx_plugins.rezplugins.release_hook
+   :members:
+   :undoc-members:
+   :show-inheritance:

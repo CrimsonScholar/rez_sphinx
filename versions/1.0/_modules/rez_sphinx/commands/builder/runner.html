@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.commands.builder.runner &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.commands.builder.runner &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developer_documentation.html">Developer Documentation</a></li>
@@ -69,17 +71,21 @@
   <h1>Source code for rez_sphinx.commands.builder.runner</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;The module which handles the :ref:`rez_sphinx build run` command.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
 <span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">rez.config</span> <span class="kn">import</span> <span class="n">config</span>
 <span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
 <span class="kn">from</span> <span class="nn">sphinx.cmd</span> <span class="kn">import</span> <span class="n">build</span> <span class="k">as</span> <span class="n">sphinx_build</span>
 
-<span class="kn">from</span> <span class="nn">...core</span> <span class="kn">import</span> <span class="n">api_builder</span><span class="p">,</span> <span class="n">doc_finder</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">sphinx_helper</span>
+<span class="kn">from</span> <span class="nn">...core</span> <span class="kn">import</span> <span class="n">api_builder</span><span class="p">,</span> <span class="n">doc_finder</span><span class="p">,</span> <span class="n">exception</span>
 <span class="kn">from</span> <span class="nn">...preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_clear_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
@@ -122,6 +128,11 @@
     <span class="n">invalids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_init_default_entries</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">check_pre_build</span><span class="p">():</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipping &quot;</span><span class="si">%s</span><span class="s1">&quot; because it is ignored during build.&#39;</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+
+            <span class="k">continue</span>
+
         <span class="n">full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">get_relative_path</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">full</span><span class="p">):</span>
@@ -150,6 +161,9 @@
 <span class="sd">    Args:</span>
 <span class="sd">        source (str): The parent directory of `Sphinx conf.py`_.</span>
 
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If ``source`` was queried but it isn&#39;t in a Rez package.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        str:</span>
 <span class="sd">            The found path on-disk where documentation must be</span>
@@ -157,15 +171,22 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">separate_build_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">separate_build_folder</span><span class="p">)</span>
-        <span class="ow">and</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">separate_build_folder</span><span class="p">)</span> <span class="o">==</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">()</span>
-    <span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">separate_build_folder</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_get_name</span><span class="p">(</span>
+        <span class="n">separate_build_folder</span>
+    <span class="p">)</span> <span class="o">==</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">):</span>
         <span class="c1"># Most :ref:`rez_sphinx` configurations will use this path</span>
         <span class="k">return</span> <span class="n">separate_build_folder</span>  <span class="c1"># {rez_root}/documentation/build</span>
 
-    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s1">&#39;Directory &quot;</span><span class="si">{source}</span><span class="s1">&quot; isn</span><span class="se">\&#39;</span><span class="s1">t in a Rez package. &#39;</span>
+            <span class="s2">&quot;This is likely a rez_sphinx bug.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
     <span class="n">root</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_package_root</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
     <span class="n">build_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>  <span class="c1"># Usually {rez_root}/build</span>
         <span class="n">root</span><span class="p">,</span>
@@ -173,7 +194,7 @@
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>  <span class="c1"># {rez_root}/build/documentation</span>
-        <span class="n">build_directory</span><span class="p">,</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">()</span>
+        <span class="n">build_directory</span><span class="p">,</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
@@ -189,20 +210,21 @@
 <span class="sd">            If ``root`` needs to initialize some documentation.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        str: The parent directory of `Sphinx conf.py`_.</span>
+<span class="sd">        tuple[rez.packages.Package, str]:</span>
+<span class="sd">            Rez package + The parent directory of `Sphinx conf.py`_.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoPackageFound</span><span class="p">(</span>
-            <span class="s1">&#39;Directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; is not in a Rez package.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s1">&#39;Directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; is not in a Rez source package.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">directory</span><span class="o">=</span><span class="n">directory</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">doc_finder</span><span class="o">.</span><span class="n">get_source_from_package</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">doc_finder</span><span class="o">.</span><span class="n">get_source_from_package</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NoDocumentationFound</span><span class="p">(</span>
             <span class="s1">&#39;Directory &quot;</span><span class="si">{root}</span><span class="s1">&quot; has no documentation. &#39;</span>
@@ -217,6 +239,7 @@
     <span class="n">api_mode</span><span class="o">=</span><span class="n">api_builder</span><span class="o">.</span><span class="n">FULL_AUTO</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
     <span class="n">api_options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span>
     <span class="n">no_api_doc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate .html files from the Sphinx documentation in ``directory``.</span>
 
@@ -232,25 +255,24 @@
 <span class="sd">        no_api_doc (bool, optional):</span>
 <span class="sd">            If True, don&#39;t build any API documentation. If False, API .rst</span>
 <span class="sd">            files will be auto-generated just before `sphinx-build`_ is ran.</span>
+<span class="sd">        quiet (bool, optional):</span>
+<span class="sd">            If True, don&#39;t print the directory where documentation is built to.</span>
+<span class="sd">            If False, print it.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        NoPackageFound:</span>
-<span class="sd">            If ``directory`` is invalid.</span>
 <span class="sd">        SphinxExecutionError:</span>
 <span class="sd">            If `sphinx-build`_ failed midway before it could be completed.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">source_directory</span> <span class="o">=</span> <span class="n">get_documentation_source</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The directory on-disk where the built documentation now lives.</span>
 
-    <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">check_default_files</span><span class="p">():</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">package</span><span class="p">,</span> <span class="n">source_directory</span> <span class="o">=</span> <span class="n">get_documentation_source</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">check_default_files</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">):</span>
         <span class="n">_validate_non_default_files</span><span class="p">(</span><span class="n">source_directory</span><span class="p">)</span>
 
-    <span class="n">api_options</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_api_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">api_options</span><span class="p">)</span>
-
-    <span class="c1"># TODO : This doesn&#39;t take into account split builds (it needs to fall back</span>
-    <span class="c1"># to the Rez build folder if the user doesn&#39;t have a documentation/source</span>
-    <span class="c1"># folder</span>
-    <span class="c1">#</span>
+    <span class="n">api_options</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_api_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">api_options</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
     <span class="n">build_directory</span> <span class="o">=</span> <span class="n">get_documentation_build</span><span class="p">(</span><span class="n">source_directory</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">build_directory</span><span class="p">):</span>
@@ -263,20 +285,45 @@
         <span class="n">build_directory</span><span class="p">,</span>
     <span class="p">]</span>
 
+    <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">preference</span><span class="o">.</span><span class="n">get_build_options</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">))</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">build_directory</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">build_directory</span><span class="p">)</span>
 
     <span class="n">api_mode</span> <span class="o">=</span> <span class="n">api_builder</span><span class="o">.</span><span class="n">get_from_label</span><span class="p">(</span><span class="n">api_mode</span><span class="p">)</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_api_doc</span> <span class="ow">and</span> <span class="n">preference</span><span class="o">.</span><span class="n">is_api_enabled</span><span class="p">()</span> <span class="ow">and</span> <span class="n">api_mode</span><span class="o">.</span><span class="n">execute</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">no_api_doc</span>
+        <span class="ow">and</span> <span class="n">preference</span><span class="o">.</span><span class="n">is_api_enabled</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">api_mode</span><span class="o">.</span><span class="n">execute</span>
+    <span class="p">):</span>
         <span class="n">api_mode</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">source_directory</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">api_options</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sphinx_build</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+        <span class="n">failure</span> <span class="o">=</span> <span class="n">sphinx_build</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">SphinxExecutionError</span><span class="p">(</span>
+            <span class="s2">&quot;sphinx-build failed to parse. See the help, below:</span><span class="se">\n\n</span><span class="si">{help_}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">help_</span><span class="o">=</span><span class="n">sphinx_build</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span><span class="o">.</span><span class="n">format_help</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
-        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">SphinxExecutionError</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">SphinxExecutionError</span><span class="p">(</span>
+            <span class="s1">&#39;sphinx-build failed with code &quot;</span><span class="si">{failure}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">failure</span><span class="o">=</span><span class="n">failure</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s1">&#39;Documentation: &quot;</span><span class="si">{build_directory}</span><span class="s1">&quot; is now viewable.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">build_directory</span><span class="o">=</span><span class="n">build_directory</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">build_directory</span></div>
 </pre></div>
 
            </div>

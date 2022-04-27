@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx suggest &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>rez_sphinx suggest &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -46,8 +48,7 @@
 <li class="toctree-l3"><a class="reference internal" href="build_command.html">build</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config_command.html">config</a></li>
 <li class="toctree-l3"><a class="reference internal" href="init_command.html">init</a></li>
-<li class="toctree-l3"><a class="reference internal" href="publish_command.html">rez_sphinx publish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="publish_command.html#rez-sphinx-publish-run">rez_sphinx publish run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="publish_command.html">publish</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">suggest</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-suggest-build-order">rez_sphinx suggest build-order</a></li>
 </ul>
@@ -88,12 +89,12 @@
            <div itemprop="articleBody">
              
   <section id="rez-sphinx-suggest">
-<span id="id1"></span><h1>rez_sphinx suggest<a class="headerlink" href="#rez-sphinx-suggest" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>rez_sphinx suggest<a class="headerlink" href="#rez-sphinx-suggest" title="Permalink to this headline"></a></h1>
 <p>This generic command is simply for querying things about Rez packages which
-users or <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> uses. See the sections below for example
+users or <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> uses. See the sections below for example
 sub-commands.</p>
 <section id="rez-sphinx-suggest-build-order">
-<span id="id2"></span><h2>rez_sphinx suggest build-order<a class="headerlink" href="#rez-sphinx-suggest-build-order" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>rez_sphinx suggest build-order<a class="headerlink" href="#rez-sphinx-suggest-build-order" title="Permalink to this headline"></a></h2>
 <p>This command can look at a group of directories, scan the Rez packages found
 within it, and recommend the order in which their documentation should be
 built. Imagine you have two packages:</p>
@@ -109,8 +110,23 @@ But if you accidentally build in the opposite order, any links
 <code class="docutils literal notranslate"><span class="pre">package_that_needs_dependency</span></code> have to <code class="docutils literal notranslate"><span class="pre">dependency</span></code> will be messed up.</p>
 <p><code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">suggest</span> <span class="pre">build-order</span></code> exists to automate this discovery + package
 ordering process.</p>
+<section id="rez-sphinx-suggest-build-order-filter">
+<span id="build-order-filter"></span><h3>rez_sphinx suggest build-order –filter<a class="headerlink" href="#rez-sphinx-suggest-build-order-filter" title="Permalink to this headline"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--filter</span></code> is used to exclude a package from being returned by <code class="docutils literal notranslate"><span class="pre">build-order</span></code>.</p>
+<p>It supports:</p>
+<ul>
+<li><p><strong>already_documented</strong>: If Sphinx documentation is found (rez_sphinx or otherwise)</p></li>
+<li><p><strong>already_released</strong>: If the package has already been released, exclude it</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Worth noting that even packages including documentation will be returned.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
 <section id="rez-sphinx-suggest-build-order-search-mode">
-<span id="build-order-search-mode"></span><h3>rez_sphinx suggest build-order –search-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-search-mode" title="Permalink to this headline">¶</a></h3>
+<span id="build-order-search-mode"></span><h3>rez_sphinx suggest build-order –search-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-search-mode" title="Permalink to this headline"></a></h3>
 <p>To find Rez packages, we must provide <code class="docutils literal notranslate"><span class="pre">build-order</span></code> some directories to
 search within. But that’s not enough because those directories may contain
 multiple Rez packages. The directory could be the root of installed packages,
@@ -124,15 +140,15 @@ repository with a completely arbitrary folder structure.</p>
 </ul>
 </section>
 <section id="rez-sphinx-suggest-build-order-suggestion-mode">
-<span id="build-order-suggestion-mode"></span><h3>rez_sphinx suggest build-order –suggestion-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-suggestion-mode" title="Permalink to this headline">¶</a></h3>
+<span id="build-order-suggestion-mode"></span><h3>rez_sphinx suggest build-order –suggestion-mode<a class="headerlink" href="#rez-sphinx-suggest-build-order-suggestion-mode" title="Permalink to this headline"></a></h3>
 <p>Once Rez packages are found, we need to query those Rez packages for
-“dependencies” needed by <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>. Normally the default value, which
+“dependencies” needed by <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>. Normally the default value, which
 checks for <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#requires">requires</a> and <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#variants">variants</a> will work for 90%+ of Rez packages and
 is most recommended.  But if your pipeline has special considerations,
 <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">suggest</span> <span class="pre">build-order</span> <span class="pre">--suggestion-mode=guess</span></code> might be for you.</p>
 </section>
 <section id="rez-sphinx-suggest-build-order-display-as">
-<span id="build-order-display-as"></span><h3>rez_sphinx suggest build-order –display-as<a class="headerlink" href="#rez-sphinx-suggest-build-order-display-as" title="Permalink to this headline">¶</a></h3>
+<span id="build-order-display-as"></span><h3>rez_sphinx suggest build-order –display-as<a class="headerlink" href="#rez-sphinx-suggest-build-order-display-as" title="Permalink to this headline"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">--display-as</span></code> determines how found packages will be printed to the terminal.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--display-as=names</span></code> Copies the style of <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-depends">rez-depends</a>, which looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rez_sphinx</span> <span class="n">suggest</span> <span class="n">build</span><span class="o">-</span><span class="n">order</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">rez</span><span class="o">/</span><span class="n">packages</span> <span class="o">--</span><span class="n">display</span><span class="o">-</span><span class="k">as</span><span class="o">=</span><span class="n">names</span>

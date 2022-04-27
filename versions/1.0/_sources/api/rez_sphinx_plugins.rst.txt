@@ -1,0 +1,12 @@
+rez\_sphinx\_plugins
+====================
+
+.. toctree::
+   :maxdepth: 4
+
+   rezplugins <rez_sphinx_plugins.rezplugins>
+
+.. automodule:: rez_sphinx_plugins
+   :members:
+   :undoc-members:
+   :show-inheritance:

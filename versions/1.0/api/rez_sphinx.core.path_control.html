@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.path_control &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.path_control &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.configuration.html">configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.constant.html">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,11 +105,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.path_control">
-<span id="rez-sphinx-core-path-control"></span><h1>rez_sphinx.core.path_control<a class="headerlink" href="#module-rez_sphinx.core.path_control" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-core-path-control"></span><h1>rez_sphinx.core.path_control<a class="headerlink" href="#module-rez_sphinx.core.path_control" title="Permalink to this headline"></a></h1>
 <p>Miscellaneous functions which make working with file paths easier.</p>
 <dl class="py function">
-<dt id="rez_sphinx.core.path_control.add_gitignore">
-<code class="sig-name descname">add_gitignore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#add_gitignore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.path_control.add_gitignore" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.path_control.add_gitignore">
+<span class="sig-name descname"><span class="pre">add_gitignore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#add_gitignore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.path_control.add_gitignore" title="Permalink to this definition"></a></dt>
 <dd><p>Add a .gitignore into <code class="docutils literal notranslate"><span class="pre">directory</span></code> which ignores all folder contents.</p>
 <p>No matter what files or folders are added under <code class="docutils literal notranslate"><span class="pre">directory</span></code>, they
 will be ignored by git.</p>
@@ -117,8 +121,8 @@ will be ignored by git.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.path_control.clear_directory">
-<code class="sig-name descname">clear_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#clear_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.path_control.clear_directory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.path_control.clear_directory">
+<span class="sig-name descname"><span class="pre">clear_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#clear_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.path_control.clear_directory" title="Permalink to this definition"></a></dt>
 <dd><p>Delete the contents of <code class="docutils literal notranslate"><span class="pre">directory</span></code> without deleting <code class="docutils literal notranslate"><span class="pre">directory</span></code> itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -131,8 +135,8 @@ will be ignored by git.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.path_control.expand_path">
-<code class="sig-name descname">expand_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#expand_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.path_control.expand_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.path_control.expand_path">
+<span class="sig-name descname"><span class="pre">expand_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#expand_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.path_control.expand_path" title="Permalink to this definition"></a></dt>
 <dd><p>Convert <code class="docutils literal notranslate"><span class="pre">path</span></code> from a relative, possibly symlinked location to a real path.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -153,8 +157,8 @@ the parent directory, or an already absolute path.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.path_control.get_installed_root">
-<code class="sig-name descname">get_installed_root</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#get_installed_root"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.path_control.get_installed_root" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.path_control.get_installed_root">
+<span class="sig-name descname"><span class="pre">get_installed_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#get_installed_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.path_control.get_installed_root" title="Permalink to this definition"></a></dt>
 <dd><p>Find the path on-disk where the resolved <code class="docutils literal notranslate"><span class="pre">name</span></code> Rez package lives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -168,6 +172,23 @@ the parent directory, or an already absolute path.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.core.path_control.to_environment_name">
+<span class="sig-name descname"><span class="pre">to_environment_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/path_control.html#to_environment_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.path_control.to_environment_name" title="Permalink to this definition"></a></dt>
+<dd><p>Change <code class="docutils literal notranslate"><span class="pre">name</span></code> from a Rez package family name to is env-var equivalent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A Rez package name. e.g. <code class="docutils literal notranslate"><span class="pre">&quot;python&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;foo.bar&quot;</span></code>, etc.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted name. e.g. <code class="docutils literal notranslate"><span class="pre">&quot;PYTHON&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;FOO_BAR&quot;</span></code>, etc.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>

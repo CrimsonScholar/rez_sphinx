@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx config &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>rez_sphinx config &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -49,13 +51,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-config-list-overrides">rez_sphinx config list-overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-config-list-defaults">rez_sphinx config list-defaults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-config-show">rez_sphinx config show</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-config-show-list-all">rez_sphinx config show –list-all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-config-show-all">rez_sphinx config show-all</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="init_command.html">init</a></li>
-<li class="toctree-l3"><a class="reference internal" href="publish_command.html">rez_sphinx publish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="publish_command.html#rez-sphinx-publish-run">rez_sphinx publish run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="publish_command.html">publish</a></li>
 <li class="toctree-l3"><a class="reference internal" href="suggest_command.html">suggest</a></li>
 <li class="toctree-l3"><a class="reference internal" href="view_command.html">view</a></li>
 </ul>
@@ -93,39 +94,39 @@
            <div itemprop="articleBody">
              
   <section id="rez-sphinx-config">
-<span id="id1"></span><h1>rez_sphinx config<a class="headerlink" href="#rez-sphinx-config" title="Permalink to this headline">¶</a></h1>
-<p>The command used to interact with <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">rez_sphinx’s</span></a> many
+<span id="id1"></span><h1>rez_sphinx config<a class="headerlink" href="#rez-sphinx-config" title="Permalink to this headline"></a></h1>
+<p>The command used to interact with <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx’s</span></a> many
 configuration options.  The <code class="docutils literal notranslate"><span class="pre">config</span></code> does nothing by itself but houses
 several sub-commands. See below for details.</p>
 <section id="rez-sphinx-config-check">
-<span id="id2"></span><h2>rez_sphinx config check<a class="headerlink" href="#rez-sphinx-config-check" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>rez_sphinx config check<a class="headerlink" href="#rez-sphinx-config-check" title="Permalink to this headline"></a></h2>
 <p>A simple command which reads your currently-applied configuration settings. If
 everything is valid, the function returns. But if there’s unexpected keys or
 values, those details are shown in the terminal.</p>
 </section>
 <section id="rez-sphinx-config-list-overrides">
-<span id="id3"></span><h2>rez_sphinx config list-overrides<a class="headerlink" href="#rez-sphinx-config-list-overrides" title="Permalink to this headline">¶</a></h2>
-<p>This commands shows all <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> configuration settings. The default
+<span id="id3"></span><h2>rez_sphinx config list-overrides<a class="headerlink" href="#rez-sphinx-config-list-overrides" title="Permalink to this headline"></a></h2>
+<p>This commands shows all <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> configuration settings. The default
 command, <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">config</span> <span class="pre">list-overrides</span></code> shows all overrides + default
 settings at once.  If you want to see just the overrides and nothing else,
 choose <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">config</span> <span class="pre">list-overrides</span> <span class="pre">--sparse</span></code>.</p>
 <p>There’s also a <code class="docutils literal notranslate"><span class="pre">--format</span></code> option, for outputting to <a class="reference external" href="https://pyyaml.org/wiki/PyYAMLDocumentation">yaml</a>.</p>
 </section>
 <section id="rez-sphinx-config-list-defaults">
-<span id="id4"></span><h2>rez_sphinx config list-defaults<a class="headerlink" href="#rez-sphinx-config-list-defaults" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>rez_sphinx config list-defaults<a class="headerlink" href="#rez-sphinx-config-list-defaults" title="Permalink to this headline"></a></h2>
 <p>Unlike <a class="reference internal" href="#rez-sphinx-config-list-overrides"><span class="std std-ref">rez_sphinx config list-overrides</span></a>, which includes user-defined
-overrides, this command only considers the settings which <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+overrides, this command only considers the settings which <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>
 provides by default and ignores any user settings. This command good as
 reference or for setting up your own set of overrides.</p>
 <p>As usual, <code class="docutils literal notranslate"><span class="pre">--sparse</span></code> and <code class="docutils literal notranslate"><span class="pre">--format</span></code> customize the output + display.</p>
 </section>
 <section id="rez-sphinx-config-show">
-<span id="id5"></span><h2>rez_sphinx config show<a class="headerlink" href="#rez-sphinx-config-show" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2>rez_sphinx config show<a class="headerlink" href="#rez-sphinx-config-show" title="Permalink to this headline"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">config</span> <span class="pre">show</span></code> is the main command to query configuration values
-for <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.  Don’t confuse this command with
+for <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.  Don’t confuse this command with
 <a class="reference internal" href="view_command.html#rez-sphinx-view-sphinx-conf"><span class="std std-ref">rez_sphinx view sphinx-conf</span></a> because they do different things.</p>
 <ul>
-<li><p><a class="reference internal" href="#rez-sphinx-config-show"><span class="std std-ref">rez_sphinx config show</span></a>: Get all <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> settings.</p>
+<li><p><a class="reference internal" href="#rez-sphinx-config-show"><span class="std std-ref">rez_sphinx config show</span></a>: Get all <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> settings.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>See <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a> for example values</p></li>
@@ -146,9 +147,9 @@ settings. <a class="reference internal" href="view_command.html#rez-sphinx-view-
 sees when it’s building your packages’s documentation and should be preferred
 for debugging a specific package.</p>
 </section>
-<section id="rez-sphinx-config-show-list-all">
-<span id="id6"></span><h2>rez_sphinx config show –list-all<a class="headerlink" href="#rez-sphinx-config-show-list-all" title="Permalink to this headline">¶</a></h2>
-<p>This command shows every setting which <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> supports. “.” note
+<section id="rez-sphinx-config-show-all">
+<span id="id6"></span><h2>rez_sphinx config show-all<a class="headerlink" href="#rez-sphinx-config-show-all" title="Permalink to this headline"></a></h2>
+<p>This command shows every setting which <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> supports. “.” note
 nested dictionaries. For example, <code class="docutils literal notranslate"><span class="pre">auto_help.filter_by</span></code> would be written in a
 configuration as:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
@@ -161,20 +162,20 @@ configuration as:</p>
 </pre></div>
 </div>
 <p>Each printed preference path from this command has an effect on
-<a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>. See <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a> to learn about those
+<a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>. See <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a> to learn about those
 preference path options.</p>
 <section id="rez-sphinx-config-show-build-documentation-key">
-<span id="id7"></span><h3>rez_sphinx config show build_documentation_key<a class="headerlink" href="#rez-sphinx-config-show-build-documentation-key" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3>rez_sphinx config show build_documentation_key<a class="headerlink" href="#rez-sphinx-config-show-build-documentation-key" title="Permalink to this headline"></a></h3>
 <p>This important command returns a <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-test">rez-test</a> string label. By default,
 “build_documentation”. This label, which may seem simple and unimportant, is
-the glue that most of <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> relies on for its automated processes.</p>
+the glue that most of <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> relies on for its automated processes.</p>
 <p>Don’t change this configuration value unless you know what you’re doing. And if
 you must, change it at the <a class="reference internal" href="configuring_rez_sphinx.html#global-configuration"><span class="std std-ref">How To Configure All Rez Packages</span></a> level, affecting all
 packages. Do not set this at the <a class="reference internal" href="configuring_rez_sphinx.html#per-package-configuration"><span class="std std-ref">Per-Package Configuration</span></a> level.</p>
 </section>
 </section>
 <section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline"></a></h2>
 <p>So as you can see, <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">config</span></code> queries your active configuration and
 default values. But you may be wondering “how do I customize rez_sphinx,
 myself”? Head over to <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a> to learn more.</p>

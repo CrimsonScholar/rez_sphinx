@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.constant &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.constant &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.configuration.html">configuration</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,11 +105,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.constant">
-<span id="rez-sphinx-core-constant"></span><h1>rez_sphinx.core.constant<a class="headerlink" href="#module-rez_sphinx.core.constant" title="Permalink to this headline">¶</a></h1>
-<p>Any variables needed by other modules within <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.</p>
+<span id="rez-sphinx-core-constant"></span><h1>rez_sphinx.core.constant<a class="headerlink" href="#module-rez_sphinx.core.constant" title="Permalink to this headline"></a></h1>
+<p>Any variables needed by other modules within <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.constant.REZ_SPHINX_OBJECTS_INV">
-<code class="sig-name descname">REZ_SPHINX_OBJECTS_INV</code><a class="headerlink" href="#rez_sphinx.core.constant.REZ_SPHINX_OBJECTS_INV" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.constant.REZ_SPHINX_OBJECTS_INV">
+<span class="sig-name descname"><span class="pre">REZ_SPHINX_OBJECTS_INV</span></span><a class="headerlink" href="#rez_sphinx.core.constant.REZ_SPHINX_OBJECTS_INV" title="Permalink to this definition"></a></dt>
 <dd><p>A key needed by Sphinx, internally, in order to load <a class="reference external" href="https://sphobjinv.readthedocs.io/en/latest/syntax.html">objects.inv</a>
 files. This key is auto-added to Rez packages on-build.</p>
 <dl class="field-list simple">
@@ -116,8 +120,8 @@ files. This key is auto-added to Rez packages on-build.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="rez_sphinx.core.constant.ROOT_REPLACEMENT">
-<code class="sig-name descname">ROOT_REPLACEMENT</code><a class="headerlink" href="#rez_sphinx.core.constant.ROOT_REPLACEMENT" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.constant.ROOT_REPLACEMENT">
+<span class="sig-name descname"><span class="pre">ROOT_REPLACEMENT</span></span><a class="headerlink" href="#rez_sphinx.core.constant.ROOT_REPLACEMENT" title="Permalink to this definition"></a></dt>
 <dd><p>A string to search for and replace while modifying the user’s <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a>
 entries. This later may be replaced with a website address or a local
 Rez package path so users can find the documentation more easily.</p>

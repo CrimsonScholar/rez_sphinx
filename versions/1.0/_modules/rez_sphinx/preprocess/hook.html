@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preprocess.hook &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preprocess.hook &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -71,13 +73,41 @@
 
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">preprocess_entry_point</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">environment</span><span class="p">,</span> <span class="n">sphinx_helper</span>
 <span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span><span class="p">,</span> <span class="n">preference_init</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">preprocess_entry_point</span>
+
+<span class="n">_HAS_CURLIES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;{[^</span><span class="si">{}</span><span class="s2">]*}&quot;</span><span class="p">)</span>
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_ROOT_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{root}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_has_unresolved_help</span><span class="p">(</span><span class="n">help_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``help_`` has some {} string that needs expanding.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        I feel like I&#39;ve solved this problem before in a much more effective</span>
+<span class="sd">        way, using :class:`string.Formatter`. Can&#39;t remember it though, oh</span>
+<span class="sd">        well.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        help_ (list[list[str, str]]): The help text to consider.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If there&#39;s at least one {} to expand, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_HAS_CURLIES</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">destination</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span>
 
 
 <span class="k">def</span> <span class="nf">_find_help_labels</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
@@ -102,14 +132,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># TODO : Consider making this a non-hard-coded value</span>
-    <span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;.html&quot;</span>
-
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">_iter_sphinx_source_files</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
         <span class="n">fallback_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">root</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">fallback_destination</span> <span class="o">=</span> <span class="n">fallback_name</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="n">fallback_destination</span> <span class="o">=</span> <span class="n">fallback_name</span> <span class="o">+</span> <span class="n">constant</span><span class="o">.</span><span class="n">DOCUMENTATION_EXTENSION</span>
 
         <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">_get_rez_sphinx_tags</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fallback_destination</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">preference_init</span><span class="o">.</span><span class="n">make_title</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">destination</span><span class="p">:</span>
                 <span class="n">destination</span> <span class="o">=</span> <span class="n">fallback_destination</span>
             <span class="k">else</span><span class="p">:</span>
@@ -185,52 +216,87 @@
 
 
 <span class="k">def</span> <span class="nf">_resolve_format_text</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">rez_docbot</span> <span class="kn">import</span> <span class="n">api</span>
+    <span class="sd">&quot;&quot;&quot;Convert all ``{root}`` format strings in ``help_`` to a publish location.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        help_ (list[list[str, str]]):</span>
+<span class="sd">            The documentation which may contain format strings like</span>
+<span class="sd">            ``[[&quot;Home Page&quot;, &quot;{root}/path.html&quot;]]``.</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The object to query from, for configuration settings.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]: The original list, but with all format strings resolved.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">url</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_first_versioned_view_url</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_publish_url</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">help_</span><span class="p">:</span>
-        <span class="n">resolved</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">root</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>  <span class="c1"># This we expect to probably exist.</span>
+            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span>  <span class="c1"># This is added, just in case.</span>
+        <span class="p">)</span>
         <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="n">resolved</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">output</span>
 
 
 <div class="viewcode-block" id="preprocess_help"><a class="viewcode-back" href="../../../api/rez_sphinx.preprocess.hook.html#rez_sphinx.preprocess.hook.preprocess_help">[docs]</a><span class="k">def</span> <span class="nf">preprocess_help</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">,</span> <span class="n">help_</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="c1"># &quot;&quot;&quot;Replace the `package help`_ in ``data`` with auto-found Sphinx documentation.</span>
-    <span class="c1">#</span>
-    <span class="c1"># If no :ref:`rez_sphinx tags &lt;rez_sphinx tag&gt;` are found, this function will</span>
-    <span class="c1"># exit early and do nothing.</span>
-    <span class="c1">#</span>
-    <span class="c1"># Args:</span>
-    <span class="c1">#     this (rez.packages.Package):</span>
-    <span class="c1">#         The installed (built) Rez package. This package is mostly read-only.</span>
-    <span class="c1">#     data (dict[str, object]):</span>
-    <span class="c1">#         The contents of ``this``. Changing this instance will have an</span>
-    <span class="c1">#         effect on the Rez package which is written to-disk.</span>
-    <span class="c1">#</span>
-    <span class="c1"># &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Get auto-generated `help` attributes for a Rez source package.</span>
+
+<span class="sd">    If the source Rez package at ``package_source_root`` has no `Sphinx</span>
+<span class="sd">    conf.py`_, this function returns nothing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package_source_root (str):</span>
+<span class="sd">            An absolute path to a directory on disk where some source Rez package lives.</span>
+<span class="sd">        help_ (list[str] or str or None):</span>
+<span class="sd">            The found Rez package help, if any.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``package_source_root`` isn&#39;t in a Rez package.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[str, str]]:</span>
+<span class="sd">            The original ``help_`` plus any auto-generated help entries.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">help_</span> <span class="o">=</span> <span class="n">preprocess_entry_point</span><span class="o">.</span><span class="n">expand_help</span><span class="p">(</span><span class="n">help_</span><span class="p">)</span>
-    <span class="n">source_path</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">find_configuration_path</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">)</span>
+
+    <span class="c1"># TODO : Double check if this function should be replaced with another one.</span>
+    <span class="c1"># I think the intent was &quot;check if rez_sphinx is applied&quot;. But conf.py can</span>
+    <span class="c1"># come from anywhere. So it&#39;s not a great check for this.</span>
+    <span class="c1">#</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">source_path</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">find_configuration_path</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Package at &quot;</span><span class="si">%s</span><span class="s1">&quot; has no documentation.&#39;</span><span class="p">,</span> <span class="n">package_source_root</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">help_</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">source_path</span><span class="p">:</span>
-        <span class="k">return</span>
+        <span class="k">return</span> <span class="n">help_</span>
 
     <span class="n">source_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
     <span class="n">new_labels</span> <span class="o">=</span> <span class="n">_find_help_labels</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span>
-
-    <span class="c1"># TODO : Make sure we incorporate user preference here. e.g. if no all</span>
-    <span class="c1"># duplicates, only add if we prefer auto-generated.</span>
-    <span class="c1">#</span>
     <span class="n">new_labels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">constant</span><span class="o">.</span><span class="n">REZ_SPHINX_OBJECTS_INV</span><span class="p">,</span> <span class="n">constant</span><span class="o">.</span><span class="n">ROOT_REPLACEMENT</span><span class="p">])</span>
 
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Directory &quot;</span><span class="si">{package_source_root}</span><span class="s1">&quot; is not in a Rez package.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">package_source_root</span><span class="o">=</span><span class="n">package_source_root</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
     <span class="n">original_help</span> <span class="o">=</span> <span class="n">help_</span>
-    <span class="n">sort_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_sort_method</span><span class="p">()</span>
+    <span class="n">sort_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_sort_method</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">filter_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_filter_method</span><span class="p">()</span>
+        <span class="n">filter_method</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_filter_method</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">EnvironmentError</span><span class="p">:</span>
         <span class="n">full_help</span> <span class="o">=</span> <span class="n">help_</span> <span class="o">+</span> <span class="n">new_labels</span>
         <span class="n">full_help</span> <span class="o">=</span> <span class="n">_sort</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="n">original_help</span><span class="p">,</span> <span class="n">full_help</span><span class="p">)</span>
@@ -240,8 +306,7 @@
             <span class="n">sort_method</span><span class="p">,</span> <span class="n">filtered_original</span><span class="p">,</span> <span class="n">filtered_original</span> <span class="o">+</span> <span class="n">filtered_labels</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">environment</span><span class="o">.</span><span class="n">is_publishing_enabled</span><span class="p">():</span>
-        <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">package_source_root</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_has_unresolved_help</span><span class="p">(</span><span class="n">full_help</span><span class="p">)</span> <span class="ow">and</span> <span class="n">environment</span><span class="o">.</span><span class="n">is_publishing_enabled</span><span class="p">():</span>
         <span class="n">full_help</span> <span class="o">=</span> <span class="n">_resolve_format_text</span><span class="p">(</span><span class="n">full_help</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">full_help</span></div>

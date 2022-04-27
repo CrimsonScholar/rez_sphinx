@@ -4,12 +4,11 @@ rez\_sphinx.commands.suggest
 .. toctree::
    :maxdepth: 4
 
-   
    build_display <rez_sphinx.commands.suggest.build_display>
-   
+   filter_by <rez_sphinx.commands.suggest.filter_by>
    search_mode <rez_sphinx.commands.suggest.search_mode>
-   
    suggestion_mode <rez_sphinx.commands.suggest.suggestion_mode>
+
 .. automodule:: rez_sphinx.commands.suggest
    :members:
    :undoc-members:

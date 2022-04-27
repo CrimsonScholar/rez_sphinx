@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.configuration &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.configuration &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -17,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="rez_sphinx.core.constant" href="rez_sphinx.core.constant.html" />
-    <link rel="prev" title="rez_sphinx.core.bootstrap" href="rez_sphinx.core.bootstrap.html" /> 
+    <link rel="prev" title="rez_sphinx.core.cli_helper" href="rez_sphinx.core.cli_helper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.constant.html">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,16 +105,16 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.configuration">
-<span id="rez-sphinx-core-configuration"></span><h1>rez_sphinx.core.configuration<a class="headerlink" href="#module-rez_sphinx.core.configuration" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-core-configuration"></span><h1>rez_sphinx.core.configuration<a class="headerlink" href="#module-rez_sphinx.core.configuration" title="Permalink to this headline"></a></h1>
 <p>A wrap for accessing data from <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>, from <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>.</p>
 <dl class="py class">
-<dt id="rez_sphinx.core.configuration.ConfPy">
-<em class="property">class </em><code class="sig-name descname">ConfPy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConfPy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A wrap for accessing data from <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>, from <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>.</p>
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.from_directory">
-<em class="property">classmethod </em><code class="sig-name descname">from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.from_directory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.from_directory">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.from_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.from_directory" title="Permalink to this definition"></a></dt>
 <dd><p>Find and convert a <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> located directly within <code class="docutils literal notranslate"><span class="pre">directory</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -128,8 +132,8 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.from_path">
-<em class="property">classmethod </em><code class="sig-name descname">from_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.from_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.from_path">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.from_path" title="Permalink to this definition"></a></dt>
 <dd><p>Convert a file path into an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -148,8 +152,8 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_attributes">
-<code class="sig-name descname">get_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">allow_extensions</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_attributes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_extensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_attributes" title="Permalink to this definition"></a></dt>
 <dd><p>Get each found attribute and its values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -167,8 +171,8 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_extensions">
-<code class="sig-name descname">get_extensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_extensions" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_extensions">
+<span class="sig-name descname"><span class="pre">get_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_extensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Get all registered <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> extensions. e.g. <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/viewcode.html">sphinx.ext.viewcode</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -181,8 +185,8 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_known_attribute_names">
-<code class="sig-name descname">get_known_attribute_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">allow_extensions</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_known_attribute_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_known_attribute_names" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_known_attribute_names">
+<span class="sig-name descname"><span class="pre">get_known_attribute_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_extensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_known_attribute_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_known_attribute_names" title="Permalink to this definition"></a></dt>
 <dd><p>Find every <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -200,26 +204,26 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_master_document_path">
-<code class="sig-name descname">get_master_document_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_master_document_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_master_document_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_master_document_path">
+<span class="sig-name descname"><span class="pre">get_master_document_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_master_document_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_master_document_path" title="Permalink to this definition"></a></dt>
 <dd><p>str: Get the full path on-disk where this <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> lives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_module_path">
-<code class="sig-name descname">get_module_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_module_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_module_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_module_path">
+<span class="sig-name descname"><span class="pre">get_module_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_module_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_module_path" title="Permalink to this definition"></a></dt>
 <dd><p>str: Get the full path to this <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> file, on-disk.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.get_source_extension">
-<code class="sig-name descname">get_source_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_source_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_source_extension" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.get_source_extension">
+<span class="sig-name descname"><span class="pre">get_source_extension</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.get_source_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.get_source_extension" title="Permalink to this definition"></a></dt>
 <dd><p>str: Get the extension to search for ReST files.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rez_sphinx.core.configuration.ConfPy.is_valid_directory">
-<em class="property">static </em><code class="sig-name descname">is_valid_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.is_valid_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.is_valid_directory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.configuration.ConfPy.is_valid_directory">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/configuration.html#ConfPy.is_valid_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.configuration.ConfPy.is_valid_directory" title="Permalink to this definition"></a></dt>
 <dd><p>Check if <code class="docutils literal notranslate"><span class="pre">directory</span></code> has a configuration file that this class can load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -242,7 +246,7 @@ e.g. <code class="docutils literal notranslate"><span class="pre">&quot;{rez_roo
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rez_sphinx.core.bootstrap.html" class="btn btn-neutral float-left" title="rez_sphinx.core.bootstrap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rez_sphinx.core.cli_helper.html" class="btn btn-neutral float-left" title="rez_sphinx.core.cli_helper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="rez_sphinx.core.constant.html" class="btn btn-neutral float-right" title="rez_sphinx.core.constant" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,0 +1,7 @@
+rez\_sphinx\_plugins.rezplugins.release\_hook.publish\_documentation
+--------------------------------------------------------------------
+
+.. automodule:: rez_sphinx_plugins.rezplugins.release_hook.publish_documentation
+   :members:
+   :undoc-members:
+   :show-inheritance:

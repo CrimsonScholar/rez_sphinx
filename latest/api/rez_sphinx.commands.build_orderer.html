@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.commands.build_orderer &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.commands.build_orderer &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -59,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -91,11 +94,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.commands.build_orderer">
-<span id="rez-sphinx-commands-build-orderer"></span><h1>rez_sphinx.commands.build_orderer<a class="headerlink" href="#module-rez_sphinx.commands.build_orderer" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-commands-build-orderer"></span><h1>rez_sphinx.commands.build_orderer<a class="headerlink" href="#module-rez_sphinx.commands.build_orderer" title="Permalink to this headline"></a></h1>
 <p>A set of functions for implementing <a class="reference internal" href="../suggest_command.html#rez-sphinx-suggest-build-order"><span class="std std-ref">rez_sphinx suggest build-order</span></a>.</p>
 <dl class="py function">
-<dt id="rez_sphinx.commands.build_orderer.collect_packages">
-<code class="sig-name descname">collect_packages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directories</span></em>, <em class="sig-param"><span class="n">searcher</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/build_orderer.html#collect_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.build_orderer.collect_packages" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.commands.build_orderer.collect_packages">
+<span class="sig-name descname"><span class="pre">collect_packages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">searcher</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/build_orderer.html#collect_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.build_orderer.collect_packages" title="Permalink to this definition"></a></dt>
 <dd><p>Check <code class="docutils literal notranslate"><span class="pre">directories</span></code> for Rez packages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -103,7 +106,7 @@
 <li><p><strong>directories</strong> (<em>iter</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The absolute path to folders on-disk to look within. It’s not
 required for Rez packages to be located directly under each folder.
 And often, they are not.</p></li>
-<li><p><strong>searcher</strong> (<em>callable</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>-&gt; list</em><em>[</em><a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)"><em>rez.packages.Package</em></a><em>]</em>) – A function which searches within <code class="docutils literal notranslate"><span class="pre">directories</span></code> for Rez packages
+<li><p><strong>searcher</strong> (<em>callable</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>-&gt; list</em><em>[</em><a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>]</em>) – A function which searches within <code class="docutils literal notranslate"><span class="pre">directories</span></code> for Rez packages
 and returns those results. These Rez packages could be source
 packages <strong>or</strong> installed packages.</p></li>
 </ul>
@@ -116,28 +119,7 @@ packages <strong>or</strong> installed packages.</p></li>
 <dd class="field-odd"><p>The found packages.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)">rez.packages.Package</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="rez_sphinx.commands.build_orderer.filter_existing_documentation">
-<code class="sig-name descname">filter_existing_documentation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">packages</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/build_orderer.html#filter_existing_documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.build_orderer.filter_existing_documentation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove any Rez package from <code class="docutils literal notranslate"><span class="pre">packages</span></code> which already has documentation.</p>
-<p>This function uses a variety of checks including searching “known”
-documentation locations. As well as guessing where it could be.</p>
-<p>This function searches specifically for <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> documentation only.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>packages</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)"><em>rez.packages.Package</em></a><em>]</em>) – The source / installed Rez packages to filter. Usually,
-these are source Rez packages.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Every package from <code class="docutils literal notranslate"><span class="pre">packages</span></code> which doesn’t have documentation.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)">rez.packages.Package</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)">rez.packages.Package</a>]</p>
 </dd>
 </dl>
 </dd></dl>

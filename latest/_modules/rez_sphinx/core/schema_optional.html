@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.schema_optional &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.schema_optional &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -146,7 +148,7 @@
 <span class="sd">            A description of the required and optional data.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        :class:`schema.Optional` or NoneType: The found key or nothing.</span>
+<span class="sd">        :class:`schema.Optional` or None: The found key or nothing.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">real_key</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">_schema</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># pylint: disable=protected-access</span>
@@ -191,7 +193,7 @@
         <span class="c1"># parameter, schema won&#39;t set the key attribute properly. Very annoying</span>
         <span class="c1"># but at least the work around it&#39;s hard.</span>
         <span class="c1">#</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">_schema</span><span class="p">)</span>  <span class="c1"># pylint: disable=protected-access</span>
+        <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="n">_schema</span>  <span class="c1"># pylint: disable=protected-access</span>
 
     <span class="k">return</span> <span class="n">key</span></div>
 
@@ -209,7 +211,7 @@
 <span class="sd">        dict: The stripped, non-default data.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">real_key</span> <span class="o">=</span> <span class="n">_get_real_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>

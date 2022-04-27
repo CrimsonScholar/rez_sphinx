@@ -1,0 +1,7 @@
+rez\_sphinx.commands.suggest.filter\_by
+---------------------------------------
+
+.. automodule:: rez_sphinx.commands.suggest.filter_by
+   :members:
+   :undoc-members:
+   :show-inheritance:

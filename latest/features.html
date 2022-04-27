@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="Why Use rez_sphinx?" href="why_use_rez_sphinx.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="what_is_rez_sphinx.html">What Is Rez Sphinx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why_use_rez_sphinx.html">Why Use rez_sphinx?</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Features</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#base-features">Base Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intrinsic-features">Intrinsic Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#opt-in-features">Opt-In Features</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#all-commands">All Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation.html#advanced-topics">Advanced Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="user_documentation.html">User Documentation</a> &raquo;</li>
+      <li>Features</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/features.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline"></a></h1>
+<p>But above all else, rez_sphinx is <strong>thorough</strong> and well tested. <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> does
+an incredible job making documenting Python code easier but it just isn’t able
+to ensure documentation is kept up-to-date or link to existing documentation
+reliably.</p>
+<p>rez_sphinx makes your documentation built to last. Here’s a summary of some of
+the features that <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> has to offer.</p>
+<section id="base-features">
+<h2>Base Features<a class="headerlink" href="#base-features" title="Permalink to this headline"></a></h2>
+<ul>
+<li><p><a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">Auto-initialize documentation</span></a></p>
+<blockquote>
+<div><ul>
+<li><p>Supports combined or separate source / build folders</p></li>
+<li><p>Extends <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> with <a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-init-options-default-files"><span class="std std-ref">optional, template files</span></a></p></li>
+<li><p><span class="xref std std-ref">Batch-publish documentation</span> for source
+<strong>or</strong> installed Rez packages</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="suggest_command.html#rez-sphinx-suggest-build-order"><span class="std std-ref">CLI-based utilities</span></a> to ensure “best results”</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">API documentation auto-generation / auto-syncing</span></a></p></li>
+<li><p><a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-init-options-check-default-files"><span class="std std-ref">Validate missing documentation</span></a>, pre-build</p></li>
+<li><p>Extremely configurable <a class="reference internal" href="configuring_rez_sphinx.html"><span class="doc">Configuring rez_sphinx</span></a> and <span class="xref std std-ref">publisher
+settings</span></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>CLI-based <a class="reference internal" href="config_command.html#rez-sphinx-config"><span class="std std-ref">configuration inspector</span></a> - shows “unresolved” values</p></li>
+<li><p>CLI-based <a class="reference internal" href="view_command.html#rez-sphinx-view"><span class="std std-ref">“actual, resolved values” inspector</span></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="intrinsic-features">
+<h2>Intrinsic Features<a class="headerlink" href="#intrinsic-features" title="Permalink to this headline"></a></h2>
+<ul>
+<li><p><a class="reference internal" href="enabling_rez_help_integration.html"><span class="doc">Auto-link and cross reference documentation</span></a> from multiple Rez packages at once</p>
+<blockquote>
+<div><ul>
+<li><p>This works …</p>
+<blockquote>
+<div><ul>
+<li><p><a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-intersphinx-settings-package-link-map"><span class="std std-ref">Even if package is external</span></a> and you don’t
+want to change it.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Example: <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-pip">rez-pip</a> installed packages.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html"><span class="doc">Even if that Rez package isn’t build with rez_sphinx</span></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Auto-discovers your documentation and <span class="xref std std-ref">integrates them into rez-help</span></p></li>
+<li><p>Provides a default <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">build_documentation rez-test command</span></a>, for easier documentation building.</p></li>
+<li><p><a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> provides sensible <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> values for your Sphinx projects</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>But you can still <a class="reference internal" href="how_rez_and_sphinx_are_linked.html#how-to-override-rez-sphinx-conf-py"><span class="std std-ref">override the conf.py customizations</span></a> with whatever you’d like</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="opt-in-features">
+<h2>Opt-In Features<a class="headerlink" href="#opt-in-features" title="Permalink to this headline"></a></h2>
+<section id="opt-in-themes">
+<h3>Opt-In Themes<a class="headerlink" href="#opt-in-themes" title="Permalink to this headline"></a></h3>
+<p>You can set all Rez packages using <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> to use sphinx_rtd_theme
+(or whichever theme you prefer), using <a class="reference internal" href="using_sphinx_rtd_theme.html"><span class="doc">this Sphinx theme tutorial</span></a>.</p>
+</section>
+<section id="opt-in-publishing">
+<h3>Opt-In Publishing<a class="headerlink" href="#opt-in-publishing" title="Permalink to this headline"></a></h3>
+<p><a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> can auto-publish your documentation.</p>
+<p>It supports this using a <span class="xref std std-ref">release_hook</span>.</p>
+<p>As a publisher, <a class="reference internal" href="publish_command.html#rez-sphinx-publish-run"><span class="std std-ref">rez_sphinx publish run</span></a> provides these features:</p>
+<ul>
+<li><p>One-to-many repositories-to-Rez package support - <span class="xref std std-ref">Multiple Rez packages in a
+single repository</span></p></li>
+<li><p>One-to-one repository-to-Rez package support - <span class="xref std std-ref">One package per
+repository</span></p></li>
+<li><p><span class="xref std std-ref">“latest live” documentation</span>
+which auto-updates with each new version</p></li>
+<li><p><span class="xref std std-ref">Versioned, locked documentation</span></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="enabling_rez_help_integration.html"><span class="doc">Auto-linked and cross referenced documentation</span></a> links against the versioned
+documentation. The result - links to external documentation don’t go out
+of date.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="why_use_rez_sphinx.html" class="btn btn-neutral float-left" title="Why Use rez_sphinx?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

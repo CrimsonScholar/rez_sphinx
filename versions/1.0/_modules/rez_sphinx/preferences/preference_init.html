@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preferences.preference_init &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preferences.preference_init &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -91,7 +93,7 @@
 
 <span class="kn">import</span> <span class="nn">schema</span>
 
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">generic</span><span class="p">,</span> <span class="n">schema_helper</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">constant</span><span class="p">,</span> <span class="n">generic</span><span class="p">,</span> <span class="n">schema_helper</span>
 
 <span class="n">_BASE_TEXT</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
     <span class="sd">&quot;&quot;&quot;\</span>
@@ -105,6 +107,7 @@
 <span class="sd">    - Table Of Contents (toctree) to other Sphinx pages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <span class="p">)</span>
+<span class="n">_CHECK_PRE_BUILD</span> <span class="o">=</span> <span class="s2">&quot;check_pre_build&quot;</span>
 <span class="n">_DEFAULT_TEXT_TEMPLATE</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
     <span class="sd">&quot;&quot;&quot;\</span>
 <span class="sd">    {title}</span>
@@ -120,7 +123,29 @@
 
 
 <div class="viewcode-block" id="Entry"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry">[docs]</a><span class="k">class</span> <span class="nc">Entry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A description for Sphinx files to generate during :ref:`rez_sphinx init`.&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A description for Sphinx files to generate during :ref:`rez_sphinx init`.</span>
+
+<span class="sd">    The easiest way to make an instance of this class is to call</span>
+<span class="sd">    :meth:`Entry.validate_data`.  Provide the dict with these values:</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        &quot;base_text&quot; (str): &quot;The documentation text body\nto write to this file.&quot;</span>
+<span class="sd">        &quot;path&quot; (str): &quot;inner/folder/some_file_name_without_an_extension&quot;.</span>
+<span class="sd">        &quot;add_tag&quot; (bool, optional): If True, a :ref:`rez_sphinx tag` is added.</span>
+<span class="sd">        &quot;check_pre_build&quot; (bool, optional): If True, ensure &quot;path&quot; has edits, pre-build.</span>
+<span class="sd">        &quot;title&quot; (str, optional): &quot;Custom title name if you want&quot;.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        Entry.validate_data(</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;base_text&quot;: &quot;Some default text to put into the file.&quot;,</span>
+<span class="sd">                &quot;path&quot;: &quot;developer_documentation&quot;,</span>
+<span class="sd">                &quot;title&quot;: &quot;Developer Documentation&quot;,</span>
+<span class="sd">            }</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Store ``data`` for reference, later.</span>
@@ -172,7 +197,7 @@
 
     <span class="k">def</span> <span class="nf">_get_title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;str: A human-friendly phrase to describe this instance, in documentation.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_make_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_file_name</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">make_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_file_name</span><span class="p">())</span>
 
 <div class="viewcode-block" id="Entry.check_pre_build"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry.check_pre_build">[docs]</a>    <span class="k">def</span> <span class="nf">check_pre_build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;If True, make sure users have manually filled out the documentation.</span>
@@ -185,8 +210,10 @@
 <span class="sd">            bool: If True, run the check prior to Sphinx builds. If False, don&#39;t.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO : Add a unittest for this functionality</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;check_pre_build&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">True</span></div>
+        <span class="k">if</span> <span class="n">_CHECK_PRE_BUILD</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">_CHECK_PRE_BUILD</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Entry.get_default_text"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry.get_default_text">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;str: The generated Sphinx documentation text body.&quot;&quot;&quot;</span>
@@ -194,10 +221,6 @@
         <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_title</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_tag_enabled</span><span class="p">():</span>
-            <span class="c1"># TODO : Maybe it&#39;d be cool to add a directive to Sphinx called</span>
-            <span class="c1"># &quot;rez_sphinx_help&quot; and then somehow query those smartly. Or just do a</span>
-            <span class="c1"># raw text parse. Either way is probably fine.</span>
-            <span class="c1">#</span>
             <span class="c1"># Reference: https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html  pylint: disable=line-too-long</span>
             <span class="c1">#</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">_TAG_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">output</span>
@@ -218,8 +241,7 @@
 
 <div class="viewcode-block" id="Entry.get_relative_path"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry.get_relative_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_relative_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;str: Get the path to this file, relative to the documentation source root.&quot;&quot;&quot;</span>
-        <span class="c1"># TODO : Get this .rst from the user&#39;s configuration settings. Don&#39;t do this</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.rst&quot;</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">constant</span><span class="o">.</span><span class="n">SOURCE_DOCUMENTATION_EXTENSION</span></div>
 
 <div class="viewcode-block" id="Entry.write"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.Entry.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write this instance to disk, starting at ``root``.</span>
@@ -253,7 +275,7 @@
         <span class="s2">&quot;base_text&quot;</span><span class="p">:</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
         <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
         <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;add_tag&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;check_pre_build&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">_CHECK_PRE_BUILD</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;relative_path&quot;</span><span class="p">):</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
         <span class="n">schema</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">):</span> <span class="n">schema_helper</span><span class="o">.</span><span class="n">NON_NULL_STR</span><span class="p">,</span>
     <span class="p">}</span>
@@ -327,9 +349,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_uses_one_character</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">text</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span>
-
     <span class="k">def</span> <span class="nf">_get_underline_header_text</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">line_length</span><span class="p">):</span>
         <span class="n">after_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -391,6 +410,31 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
 
+<span class="k">def</span> <span class="nf">_has_help_label</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``text`` describes a :ref:`rez_sphinx_help` line.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">text</span>
+
+
+<span class="k">def</span> <span class="nf">_uses_one_character</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;bool: Check if every character in ``text`` is the same.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">text</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">_get_help_label</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the right-side of a :ref:`rez_sphinx_help`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Some raw text from a Sphinx file. e.g. ``&quot;rez_sphinx_help:Blah&quot;``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found label. e.g. ``&quot;Blah&quot;``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">name</span>
+
+
 <div class="viewcode-block" id="find_tags"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.find_tags">[docs]</a><span class="k">def</span> <span class="nf">find_tags</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse ``lines`` for :ref:`rez_sphinx tags &lt;rez_sphinx tag&gt;`.</span>
 
@@ -407,8 +451,26 @@
 <span class="sd">        list[list[str, str]]: Each hard-coded label + &quot;destination&quot;, if any.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_header</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">_IS_COMMENT</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">stripped</span><span class="p">):</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">_uses_one_character</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">return</span> <span class="n">_get_header_text_at</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="n">top_header</span> <span class="o">=</span> <span class="n">_get_header</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_IS_COMMENT</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
@@ -424,7 +486,11 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">next_line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">_TAG_NAME</span><span class="p">):</span>
             <span class="k">continue</span>
 
-        <span class="n">_</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">next_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_has_help_label</span><span class="p">(</span><span class="n">next_line</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_get_help_label</span><span class="p">(</span><span class="n">next_line</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">top_header</span>
+
         <span class="n">destination</span> <span class="o">=</span> <span class="n">_get_header_text_at</span><span class="p">(</span><span class="n">next_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
 
         <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
@@ -432,7 +498,7 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
-<span class="k">def</span> <span class="nf">_make_title</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="make_title"><a class="viewcode-back" href="../../../api/rez_sphinx.preferences.preference_init.html#rez_sphinx.preferences.preference_init.make_title">[docs]</a><span class="k">def</span> <span class="nf">make_title</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert some file name into a Human-friendly documentation phrase.</span>
 
 <span class="sd">    Args:</span>
@@ -442,7 +508,7 @@
 <span class="sd">        str: The converted phrase. e.g. &quot;Some File&quot;.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

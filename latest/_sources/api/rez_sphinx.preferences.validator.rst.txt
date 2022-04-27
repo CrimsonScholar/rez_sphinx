@@ -1,0 +1,7 @@
+rez\_sphinx.preferences.validator
+---------------------------------
+
+.. automodule:: rez_sphinx.preferences.validator
+   :members:
+   :undoc-members:
+   :show-inheritance:

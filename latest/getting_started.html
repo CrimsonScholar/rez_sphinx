@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Getting Started &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -17,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="rez_sphinx build" href="build_command.html" />
-    <link rel="prev" title="Why Use rez_sphinx?" href="why_use_rez_sphinx.html" /> 
+    <link rel="prev" title="Features" href="features.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,11 +40,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="what_is_rez_sphinx.html">What Is Rez Sphinx</a></li>
 <li class="toctree-l3"><a class="reference internal" href="why_use_rez_sphinx.html">Why Use rez_sphinx?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html">Features</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#run-rez-sphinx-init">Run rez_sphinx init</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#run-rez-build">Run rez_build</a></li>
@@ -86,10 +90,10 @@
            <div itemprop="articleBody">
              
   <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
 <section id="run-rez-sphinx-init">
-<h2>Run rez_sphinx init<a class="headerlink" href="#run-rez-sphinx-init" title="Permalink to this headline">¶</a></h2>
-<p>To link <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> with your Rez package, here’s what you must do:</p>
+<h2>Run rez_sphinx init<a class="headerlink" href="#run-rez-sphinx-init" title="Permalink to this headline"></a></h2>
+<p>To link <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> with your Rez package, here’s what you must do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">directory</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">your_package_name_here</span>
 <span class="n">rez</span><span class="o">-</span><span class="n">env</span> <span class="n">your_package_name_here</span> <span class="n">rez_sphinx</span> <span class="o">--</span> <span class="n">rez_sphinx</span> <span class="n">init</span>
 </pre></div>
@@ -97,8 +101,8 @@
 <p>That’s it. This command only needs to be ran <strong>once</strong>.</p>
 </section>
 <section id="run-rez-build">
-<h2>Run rez_build<a class="headerlink" href="#run-rez-build" title="Permalink to this headline">¶</a></h2>
-<p>You’re now ready to build your documentation. <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> made some
+<h2>Run rez_build<a class="headerlink" href="#run-rez-build" title="Permalink to this headline"></a></h2>
+<p>You’re now ready to build your documentation. <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> made some
 changes to your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a> file so before continuing be sure to run
 <code class="docutils literal notranslate"><span class="pre">rez-build</span></code> just once more.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rez</span><span class="o">-</span><span class="n">build</span> <span class="o">--</span><span class="n">clean</span> <span class="o">--</span><span class="n">install</span>
@@ -106,12 +110,12 @@ changes to your <a class="reference external" href="https://github.com/nerdvegas
 </div>
 </section>
 <section id="write-some-documentation">
-<h2>Write Some Documentation<a class="headerlink" href="#write-some-documentation" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> by default adds some template files which you are expected
+<h2>Write Some Documentation<a class="headerlink" href="#write-some-documentation" title="Permalink to this headline"></a></h2>
+<p><a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> by default adds some template files which you are expected
 to fill out located at:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">{root}/documentation/source/developer_documentation.rst</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">{root}/documentation/source/user_documentation.rst</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{root}/documentation/developer_documentation.rst</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{root}/documentation/user_documentation.rst</span></code></p></li>
 </ul>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -120,8 +124,8 @@ edits and fails + stops early if they’re still default. So let’s add some
 text to them.</p>
 </div>
 <p>Run this in your terminal to quickly append some edits to those files:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;Some documentation for users here&quot;</span> &gt;&gt; ./documentation/source/user_documentation.rst
-<span class="nb">echo</span> <span class="s2">&quot;Some technical documentation&quot;</span> &gt;&gt; ./documentation/source/developer_documentation.rst
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;Some documentation for users here&quot;</span> &gt;&gt; ./documentation/user_documentation.rst
+<span class="nb">echo</span> <span class="s2">&quot;Some technical documentation&quot;</span> &gt;&gt; ./documentation/developer_documentation.rst
 </pre></div>
 </div>
 <div class="admonition note">
@@ -131,17 +135,17 @@ text to them.</p>
 </div>
 </section>
 <section id="rez-sphinx-build-run">
-<h2>rez_sphinx build run<a class="headerlink" href="#rez-sphinx-build-run" title="Permalink to this headline">¶</a></h2>
+<h2>rez_sphinx build run<a class="headerlink" href="#rez-sphinx-build-run" title="Permalink to this headline"></a></h2>
 <p>Your documentation is initialized and has some hand-written edits. You’re ready
 to build!</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rez-test your_package_name_here build_documentation
 </pre></div>
 </div>
 <p>Congratulations, your documentation is now waiting for you in
-<code class="docutils literal notranslate"><span class="pre">{root}/documentation/build/index.html</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">{root}/build/documentation/index.html</span></code>.</p>
 <p>If all you want to do is get some documentation quickly up and running and
 aren’t too particular about the details, here’s where the tutorial ends.  But
-if you want to learn more about <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> and how it works, see the
+if you want to learn more about <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> and how it works, see the
 sections below.</p>
 </section>
 </section>
@@ -150,7 +154,7 @@ sections below.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="why_use_rez_sphinx.html" class="btn btn-neutral float-left" title="Why Use rez_sphinx?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="features.html" class="btn btn-neutral float-left" title="Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="build_command.html" class="btn btn-neutral float-right" title="rez_sphinx build" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

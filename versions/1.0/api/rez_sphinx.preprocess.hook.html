@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preprocess.hook &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preprocess.hook &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -56,6 +58,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -88,12 +91,32 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.preprocess.hook">
-<span id="rez-sphinx-preprocess-hook"></span><h1>rez_sphinx.preprocess.hook<a class="headerlink" href="#module-rez_sphinx.preprocess.hook" title="Permalink to this headline">¶</a></h1>
-<p>Automatically add <a class="reference internal" href="../auto_append_help_tags.html#rez-sphinx-tag"><span class="std std-ref">rez_sphinx tags</span></a> to built packages.</p>
+<span id="rez-sphinx-preprocess-hook"></span><h1>rez_sphinx.preprocess.hook<a class="headerlink" href="#module-rez_sphinx.preprocess.hook" title="Permalink to this headline"></a></h1>
+<p>Automatically add <a class="reference internal" href="../enabling_rez_help_integration.html#rez-sphinx-tag"><span class="std std-ref">rez_sphinx tags</span></a> to built packages.</p>
 <dl class="py function">
-<dt id="rez_sphinx.preprocess.hook.preprocess_help">
-<code class="sig-name descname">preprocess_help</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package_source_root</span></em>, <em class="sig-param"><span class="n">help_</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/hook.html#preprocess_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preprocess.hook.preprocess_help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="rez_sphinx.preprocess.hook.preprocess_help">
+<span class="sig-name descname"><span class="pre">preprocess_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_source_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preprocess/hook.html#preprocess_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preprocess.hook.preprocess_help" title="Permalink to this definition"></a></dt>
+<dd><p>Get auto-generated <cite>help</cite> attributes for a Rez source package.</p>
+<p>If the source Rez package at <code class="docutils literal notranslate"><span class="pre">package_source_root</span></code> has no <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx
+conf.py</a>, this function returns nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package_source_root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – An absolute path to a directory on disk where some source Rez package lives.</p></li>
+<li><p><strong>help</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – The found Rez package help, if any.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">package_source_root</span></code> isn’t in a Rez package.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The original <code class="docutils literal notranslate"><span class="pre">help_</span></code> plus any auto-generated help entries.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

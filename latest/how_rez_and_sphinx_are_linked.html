@@ -4,19 +4,21 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How Rez And Sphinx Are Linked &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>How Rez And Sphinx Are Linked &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="python" href="api/modules.html" />
+    <link rel="next" title="How interlinking works" href="how_interlinking_works.html" />
     <link rel="prev" title="Developer Documentation" href="developer_documentation.html" /> 
 </head>
 
@@ -38,15 +40,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="developer_documentation.html">Developer Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How Rez And Sphinx Are Linked</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-bootstrap-line">The Bootstrap Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-override-rez-sphinx-conf-py">How To Override rez_sphinx conf.py</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-extra-overrides">Adding Extra Overrides</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="how_interlinking_works.html">How interlinking works</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
@@ -78,13 +82,13 @@
            <div itemprop="articleBody">
              
   <section id="how-rez-and-sphinx-are-linked">
-<h1>How Rez And Sphinx Are Linked<a class="headerlink" href="#how-rez-and-sphinx-are-linked" title="Permalink to this headline">¶</a></h1>
+<h1>How Rez And Sphinx Are Linked<a class="headerlink" href="#how-rez-and-sphinx-are-linked" title="Permalink to this headline"></a></h1>
 <p>When you call <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a> for the first time, as mentioned in the
 <a class="reference internal" href="init_command.html"><span class="doc">rez_sphinx init</span></a>, several changes happen behind the scenes.</p>
 <p>One of the changes, the most important change, happens in the generated
 <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> file.</p>
 <section id="the-bootstrap-line">
-<span id="rez-sphinx-bootstrap"></span><h2>The Bootstrap Line<a class="headerlink" href="#the-bootstrap-line" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-bootstrap"></span><h2>The Bootstrap Line<a class="headerlink" href="#the-bootstrap-line" title="Permalink to this headline"></a></h2>
 <p>In the generated <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> file, these lines are added:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rez_sphinx</span> <span class="kn">import</span> <span class="n">api</span>
 <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="nb">locals</span><span class="p">()))</span>
@@ -100,7 +104,7 @@ is Sphinx’s main customization file for your documentation.</p>
 existing values, which is why <code class="docutils literal notranslate"><span class="pre">locals()</span></code> is passed to <code class="docutils literal notranslate"><span class="pre">api.bootstrap(locals())</span></code>.</p>
 <p><a class="reference internal" href="api/rez_sphinx.core.bootstrap.html#rez_sphinx.core.bootstrap.bootstrap" title="rez_sphinx.core.bootstrap.bootstrap"><code class="xref py py-func docutils literal notranslate"><span class="pre">bootstrap.bootstrap()</span></code></a> doesn’t change every variable. By default it…:</p>
 <ul>
-<li><p>extends <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/index.html#where-to-put-your-own-extensions">extensions</a> with things <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> needs.</p></li>
+<li><p>extends <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/index.html#where-to-put-your-own-extensions">extensions</a> with things <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> needs.</p></li>
 <li><p>sets <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">intersphinx_mapping</a>, a variable for <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">sphinx.ext.intersphinx</a>.</p>
 <blockquote>
 <div><ul class="simple">
@@ -129,13 +133,25 @@ existing values, which is why <code class="docutils literal notranslate"><span c
 overwrite whatever has just been set.</p></li>
 <li><p>Anything you add beforehand will be taken into consideration during
 <a class="reference internal" href="api/rez_sphinx.core.bootstrap.html#rez_sphinx.core.bootstrap.bootstrap" title="rez_sphinx.core.bootstrap.bootstrap"><code class="xref py py-func docutils literal notranslate"><span class="pre">bootstrap.bootstrap()</span></code></a>.</p></li>
-<li><p>If you absolutely don’t want <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> messing with a particular
+<li><p>If you absolutely don’t want <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> messing with a particular
 variable, you can add <code class="docutils literal notranslate"><span class="pre">skip={&quot;project&quot;,</span> <span class="pre">}</span></code>, for example, to skip the setting
 of the project name.</p></li>
 </ul>
 </section>
+<section id="how-to-override-rez-sphinx-conf-py">
+<span id="id1"></span><h2>How To Override rez_sphinx conf.py<a class="headerlink" href="#how-to-override-rez-sphinx-conf-py" title="Permalink to this headline"></a></h2>
+<p>If you want to add something to your <cite>Sphinx conf.py</cite> and <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> doesn’t appear to “see” the variable, make sure that you define the
+variable underneath these lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># {root}/documentation/conf.py</span>
+
+<span class="kn">from</span> <span class="nn">rez_sphinx</span> <span class="kn">import</span> <span class="n">api</span>
+<span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="nb">locals</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>As long as you define your variables <strong>after</strong> those lines, <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> will respect it.</p>
+</section>
 <section id="adding-extra-overrides">
-<h2>Adding Extra Overrides<a class="headerlink" href="#adding-extra-overrides" title="Permalink to this headline">¶</a></h2>
+<h2>Adding Extra Overrides<a class="headerlink" href="#adding-extra-overrides" title="Permalink to this headline"></a></h2>
 <p>If you find yourself adding the same overrides to your <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>,
 consider adding it as a configuration value using
 <a class="reference internal" href="configuring_rez_sphinx.html#rez-sphinx-sphinx-conf-overrides"><span class="std std-ref">sphinx_conf_overrides</span></a>.</p>
@@ -147,7 +163,7 @@ consider adding it as a configuration value using
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="developer_documentation.html" class="btn btn-neutral float-left" title="Developer Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api/modules.html" class="btn btn-neutral float-right" title="python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="how_interlinking_works.html" class="btn btn-neutral float-right" title="How interlinking works" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

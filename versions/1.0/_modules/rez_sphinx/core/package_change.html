@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.package_change &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.package_change &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -78,6 +80,7 @@
 <span class="kn">from</span> <span class="nn">rez_industry</span> <span class="kn">import</span> <span class="n">api</span>
 <span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
 
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">exception</span>
 <span class="kn">from</span> <span class="nn">..preferences</span> <span class="kn">import</span> <span class="n">preference</span>
 
 <span class="n">_CURRENT_DIRECTORY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
@@ -88,8 +91,10 @@
     <span class="sd">&quot;&quot;&quot;Add `rez tests attribute`_ values to make :ref:`rez_sphinx` auto-run.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        package (rez.packages.Package):</span>
-<span class="sd">            The package to directly modify.</span>
+<span class="sd">        package (rez.packages.Package): The package to directly modify.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RezSphinxException: If no :ref:`rez_sphinx` package is found.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -105,23 +110,34 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handler</span><span class="p">:</span>
             <span class="n">handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-    <span class="n">tests</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">build_key</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_key</span><span class="p">()</span>
+    <span class="n">tests</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">tests</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">build_key</span> <span class="o">=</span> <span class="n">preference</span><span class="o">.</span><span class="n">get_build_documentation_key</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
 
     <span class="n">rez_sphinx_package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">_CURRENT_DIRECTORY</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rez_sphinx_package</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">RezSphinxException</span><span class="p">(</span>
+            <span class="s1">&#39;Directory &quot;</span><span class="si">{_CURRENT_DIRECTORY}</span><span class="s1">&quot; is not in a rez_sphinx package!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">_CURRENT_DIRECTORY</span><span class="o">=</span><span class="n">_CURRENT_DIRECTORY</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
     <span class="n">major</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rez_sphinx_package</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">major</span><span class="p">))</span>
     <span class="n">minor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rez_sphinx_package</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">minor</span><span class="p">))</span>
-    <span class="n">next_</span> <span class="o">=</span> <span class="n">major</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">minor</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">next_</span> <span class="o">=</span> <span class="n">major</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">rez_sphinx_requirement</span> <span class="o">=</span> <span class="s2">&quot;rez_sphinx-</span><span class="si">{major}</span><span class="s2">.</span><span class="si">{minor}</span><span class="s2">+&lt;</span><span class="si">{next_}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">,</span>
+            <span class="n">minor</span><span class="o">=</span><span class="n">minor</span><span class="p">,</span>
+            <span class="n">next_</span><span class="o">=</span><span class="n">next_</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rez_sphinx_requirement</span> <span class="o">=</span> <span class="s2">&quot;rez_sphinx-</span><span class="si">{major}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">)</span>
 
     <span class="n">tests</span><span class="p">[</span><span class="n">build_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;rez_sphinx build run&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;requires&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;rez_sphinx-</span><span class="si">{major}</span><span class="s2">.</span><span class="si">{minor}</span><span class="s2">+&lt;</span><span class="si">{next_}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">,</span>
-                <span class="n">minor</span><span class="o">=</span><span class="n">minor</span><span class="p">,</span>
-                <span class="n">next_</span><span class="o">=</span><span class="n">next_</span><span class="p">,</span>
-            <span class="p">),</span>
-        <span class="p">],</span>
+        <span class="s2">&quot;requires&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">rez_sphinx_requirement</span><span class="p">],</span>
     <span class="p">}</span>
 
     <span class="n">original</span> <span class="o">=</span> <span class="n">_get_package_text</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
@@ -148,7 +164,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
-        <span class="c1"># TODO : Add a test case for this</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; version will not be bumped because it has no version.&#39;</span><span class="p">,</span>
             <span class="n">package</span><span class="p">,</span>
@@ -169,13 +184,23 @@
 <span class="sd">        package (rez.packages.Package):</span>
 <span class="sd">            The out-of-date package which needs to be &quot;refreshed&quot;.</span>
 
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If no package could be re-acquired.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        rez.packages.Package: The refreshed package.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">directory</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_package_root</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_nearest_rez_package</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">package</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">package</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s1">&#39;Directory &quot;</span><span class="si">{directory}</span><span class="s1">&quot; has no package.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="initialize_rez_package"><a class="viewcode-back" href="../../../api/rez_sphinx.core.package_change.html#rez_sphinx.core.package_change.initialize_rez_package">[docs]</a><span class="k">def</span> <span class="nf">initialize_rez_package</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
@@ -186,10 +211,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_bump_minor_version</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
-    <span class="n">_add_rez_tests</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
-    <span class="c1"># TODO : Hopefully we won&#39;t actually need to do this</span>
-    <span class="c1"># _add_help_attribute(package)</span>
+    <span class="k">if</span> <span class="n">preference</span><span class="o">.</span><span class="n">has_build_documentation_key</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">):</span>
+        <span class="n">_add_rez_tests</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">_re_acquire_package</span><span class="p">(</span><span class="n">package</span><span class="p">)</span></div>
 </pre></div>

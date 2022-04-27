@@ -4,10 +4,9 @@ rez\_sphinx.preprocess
 .. toctree::
    :maxdepth: 4
 
-   
    hook <rez_sphinx.preprocess.hook>
-   
    preprocess_entry_point <rez_sphinx.preprocess.preprocess_entry_point>
+
 .. automodule:: rez_sphinx.preprocess
    :members:
    :undoc-members:

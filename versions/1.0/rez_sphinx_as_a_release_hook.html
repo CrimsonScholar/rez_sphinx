@@ -4,20 +4,22 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx As A Release Hook &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>rez_sphinx As A Release Hook &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Linking rez_sphinx With Other Documentation Tools" href="linking_rez_sphinx_with_other_documentation_tools.html" />
-    <link rel="prev" title="Auto-Append Help Tags" href="auto_append_help_tags.html" /> 
+    <link rel="next" title="Batch-Publish Documentation" href="batch_publish_documentation.html" />
+    <link rel="prev" title="Enabling rez-help Integration" href="enabling_rez_help_integration.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -47,8 +49,14 @@
 <li class="toctree-l3"><a class="reference internal" href="using_sphinx_rtd_theme.html">Using sphinx-rtd-theme</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adding_extra_interlinking.html">Adding Extra Interlinking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuring_rez_sphinx.html">Configuring rez_sphinx</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Auto-Append Help Tags</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Adding Documentation Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enable_external_website_publishing.html">Enabling External Website Publishing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enabling_rez_help_integration.html">Enabling rez-help Integration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rez_sphinx As A Release Hook</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rez-sphinx-release-hook">rez_sphinx release hook</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="batch_publish_documentation.html">Batch-Publish Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html">Linking rez_sphinx With Other Documentation Tools</a></li>
 </ul>
 </li>
@@ -84,16 +92,83 @@
            <div itemprop="articleBody">
              
   <section id="rez-sphinx-as-a-release-hook">
-<h1>rez_sphinx As A Release Hook<a class="headerlink" href="#rez-sphinx-as-a-release-hook" title="Permalink to this headline">¶</a></h1>
-<p>TODO Add implementation and documentation for this</p>
+<h1>rez_sphinx As A Release Hook<a class="headerlink" href="#rez-sphinx-as-a-release-hook" title="Permalink to this headline"></a></h1>
+<p>When releasing packages, it’s possible to auto build and publish documentation.
+To do this, <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> recruits the help of a plug-in,
+<span class="xref std std-ref">rez_docbot</span>.</p>
+<p>If you’d like to add publishing on-release, the basic steps are as follows:</p>
+<ul class="simple">
+<li><p>Install <span class="xref std std-ref">&lt;rez_docbot&gt; rez_docbot:installation</span> and follow its steps</p></li>
+<li><p>Set up a basic publisher configuration. We’ll show a simple one below:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optionvars</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rez_docbot&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;publishers&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;authentication&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;YourUserName&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;some_access_token&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;github&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="s2">&quot;gh-pages&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;repository_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;git@github.com:YourUserName/</span><span class="si">{package.name}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;view_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://YourUserName.github.io/</span><span class="si">{package.name}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The above configuration assumes that you’re publishing to GitHub and already
+you have a username and password for GitHub. Make sure to edit
+<code class="docutils literal notranslate"><span class="pre">&quot;authentication&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;repository_uri&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;view_url&quot;</span></code> with your
+details.</p>
+<p>For more details on other available <code class="docutils literal notranslate"><span class="pre">rez_docbot</span></code> configurations, check out:
+<span class="xref std std-ref">rez_docbot:other configuration options</span>.</p>
+<ul class="simple">
+<li><p>To confirm everything is set up correctly so far, run this command:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rez-sphinx view view-url
+</pre></div>
+</div>
+<p>It should print back <code class="docutils literal notranslate"><span class="pre">&quot;https://YourUserName.github.io/your_package_name&quot;</span></code>.
+Note that <code class="docutils literal notranslate"><span class="pre">{package.name}</span></code> would be replaced with your current Rez package name.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="view_command.html#rez-sphinx-view-view-url"><span class="std std-ref">rez_sphinx view view-url</span></a></p>
+</div>
+<ul class="simple">
+<li><p>Now confirm the returned output of <a class="reference internal" href="view_command.html#rez-sphinx-view-repository-uri"><span class="std std-ref">rez_sphinx view repository-uri</span></a></p></li>
+</ul>
+<p>If you have a GitHub user set up and both URLs / URIs point to their expected
+locations, you’re ready to enable the release hook.</p>
+<section id="rez-sphinx-release-hook">
+<span id="id1"></span><h2>rez_sphinx release hook<a class="headerlink" href="#rez-sphinx-release-hook" title="Permalink to this headline"></a></h2>
+<p>The steps for adding the release hook is much easier than the previous steps.
+To do it, you must:</p>
+<ul class="simple">
+<li><p>rez-release / rez-build <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a></p></li>
+<li><p>Append to your <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#plugin_path">plugin_path</a> and <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Configuring-Rez#release_hooks">release_hooks</a> in your <a href="#id2"><span class="problematic" id="id3">`rezconfig`_</span></a>.</p></li>
+</ul>
+<p>TODO : Confirm that this path works</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># rezconfig.py</span>
+
+<span class="n">plugin_path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/path/to/rez_sphinx/1.0.0/python-3/python/rez_sphinx_plugins&quot;</span><span class="p">]</span>
+<span class="n">release_hooks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;publish_documentation&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And you’re done. Any Rez source package which you’ve ran <a class="reference internal" href="init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>
+on will auto-release and auto-link as expected, whenever you call
+<a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-release">rez-release</a>.</p>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="auto_append_help_tags.html" class="btn btn-neutral float-left" title="Auto-Append Help Tags" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="linking_rez_sphinx_with_other_documentation_tools.html" class="btn btn-neutral float-right" title="Linking rez_sphinx With Other Documentation Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="enabling_rez_help_integration.html" class="btn btn-neutral float-left" title="Enabling rez-help Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="batch_publish_documentation.html" class="btn btn-neutral float-right" title="Batch-Publish Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

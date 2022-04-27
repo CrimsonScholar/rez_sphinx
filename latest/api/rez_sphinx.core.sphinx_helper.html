@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.sphinx_helper &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.sphinx_helper &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.configuration.html">configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.constant.html">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,11 +105,11 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.sphinx_helper">
-<span id="rez-sphinx-core-sphinx-helper"></span><h1>rez_sphinx.core.sphinx_helper<a class="headerlink" href="#module-rez_sphinx.core.sphinx_helper" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-core-sphinx-helper"></span><h1>rez_sphinx.core.sphinx_helper<a class="headerlink" href="#module-rez_sphinx.core.sphinx_helper" title="Permalink to this headline"></a></h1>
 <p>A collection of functions for making dealing with <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> easier.</p>
 <dl class="py function">
-<dt id="rez_sphinx.core.sphinx_helper.add_links_to_a_tree">
-<code class="sig-name descname">add_links_to_a_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entries</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#add_links_to_a_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.add_links_to_a_tree" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.sphinx_helper.add_links_to_a_tree">
+<span class="sig-name descname"><span class="pre">add_links_to_a_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#add_links_to_a_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.add_links_to_a_tree" title="Permalink to this definition"></a></dt>
 <dd><p>Add <code class="docutils literal notranslate"><span class="pre">entries</span></code> as line items within a toctree in <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">path</span></code> doesn’t have at least one toctree defined, a new one will be
 created and then <code class="docutils literal notranslate"><span class="pre">entries</span></code> is added to that.</p>
@@ -125,8 +129,8 @@ Otherwise, <code class="docutils literal notranslate"><span class="pre">path</sp
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.sphinx_helper.find_configuration_path">
-<code class="sig-name descname">find_configuration_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#find_configuration_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.find_configuration_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.sphinx_helper.find_configuration_path">
+<span class="sig-name descname"><span class="pre">find_configuration_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#find_configuration_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.find_configuration_path" title="Permalink to this definition"></a></dt>
 <dd><p>Find the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> or fail trying.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -142,8 +146,8 @@ Otherwise, <code class="docutils literal notranslate"><span class="pre">path</sp
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.sphinx_helper.get_toctrees">
-<code class="sig-name descname">get_toctrees</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#get_toctrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.get_toctrees" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.sphinx_helper.get_toctrees">
+<span class="sig-name descname"><span class="pre">get_toctrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#get_toctrees"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.get_toctrees" title="Permalink to this definition"></a></dt>
 <dd><p>Get every <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html">toctree</a> in <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -159,8 +163,8 @@ Otherwise, <code class="docutils literal notranslate"><span class="pre">path</sp
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.sphinx_helper.htmlize_ref">
-<code class="sig-name descname">htmlize_ref</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#htmlize_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.htmlize_ref" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.sphinx_helper.htmlize_ref">
+<span class="sig-name descname"><span class="pre">htmlize_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#htmlize_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.htmlize_ref" title="Permalink to this definition"></a></dt>
 <dd><p>Convert <code class="docutils literal notranslate"><span class="pre">text</span></code> to its HTML equivalent. Attach it to <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -179,8 +183,8 @@ Otherwise, <code class="docutils literal notranslate"><span class="pre">path</sp
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.core.sphinx_helper.supports_apidoc_templates">
-<code class="sig-name descname">supports_apidoc_templates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#supports_apidoc_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.supports_apidoc_templates" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.sphinx_helper.supports_apidoc_templates">
+<span class="sig-name descname"><span class="pre">supports_apidoc_templates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/core/sphinx_helper.html#supports_apidoc_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.sphinx_helper.supports_apidoc_templates" title="Permalink to this definition"></a></dt>
 <dd><p>bool: Check if <code class="docutils literal notranslate"><span class="pre">--templatedir</span></code> is supported in <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>.</p>
 </dd></dl>
 

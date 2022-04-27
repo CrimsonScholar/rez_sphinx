@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.preferences.preference &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.preferences.preference &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -51,14 +53,17 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.preferences.html">preferences</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">preference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_configuration.html">preference_configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_environment.html">preference_environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_help.html">preference_help</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_help_.html">preference_help_</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.preference_init.html">preference_init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.preferences.validator.html">validator</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -91,64 +96,183 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.preferences.preference">
-<span id="rez-sphinx-preferences-preference"></span><h1>rez_sphinx.preferences.preference<a class="headerlink" href="#module-rez_sphinx.preferences.preference" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-preferences-preference"></span><h1>rez_sphinx.preferences.preference<a class="headerlink" href="#module-rez_sphinx.preferences.preference" title="Permalink to this headline"></a></h1>
 <p>The module which managers user configuration settings.</p>
 <p>Most of these functions are just thin wraps around <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-config">rez-config</a> calls.</p>
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.allow_apidoc_templates">
-<code class="sig-name descname">allow_apidoc_templates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#allow_apidoc_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.allow_apidoc_templates" title="Permalink to this definition">¶</a></dt>
-<dd><p>bool: Enable / Disable <a class="reference internal" href="../build_command.html#rez-sphinx-apidoc-templates"><span class="std std-ref">A note about Python 2 / 3</span></a>.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="rez_sphinx.preferences.preference.check_default_files">
-<code class="sig-name descname">check_default_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#check_default_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.check_default_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>bool: If True, <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> checks files for user edits.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_api_options">
-<code class="sig-name descname">get_api_options</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_api_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_api_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find all arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.allow_apidoc_templates">
+<span class="sig-name descname"><span class="pre">allow_apidoc_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#allow_apidoc_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.allow_apidoc_templates" title="Permalink to this definition"></a></dt>
+<dd><p>Enable / Disable <a class="reference internal" href="../build_command.html#rez-sphinx-apidoc-templates"><span class="std std-ref">A note about Python 2 / 3</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>options</strong> (<em>container</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – User arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>. These options come from
-<a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> CLI and may be valid or invalid.</p>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If True, <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a> runs just before <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> is calls <cite>sphinx-build</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_base_settings">
-<code class="sig-name descname">get_base_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_base_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_base_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>dict[str, object]: Get all <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> specific default settings.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.check_default_files">
+<span class="sig-name descname"><span class="pre">check_default_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#check_default_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.check_default_files" title="Permalink to this definition"></a></dt>
+<dd><p>If True, <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> checks files for user edits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether or not checking default files is enabled.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_build_documentation_key">
-<code class="sig-name descname">get_build_documentation_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_build_documentation_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_build_documentation_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>str: Get the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests attribute</a> key for <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_api_options">
+<span class="sig-name descname"><span class="pre">get_api_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_api_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_api_options" title="Permalink to this definition"></a></dt>
+<dd><p>Find all arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options</strong> (<em>container</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – User arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a>. These options come from
+<a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> CLI and may be valid or invalid.</p></li>
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_build_documentation_keys">
-<code class="sig-name descname">get_build_documentation_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_build_documentation_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_build_documentation_keys" title="Permalink to this definition">¶</a></dt>
-<dd><p>list[str]: Get the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests attribute</a> key for <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_auto_help_methods">
+<span class="sig-name descname"><span class="pre">get_auto_help_methods</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_auto_help_methods"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_auto_help_methods" title="Permalink to this definition"></a></dt>
+<dd><p>list[str]: Find all defined <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> methods. See <span class="xref std std-doc">auto_append_help_tags</span>.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_documentation_root_name">
-<code class="sig-name descname">get_documentation_root_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_documentation_root_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_documentation_root_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>str: The name of the folder where all documentation-related files will go.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_base_settings">
+<span class="sig-name descname"><span class="pre">get_base_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_base_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_base_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Get all <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> specific default settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The found <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> configuration settings.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_filter_method">
-<code class="sig-name descname">get_filter_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_filter_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_filter_method" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_build_documentation_key">
+<span class="sig-name descname"><span class="pre">get_build_documentation_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_build_documentation_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_build_documentation_key" title="Permalink to this definition"></a></dt>
+<dd><p>Get the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests attribute</a> key for <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The found, preferred <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> keys. By default, this is
+<code class="docutils literal notranslate"><span class="pre">&quot;build_documentation&quot;</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_build_documentation_keys">
+<span class="sig-name descname"><span class="pre">get_build_documentation_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_build_documentation_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_build_documentation_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Get the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests attribute</a> key for <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The found, allowed Rez <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> keys. By default, this is
+<code class="docutils literal notranslate"><span class="pre">[&quot;build_documentation&quot;]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_build_options">
+<span class="sig-name descname"><span class="pre">get_build_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_build_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_build_options" title="Permalink to this definition"></a></dt>
+<dd><p>Get extra arguments to pass to <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><strong>ConfigurationError</strong></a> – If the global or <code class="docutils literal notranslate"><span class="pre">package</span></code> overrides provide arguments which
+    would cause <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> to fail.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The found arguments, if any. e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;-W&quot;]</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_documentation_root_name">
+<span class="sig-name descname"><span class="pre">get_documentation_root_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_documentation_root_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_documentation_root_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the name of the folder where all documentation-related files will go.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The folder name where documentation will live, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;documentation&quot;</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_filter_method">
+<span class="sig-name descname"><span class="pre">get_filter_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_filter_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_filter_method" title="Permalink to this definition"></a></dt>
 <dd><p>Get a function to process original / auto-generated <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a> values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
 <dt>callable[</dt><dd><p>list[list[str, str]],
 list[list[str, str]]</p>
 </dd>
@@ -165,14 +289,14 @@ unique results from either of them.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_help_label">
-<code class="sig-name descname">get_help_label</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_help_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_help_label" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_help_label">
+<span class="sig-name descname"><span class="pre">get_help_label</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_help_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_help_label" title="Permalink to this definition"></a></dt>
 <dd><p>str: Get the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> which connects with <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">intersphinx</a>.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_init_default_entries">
-<code class="sig-name descname">get_init_default_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_init_default_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_init_default_entries" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_init_default_entries">
+<span class="sig-name descname"><span class="pre">get_init_default_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_init_default_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_init_default_entries" title="Permalink to this definition"></a></dt>
 <dd><p>Get the documentation files to auto-generate during <a class="reference internal" href="../init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -186,30 +310,27 @@ on-disk, within the source documentation root.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_initial_files_from_configuration">
-<code class="sig-name descname">get_initial_files_from_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_initial_files_from_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_initial_files_from_configuration" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_initial_files_from_configuration">
+<span class="sig-name descname"><span class="pre">get_initial_files_from_configuration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_initial_files_from_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_initial_files_from_configuration" title="Permalink to this definition"></a></dt>
 <dd><p>list[Entry]: File data to write during <a class="reference internal" href="../init_command.html#rez-sphinx-init"><span class="std std-ref">rez_sphinx init</span></a>.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_master_api_documentation_line">
-<code class="sig-name descname">get_master_api_documentation_line</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_master_api_documentation_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_master_api_documentation_line" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_master_api_documentation_line">
+<span class="sig-name descname"><span class="pre">get_master_api_documentation_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_master_api_documentation_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_master_api_documentation_line" title="Permalink to this definition"></a></dt>
 <dd><p>str: Get the line that typically is added to the main <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/step-1">index.rst</a>.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_master_document_name">
-<code class="sig-name descname">get_master_document_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_master_document_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_master_document_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the first .rst file <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> should point to.</p>
-<p>Ideally this shouldn’t be necessary but it looks like, while building
-<a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> in Python 2 + <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>, the name of this file
-gets swapped to “contents.rst”.</p>
-<p>So we name it “index.rst”, for consistency.</p>
-<p class="rubric">References</p>
-<p><a class="reference external" href="https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-270577290">https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-270577290</a></p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><strong>ConfigurationError</strong></a> – If the found configuration value is empty.</p>
+</dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The base name, without file extension, of the “entry point” for <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>.</p>
+<dd class="field-odd"><p>The found text needed to add the auto-generated API into the master
+Sphinx toctree.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
@@ -218,23 +339,65 @@ gets swapped to “contents.rst”.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_package_link_map">
-<code class="sig-name descname">get_package_link_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_package_link_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_package_link_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>dict[str, str]: Each Rez package family name + its root documentation, if any.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_master_document_name">
+<span class="sig-name descname"><span class="pre">get_master_document_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_master_document_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_master_document_name" title="Permalink to this definition"></a></dt>
+<dd><p>Find the first .rst file <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> should point to.</p>
+<p>Ideally this shouldn’t be necessary but it looks like, while building
+<a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> in Python 2 + <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/">sphinx-rtd-theme</a>, the name of this file
+gets swapped to “contents.rst”.</p>
+<p>So we name it “index.rst”, for consistency.</p>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-270577290">https://github.com/readthedocs/readthedocs.org/issues/2569#issuecomment-270577290</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The base name, without file extension, of the “entry point” for <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_preference_from_path">
-<code class="sig-name descname">get_preference_from_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_preference_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_preference_from_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the dict value located at <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_package_link_map">
+<span class="sig-name descname"><span class="pre">get_package_link_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_package_link_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_package_link_map" title="Permalink to this definition"></a></dt>
+<dd><p>Each Rez package family name + its root documentation, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Rez package family name and the URL to its viewable Sphinx
+documentation.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_preference_from_path">
+<span class="sig-name descname"><span class="pre">get_preference_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_preference_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_preference_from_path" title="Permalink to this definition"></a></dt>
+<dd><p>Find the preference value located at <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#rez_sphinx.preferences.preference.get_preference_paths" title="rez_sphinx.preferences.preference.get_preference_paths"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_preference_paths()</span></code></a> and <a class="reference internal" href="../config_command.html#rez-sphinx-config-show-list-all"><span class="std std-ref">rez_sphinx config show –list-all</span></a>.</p>
+<p><a class="reference internal" href="#rez_sphinx.preferences.preference.get_preference_paths" title="rez_sphinx.preferences.preference.get_preference_paths"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_preference_paths()</span></code></a> and <a class="reference internal" href="../config_command.html#rez-sphinx-config-show-all"><span class="std std-ref">rez_sphinx config show-all</span></a>.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Some dot-separated dict key to query. e.g.
-<code class="docutils literal notranslate"><span class="pre">&quot;init_options.check_default_files&quot;</span></code></p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Some dot-separated dict key to query. e.g.
+<code class="docutils literal notranslate"><span class="pre">&quot;init_options.check_default_files&quot;</span></code></p></li>
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – If provided, the settings from this package are checked.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><strong>ConfigurationError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">path</span></code> isn’t a valid setting.</p>
@@ -249,26 +412,42 @@ gets swapped to “contents.rst”.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_preference_paths">
-<code class="sig-name descname">get_preference_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_preference_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_preference_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>set[str]: All valid paths for <a class="reference internal" href="../config_command.html#rez-sphinx-config-show"><span class="std std-ref">rez_sphinx config show</span></a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_preference_paths">
+<span class="sig-name descname"><span class="pre">get_preference_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_preference_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_preference_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Find all valid paths for <a class="reference internal" href="../config_command.html#rez-sphinx-config-show"><span class="std std-ref">rez_sphinx config show</span></a>.</p>
+<p>Most of these returned paths are “default” and will always be present.
+But depending the currently-set global / package configuration, dynamic
+keys may also be present in the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The “default” + “dynamic” keys.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_quick_start_options">
-<code class="sig-name descname">get_quick_start_options</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_quick_start_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_quick_start_options" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_quick_start_options">
+<span class="sig-name descname"><span class="pre">get_quick_start_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_quick_start_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_quick_start_options" title="Permalink to this definition"></a></dt>
 <dd><p>Get the arguments <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-quickstart.html">sphinx-quickstart</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the Rez package family. e.g. “python”, “Sphinx”, etc.</p></li>
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – The Rez package to query from. e.g. “python”, “Sphinx”, etc.</p></li>
 <li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – User-provided arguments to consider while resolving
 <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-quickstart.html">sphinx-quickstart</a> values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.UserInputError" title="rez_sphinx.core.exception.UserInputError"><strong>UserInputError</strong></a> – If the user attempted to pass settings which may only be
-    edited by <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>, fail this function early.
+    edited by <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>, fail this function early.
     Examples of “reserved” parameters are “–project”, which are
     meant to be set by the Rez package name.</p>
 </dd>
@@ -282,33 +461,124 @@ gets swapped to “contents.rst”.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_sort_method">
-<code class="sig-name descname">get_sort_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sort_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sort_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>callable[list[str], str] -&gt; object: The sort function for <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_sort_method">
+<span class="sig-name descname"><span class="pre">get_sort_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sort_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sort_method" title="Permalink to this definition"></a></dt>
+<dd><p>Get the function which sorts entries in Rez <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">package help</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The found, callable function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>callable[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>] -&gt; object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_sphinx_configuration_overrides">
-<code class="sig-name descname">get_sphinx_configuration_overrides</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sphinx_configuration_overrides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sphinx_configuration_overrides" title="Permalink to this definition">¶</a></dt>
-<dd><p>dict[str, object]: Get all values to directly set within <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_sphinx_configuration_overrides">
+<span class="sig-name descname"><span class="pre">get_sphinx_configuration_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sphinx_configuration_overrides"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sphinx_configuration_overrides" title="Permalink to this definition"></a></dt>
+<dd><p>Get all values to directly set within <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Each <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> variable name and its value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.get_sphinx_extensions">
-<code class="sig-name descname">get_sphinx_extensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sphinx_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sphinx_extensions" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.get_sphinx_extensions">
+<span class="sig-name descname"><span class="pre">get_sphinx_extensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#get_sphinx_extensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.get_sphinx_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>list[str]: All <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> optional add-ons to include in documentation.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.is_api_enabled">
-<code class="sig-name descname">is_api_enabled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#is_api_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.is_api_enabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>bool: Check if the user will generate <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a> ReST files.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.has_build_documentation_key">
+<span class="sig-name descname"><span class="pre">has_build_documentation_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#has_build_documentation_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.has_build_documentation_key" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">rez tests attribute</a> key defines <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If there’s at least one defined test name which provides for
+<a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>, return True.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.serialize_default_settings">
-<code class="sig-name descname">serialize_default_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_default_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_default_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> default values.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.is_api_enabled">
+<span class="sig-name descname"><span class="pre">is_api_enabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#is_api_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.is_api_enabled" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the user will generate <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html">sphinx-apidoc</a> ReST files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> is meant to auto-generate API
+documentation prior to running, return True.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.merge_with_sphinx_overrides">
+<span class="sig-name descname"><span class="pre">merge_with_sphinx_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#merge_with_sphinx_overrides"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.merge_with_sphinx_overrides" title="Permalink to this definition"></a></dt>
+<dd><p>Combine <code class="docutils literal notranslate"><span class="pre">data</span></code> <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>’s configuration.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="rez_sphinx.api.html#rez_sphinx.api.bootstrap" title="rez_sphinx.api.bootstrap"><code class="xref py py-func docutils literal notranslate"><span class="pre">bootstrap()</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a><em>]</em>) – Overrides to apply on top of any existing configuration settings.</p></li>
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – Any variable which you do not want <a class="reference internal" href="../build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> to
+set.  This includes both the built-in variables, such as
+<code class="docutils literal notranslate"><span class="pre">&quot;intersphinx_mapping&quot;</span></code> and even dynamic variables set using
+<a class="reference internal" href="../configuring_rez_sphinx.html#rez-sphinx-sphinx-conf-overrides"><span class="std std-ref">sphinx_conf_overrides</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All found configuration values + all of <code class="docutils literal notranslate"><span class="pre">data</span></code>, merged as a
+single definition.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.serialize_default_settings">
+<span class="sig-name descname"><span class="pre">serialize_default_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_default_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_default_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Get all <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> default values.</p>
 <p>This function can be very long. <a class="reference internal" href="#rez_sphinx.preferences.preference.serialize_default_sparse_settings" title="rez_sphinx.preferences.preference.serialize_default_sparse_settings"><code class="xref py py-func docutils literal notranslate"><span class="pre">serialize_default_sparse_settings()</span></code></a>
 shows a briefer (but still valid) set of default settings.</p>
 <dl class="field-list simple">
@@ -322,9 +592,9 @@ shows a briefer (but still valid) set of default settings.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.serialize_default_sparse_settings">
-<code class="sig-name descname">serialize_default_sparse_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_default_sparse_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_default_sparse_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the default settings for <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.serialize_default_sparse_settings">
+<span class="sig-name descname"><span class="pre">serialize_default_sparse_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_default_sparse_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_default_sparse_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Get the default settings for <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>.</p>
 <p>These settings ignore nested content and just shows the simple, top-level data.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -341,26 +611,57 @@ shows a briefer (but still valid) set of default settings.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.serialize_override_settings">
-<code class="sig-name descname">serialize_override_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_override_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_override_settings" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.serialize_override_settings">
+<span class="sig-name descname"><span class="pre">serialize_override_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#serialize_override_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.serialize_override_settings" title="Permalink to this definition"></a></dt>
 <dd><p>Get all user-set values, without any default schema values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The values, stripped of all default data.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a>]</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The values, stripped of all default data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)">object</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.preferences.preference.validate_base_settings">
-<code class="sig-name descname">validate_base_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#validate_base_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.validate_base_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the user’s settings won’t cause <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> to break.</p>
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.validate_base_settings">
+<span class="sig-name descname"><span class="pre">validate_base_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#validate_base_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.validate_base_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the user’s settings won’t cause <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> to break.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><strong>ConfigurationError</strong></a> – Raised if a configuration-related issue is found.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><strong>ConfigurationError</strong></a> – Raised if a configuration-related issue is found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rez_sphinx.preferences.preference.validate_help_settings">
+<span class="sig-name descname"><span class="pre">validate_help_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/preferences/preference.html#validate_help_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.preferences.preference.validate_help_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Ensure <code class="docutils literal notranslate"><span class="pre">package</span></code> is compatible with existing global <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#help">help</a> settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a><em>, </em><em>optional</em>) – A Rez package which may override the global setting.  If the
+package doesn’t define an opinion, the global setting / default
+value is used instead.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If there is some kind of problem, return an exception which the
+caller can choose to raise. If there’s nothin wrong, return
+nothing.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base">exception.Base</a> or None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.exception &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.exception &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="rez_sphinx.core.html">core</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.api_builder.html">api_builder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.bootstrap.html">bootstrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.cli_helper.html">cli_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.configuration.html">configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.constant.html">constant</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rez_sphinx.core.doc_finder.html">doc_finder</a></li>
@@ -69,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -101,149 +105,203 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.core.exception">
-<span id="rez-sphinx-core-exception"></span><h1>rez_sphinx.core.exception<a class="headerlink" href="#module-rez_sphinx.core.exception" title="Permalink to this headline">¶</a></h1>
-<p>All exceptions needed by <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> for internal use.</p>
+<span id="rez-sphinx-core-exception"></span><h1>rez_sphinx.core.exception<a class="headerlink" href="#module-rez_sphinx.core.exception" title="Permalink to this headline"></a></h1>
+<p>All exceptions needed by <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> for internal use.</p>
 <p>These exceptions are not meant for any third-party package to import or use.</p>
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.BadPackage">
-<em class="property">exception </em><code class="sig-name descname">BadPackage</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#BadPackage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.BadPackage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.BadPackage">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BadPackage</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#BadPackage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.BadPackage" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If a valid Rez package (e.g. package.py) is expected but not found.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.BadPackage.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 21</em><a class="headerlink" href="#rez_sphinx.core.exception.BadPackage.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.BadPackage.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></em><a class="headerlink" href="#rez_sphinx.core.exception.BadPackage.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.Base">
-<em class="property">exception </em><code class="sig-name descname">Base</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#Base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.Base" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.Base">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Base</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#Base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.Base" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>A class which all exceptions in this module must inherit from.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.Base.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 11</em><a class="headerlink" href="#rez_sphinx.core.exception.Base.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.Base.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#rez_sphinx.core.exception.Base.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.ConfigurationError">
-<em class="property">exception </em><code class="sig-name descname">ConfigurationError</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#ConfigurationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.ConfigurationError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.ConfigurationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConfigurationError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#ConfigurationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.ConfigurationError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
-<p>If the user’s rez-config would prevent <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> from running.</p>
+<p>If the user’s rez-config would prevent <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> from running.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.ConfigurationError.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 31</em><a class="headerlink" href="#rez_sphinx.core.exception.ConfigurationError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.ConfigurationError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></em><a class="headerlink" href="#rez_sphinx.core.exception.ConfigurationError.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.MissingPlugIn">
-<em class="property">exception </em><code class="sig-name descname">MissingPlugIn</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#MissingPlugIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.MissingPlugIn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#DoesNotExist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.DoesNotExist" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
+<p>If something required is missing (This exception is intentionally vague).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.DoesNotExist.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36</span></em><a class="headerlink" href="#rez_sphinx.core.exception.DoesNotExist.exit_code" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.MissingPlugIn">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MissingPlugIn</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#MissingPlugIn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.MissingPlugIn" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If a plug-in (like <span class="xref std std-ref">rez_docbot</span>) could not be loaded.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.MissingPlugIn.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 46</em><a class="headerlink" href="#rez_sphinx.core.exception.MissingPlugIn.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.MissingPlugIn.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">46</span></em><a class="headerlink" href="#rez_sphinx.core.exception.MissingPlugIn.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.NoDocumentationFound">
-<em class="property">exception </em><code class="sig-name descname">NoDocumentationFound</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoDocumentationFound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationFound" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoDocumentationFound">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoDocumentationFound</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoDocumentationFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationFound" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If source documentation is required for something, but is missing.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.NoDocumentationFound.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 51</em><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationFound.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoDocumentationFound.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">51</span></em><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationFound.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.NoDocumentationWritten">
-<em class="property">exception </em><code class="sig-name descname">NoDocumentationWritten</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoDocumentationWritten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationWritten" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoDocumentationWritten">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoDocumentationWritten</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoDocumentationWritten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationWritten" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If source documentation is required for something, but is missing.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.NoDocumentationWritten.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 61</em><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationWritten.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoDocumentationWritten.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">61</span></em><a class="headerlink" href="#rez_sphinx.core.exception.NoDocumentationWritten.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.NoPackageFound">
-<em class="property">exception </em><code class="sig-name descname">NoPackageFound</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoPackageFound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoPackageFound" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoPackageFound">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoPackageFound</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoPackageFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoPackageFound" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If a Rez package is needed but none can be found.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.NoPackageFound.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 71</em><a class="headerlink" href="#rez_sphinx.core.exception.NoPackageFound.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoPackageFound.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">71</span></em><a class="headerlink" href="#rez_sphinx.core.exception.NoPackageFound.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.NoPythonFiles">
-<em class="property">exception </em><code class="sig-name descname">NoPythonFiles</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoPythonFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoPythonFiles" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoPythonFiles">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoPythonFiles</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#NoPythonFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.NoPythonFiles" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If at least one Python file was needed but none were found.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.NoPythonFiles.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 81</em><a class="headerlink" href="#rez_sphinx.core.exception.NoPythonFiles.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.NoPythonFiles.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">81</span></em><a class="headerlink" href="#rez_sphinx.core.exception.NoPythonFiles.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.PackageConflict">
-<em class="property">exception </em><code class="sig-name descname">PackageConflict</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#PackageConflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.PackageConflict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PackageConflict">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PackageConflict</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#PackageConflict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.PackageConflict" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>When only 1 unique Rez package family name is expected but multiple are found.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.PackageConflict.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 41</em><a class="headerlink" href="#rez_sphinx.core.exception.PackageConflict.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PackageConflict.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">41</span></em><a class="headerlink" href="#rez_sphinx.core.exception.PackageConflict.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.SphinxConfError">
-<em class="property">exception </em><code class="sig-name descname">SphinxConfError</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#SphinxConfError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.SphinxConfError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PermissionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PermissionError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#PermissionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.PermissionError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.ConfigurationError</span></code></a></p>
+<p>When an expected file / folder needs to be readable, but is not.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PermissionError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">44</span></em><a class="headerlink" href="#rez_sphinx.core.exception.PermissionError.exit_code" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PluginConfigurationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PluginConfigurationError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#PluginConfigurationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.PluginConfigurationError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.ConfigurationError" title="rez_sphinx.core.exception.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.ConfigurationError</span></code></a></p>
+<p>If <span class="xref std std-ref">rez_docbot</span> is enabled but the user is missing configuration data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.PluginConfigurationError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">43</span></em><a class="headerlink" href="#rez_sphinx.core.exception.PluginConfigurationError.exit_code" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.RezSphinxException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RezSphinxException</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#RezSphinxException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.RezSphinxException" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
+<p>If somehow <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>’s code diverges in an unexpected way.</p>
+<p class="rubric">Example</p>
+<p>The <a class="reference internal" href="rez_sphinx.preprocess.preprocess_entry_point.html#rez_sphinx.preprocess.preprocess_entry_point.run" title="rez_sphinx.preprocess.preprocess_entry_point.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess_entry_point.run()</span></code></a> function is renamed but
+<a class="reference internal" href="rez_sphinx.preferences.preference.html#rez_sphinx.preferences.preference.validate_help_settings" title="rez_sphinx.preferences.preference.validate_help_settings"><code class="xref py py-func docutils literal notranslate"><span class="pre">preference.validate_help_settings()</span></code></a> isn’t updated to
+reflect that change.</p>
+<p>If this exception occurs, it’s always a maintainer error that must be fixed
+on <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>’s code.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.RezSphinxException.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">91</span></em><a class="headerlink" href="#rez_sphinx.core.exception.RezSphinxException.exit_code" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.SphinxConfError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SphinxConfError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#SphinxConfError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.SphinxConfError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>When the user’s <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx conf.py</a> is unreadable or has empty content.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.SphinxConfError.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 101</em><a class="headerlink" href="#rez_sphinx.core.exception.SphinxConfError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.SphinxConfError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">101</span></em><a class="headerlink" href="#rez_sphinx.core.exception.SphinxConfError.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.SphinxExecutionError">
-<em class="property">exception </em><code class="sig-name descname">SphinxExecutionError</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#SphinxExecutionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.SphinxExecutionError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.SphinxExecutionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SphinxExecutionError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#SphinxExecutionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.SphinxExecutionError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If some <a class="reference external" href="https://www.sphinx-doc.org/en/master">Sphinx</a> CLI program fails to run and stops midway.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.SphinxExecutionError.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 111</em><a class="headerlink" href="#rez_sphinx.core.exception.SphinxExecutionError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.SphinxExecutionError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">111</span></em><a class="headerlink" href="#rez_sphinx.core.exception.SphinxExecutionError.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="rez_sphinx.core.exception.UserInputError">
-<em class="property">exception </em><code class="sig-name descname">UserInputError</code><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#UserInputError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.core.exception.UserInputError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.UserInputError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UserInputError</span></span><a class="reference internal" href="../_modules/rez_sphinx/core/exception.html#UserInputError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.core.exception.UserInputError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rez_sphinx.core.exception.Base" title="rez_sphinx.core.exception.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rez_sphinx.core.exception.Base</span></code></a></p>
 <p>If a user argument to the CLI or <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-config">rez-config</a> is not allowed.</p>
 <dl class="py attribute">
-<dt id="rez_sphinx.core.exception.UserInputError.exit_code">
-<code class="sig-name descname">exit_code</code><em class="property"> = 121</em><a class="headerlink" href="#rez_sphinx.core.exception.UserInputError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.core.exception.UserInputError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">121</span></em><a class="headerlink" href="#rez_sphinx.core.exception.UserInputError.exit_code" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rez_sphinx.commands.suggest.filter_by &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> rez_sphinx
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_documentation.html">User Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_documentation.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">rez_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>rez_sphinx.commands.suggest.filter_by</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rez_sphinx.commands.suggest.filter_by</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The functions needed to implement :ref:`build-order --filter`.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">rez.config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">rez_bump</span> <span class="kn">import</span> <span class="n">rez_bump_api</span>
+<span class="kn">from</span> <span class="nn">rez_utilities</span> <span class="kn">import</span> <span class="n">finder</span>
+
+<span class="kn">from</span> <span class="nn">...core</span> <span class="kn">import</span> <span class="n">constant</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">sphinx_helper</span>
+<span class="kn">from</span> <span class="nn">...preferences</span> <span class="kn">import</span> <span class="n">preference</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># TODO : Combine this logic with initer._check_for_existing_documentation</span>
+<span class="c1"># We must be using the same function for both!</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">_has_documentation</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine if ``package`` needs :ref:`rez_sphinx init` ran on it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source Rez package to check for documentation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``package`` has documentation, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if ``package`` is an installed, auto-generated package</span>
+    <span class="k">if</span> <span class="n">_in_help</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">REZ_SPHINX_OBJECTS_INV</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">help</span><span class="p">):</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It already has an objects.inv.&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">package_root</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_package_root</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="c1"># Check if ``package`` is a source package</span>
+    <span class="n">documentation_top</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">package_root</span><span class="p">,</span>
+        <span class="n">preference</span><span class="o">.</span><span class="n">get_documentation_root_name</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">documentation_top</span><span class="p">):</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It has a documentation folder.&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">configuration</span> <span class="o">=</span> <span class="n">sphinx_helper</span><span class="o">.</span><span class="n">find_configuration_path</span><span class="p">(</span><span class="n">package_root</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;Package &quot;</span><span class="si">%s</span><span class="s1">&quot; will be skipped. It has a conf.py &quot;</span><span class="si">%s</span><span class="s1">&quot; file.&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">configuration</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">_in_help</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">help_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``label`` is in ``help_``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        label (str):</span>
+<span class="sd">            A phrase to search with ``help_`` for. e.g. ``&quot;Foo&quot;``.</span>
+<span class="sd">        help_ (list[list[str, str]] or str or None):</span>
+<span class="sd">            The defined `help`_, if any. e.g. ``[[&quot;Foo&quot;, &quot;README.md&quot;]]``</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If ``label`` is in ``help_``, return True.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">help_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">entry_label</span> <span class="o">==</span> <span class="n">label</span> <span class="k">for</span> <span class="n">entry_label</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">help_</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_installed</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ``package`` is installed into ``directory``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            A Rez package to check for.</span>
+<span class="sd">        directory (str):</span>
+<span class="sd">            The root folder on-disk where released Rez packages live.</span>
+<span class="sd">        version (rez.vendor.version.version.Version, optional):</span>
+<span class="sd">            If included, this version is used instead of ``package.version``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: If the package is released somewhere.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">version</span> <span class="ow">or</span> <span class="n">package</span><span class="o">.</span><span class="n">version</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">version</span><span class="p">:</span>
+        <span class="c1"># In the rare case that an installed Rez package is unversioned...</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">)))</span>
+
+
+<span class="k">def</span> <span class="nf">_existing_documentation</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove any Rez package from ``packages`` which already has documentation.</span>
+
+<span class="sd">    This function uses a variety of checks including searching &quot;known&quot;</span>
+<span class="sd">    documentation locations. As well as guessing where it could be.</span>
+
+<span class="sd">    This function searches specifically for `Sphinx`_ documentation only.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (list[rez.packages.Package]):</span>
+<span class="sd">            The source / installed Rez packages to filter. Usually,</span>
+<span class="sd">            these are source Rez packages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[rez.packages.Package]:</span>
+<span class="sd">            Every package from ``packages`` which doesn&#39;t have documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">package</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">_has_documentation</span><span class="p">(</span><span class="n">package</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">_existing_release</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove from ``packages`` only if has been released with documentation.</span>
+
+<span class="sd">    In other words, ``packages`` may be returned even if it already has</span>
+<span class="sd">    documentation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (list[rez.packages.Package]):</span>
+<span class="sd">            The source / installed Rez packages to filter. Usually,</span>
+<span class="sd">            these are source Rez packages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[rez.packages.Package]:</span>
+<span class="sd">            Every package from ``packages`` which isn&#39;t released with</span>
+<span class="sd">            documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">release_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">release_packages_path</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">release_path</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">ConfigurationError</span><span class="p">(</span><span class="s2">&quot;No configuration release path was defined.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">release_path</span><span class="p">):</span>
+        <span class="c1"># If the release path doesn&#39;t exist then ``packages`` cannot possibly</span>
+        <span class="c1"># be released to that location. Though we should warn the user, because</span>
+        <span class="c1"># it&#39;s likely user error if that ever happens.</span>
+        <span class="c1">#</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;release_packages_path &quot;</span><span class="si">%s</span><span class="s1">&quot; doesn</span><span class="se">\&#39;</span><span class="s1">t exist.&#39;</span><span class="p">,</span> <span class="n">release_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">packages</span>
+
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_has_documentation</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+            <span class="c1"># :ref:`rez_sphinx init` would bump :attr:`package.version` to its</span>
+            <span class="c1"># next minor version. So if there&#39;s not documentation in `package`</span>
+            <span class="c1"># then that means we need to check for a release not this package</span>
+            <span class="c1"># but its **next** version up!</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">version</span>
+
+            <span class="k">if</span> <span class="n">version</span><span class="p">:</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="n">rez_bump_api</span><span class="o">.</span><span class="n">bump_version</span><span class="p">(</span>
+                    <span class="n">package</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+                    <span class="n">minor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">absolute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_installed</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">release_path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">):</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">_is_installed</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">release_path</span><span class="p">):</span>
+            <span class="c1"># If ``package`` has documentation then it&#39;s assumed that the</span>
+            <span class="c1"># package&#39;s current version is what **would** be released. This</span>
+            <span class="c1"># typically only happens while re-running batch publish. See</span>
+            <span class="c1"># :doc:`batch_publish_documentation` for details.</span>
+            <span class="c1">#</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">def</span> <span class="nf">_no_filter</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Don&#39;t filter anything.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        packages (iter[rez.packages.Packages]): The source / installed Rez packages.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        iter[rez.packages.Packages]: The original, unaltered Rez packages.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">packages</span>
+
+
+<div class="viewcode-block" id="get_mode_by_name"><a class="viewcode-back" href="../../../../api/rez_sphinx.commands.suggest.filter_by.html#rez_sphinx.commands.suggest.filter_by.get_mode_by_name">[docs]</a><span class="k">def</span> <span class="nf">get_mode_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find a callable function matching ``name``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            A registered possibility, e.g. ``&quot;none&quot;``, ``&quot;already_released&quot;``,</span>
+<span class="sd">            ``&quot;already_documented&quot;`` etc.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``name`` is not a registered command.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable[str] -&gt; list[rez.packages.Package]:</span>
+<span class="sd">            A function that takes an absolute directory path and then finds all</span>
+<span class="sd">            Rez packages that it can, underneath the directory.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Name &quot;</span><span class="si">{name}</span><span class="s1">&quot; is invalid. The options were, &quot;</span><span class="si">{options}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+<span class="n">OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DEFAULT</span><span class="p">:</span> <span class="n">_no_filter</span><span class="p">,</span>
+    <span class="s2">&quot;already_documented&quot;</span><span class="p">:</span> <span class="n">_existing_documentation</span><span class="p">,</span>
+    <span class="s2">&quot;already_released&quot;</span><span class="p">:</span> <span class="n">_existing_release</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ColinKennedy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

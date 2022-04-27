@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.environment &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.environment &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -67,7 +69,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for rez_sphinx.core.environment</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="sd">&quot;&quot;&quot;Miscellaneous functions for querying the user&#39;s environment.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exception</span>
+
+
+<div class="viewcode-block" id="is_docbot_exception"><a class="viewcode-back" href="../../../api/rez_sphinx.core.environment.html#rez_sphinx.core.environment.is_docbot_exception">[docs]</a><span class="k">def</span> <span class="nf">is_docbot_exception</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;bool: Check if ``error`` comes from :ref:`rez_docbot`.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">rez_docbot</span> <span class="kn">import</span> <span class="n">api</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># It&#39;s disabled. Just ignore it.</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CoreException</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_publishing_enabled"><a class="viewcode-back" href="../../../api/rez_sphinx.core.environment.html#rez_sphinx.core.environment.is_publishing_enabled">[docs]</a><span class="k">def</span> <span class="nf">is_publishing_enabled</span><span class="p">():</span>
@@ -75,6 +92,84 @@
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;REZ_EPH_REZ_SPHINX_FEATURE_DOCBOT_PLUGIN_REQUEST&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span>
         <span class="s2">&quot;1&quot;</span>
     <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_publish_url"><a class="viewcode-back" href="../../../api/rez_sphinx.core.environment.html#rez_sphinx.core.environment.get_publish_url">[docs]</a><span class="k">def</span> <span class="nf">get_publish_url</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the website where ``package``&#39;s can view its documentation from.</span>
+
+<span class="sd">    It&#39;s expected that the destination will be some network URL but this</span>
+<span class="sd">    function could also return an absolute / relative path on-disk somewhere,</span>
+<span class="sd">    potentially.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source or installed Rez package to query from.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        PluginConfigurationError: If an expected plug-in URL could not be queried.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found destination.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">rez_docbot</span> <span class="kn">import</span> <span class="n">api</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">api</span><span class="o">.</span><span class="n">get_first_versioned_view_url</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">PluginConfigurationError</span><span class="p">(</span>
+            <span class="s2">&quot;rez_docbot is loaded but no configured view URL was found &quot;</span>
+            <span class="s1">&#39;globally nor from &quot;</span><span class="si">{package.name}</span><span class="s1"> / </span><span class="si">{package.version}</span><span class="s1">&quot;. &#39;</span>
+            <span class="s2">&quot;Please add it to your rezconfig via &quot;</span>
+            <span class="s2">&quot;:ref:`rez_docbot.publishers.*.view_url` &quot;</span>
+            <span class="s2">&quot;and try again.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_all_repository_uris"><a class="viewcode-back" href="../../../api/rez_sphinx.core.environment.html#rez_sphinx.core.environment.get_all_repository_uris">[docs]</a><span class="k">def</span> <span class="nf">get_all_repository_uris</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the location where ``package``&#39;s documentation will be built to.</span>
+
+<span class="sd">    It&#39;s expected that the destination will be some network URL but this</span>
+<span class="sd">    function could also return an absolute / relative path on-disk somewhere,</span>
+<span class="sd">    potentially.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package (rez.packages.Package):</span>
+<span class="sd">            The source or installed Rez package to query from.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        PluginConfigurationError: If an expected plug-in URL could not be queried.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The found destination.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">rez_docbot</span> <span class="kn">import</span> <span class="n">api</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+
+    <span class="n">publishers</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_all_publishers</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">publishers</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">PluginConfigurationError</span><span class="p">(</span>
+            <span class="s2">&quot;rez_docbot is loaded but no configured publishers were found &quot;</span>
+            <span class="s1">&#39;globally nor from &quot;</span><span class="si">{package.name}</span><span class="s1"> / </span><span class="si">{package.version}</span><span class="s1">&quot;. &#39;</span>
+            <span class="s2">&quot;Please add it to your rezconfig via &quot;</span>
+            <span class="s2">&quot;:ref:`rez_docbot:rez_docbot.publishers` &quot;</span>
+            <span class="s2">&quot;and try again.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">publisher</span> <span class="ow">in</span> <span class="n">publishers</span><span class="p">:</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">publisher</span><span class="o">.</span><span class="n">get_resolved_repository_uri</span><span class="p">()</span>
+        <span class="n">required</span> <span class="o">=</span> <span class="n">publisher</span><span class="o">.</span><span class="n">is_required</span><span class="p">()</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">uri</span><span class="p">,</span> <span class="n">required</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
 </pre></div>
 
            </div>

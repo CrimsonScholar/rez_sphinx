@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adding Extra Interlinking &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Adding Extra Interlinking &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="user_documentation.html">User Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="user_documentation.html#beginner-topics">Beginner Topics</a></li>
@@ -52,8 +54,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="configuring_rez_sphinx.html">Configuring rez_sphinx</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Auto-Append Help Tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_append_help_tags.html">Adding Documentation Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enable_external_website_publishing.html">Enabling External Website Publishing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enabling_rez_help_integration.html">Enabling rez-help Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx_as_a_release_hook.html">rez_sphinx As A Release Hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch_publish_documentation.html">Batch-Publish Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html">Linking rez_sphinx With Other Documentation Tools</a></li>
 </ul>
 </li>
@@ -89,38 +94,47 @@
            <div itemprop="articleBody">
              
   <section id="adding-extra-interlinking">
-<h1>Adding Extra Interlinking<a class="headerlink" href="#adding-extra-interlinking" title="Permalink to this headline">¶</a></h1>
+<h1>Adding Extra Interlinking<a class="headerlink" href="#adding-extra-interlinking" title="Permalink to this headline"></a></h1>
 <p>As mentioned in other pages, <a class="reference internal" href="build_command.html#rez-sphinx-build"><span class="std std-ref">rez_sphinx build</span></a> is able to auto-find the
 documentation of dependency Rez packages and links it with the documentation
 you’re attempting to build.</p>
 <section id="how-it-works">
-<h2>How It Works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<h2>How It Works<a class="headerlink" href="#how-it-works" title="Permalink to this headline"></a></h2>
 <p>Before the documentation is built:</p>
-<ul class="simple">
+<ul>
 <li><p>Grab all Rez package dependencies, (<a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#requires">requires</a>, <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#variants">variants</a>, <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> etc)</p></li>
 <li><p>For each item in the list, check if there’s a defined <code class="docutils literal notranslate"><span class="pre">REZ_{NAME}_ROOT</span></code>
-environment variable defined.
-- If it is, check if the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a> at that directory has defined documentation.
-- If so, add it to <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">intersphinx_mapping</a> so <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">sphinx.ext.intersphinx</a> sees it.</p></li>
+environment variable defined.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If it is, check if the <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Commands">package.py</a> at that directory has defined documentation.</p></li>
+<li><p>If so, add it to <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">intersphinx_mapping</a> so <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">sphinx.ext.intersphinx</a> sees it.</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 <p>From there, <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build">sphinx-build</a> runs like it normally does. There’s a bunch of
 extra checks, like skipping ephemerals, conflicting packages, etc. But that’s
 the jist.</p>
 </section>
 <section id="checking-your-interlinks">
-<span id="rez-sphinx-build-inspect-conf-intersphinx-mapping"></span><h2>Checking Your Interlinks<a class="headerlink" href="#checking-your-interlinks" title="Permalink to this headline">¶</a></h2>
+<span id="rez-sphinx-build-inspect-conf-intersphinx-mapping"></span><h2>Checking Your Interlinks<a class="headerlink" href="#checking-your-interlinks" title="Permalink to this headline"></a></h2>
 <p>Run <a class="reference internal" href="view_command.html#rez-sphinx-view-sphinx-conf-intersphinx-mapping"><span class="std std-ref">rez_sphinx view sphinx-conf intersphinx_mapping</span></a>. It’ll tell you
 exactly what <a class="reference internal" href="build_command.html#rez-sphinx-build-run"><span class="std std-ref">rez_sphinx build run</span></a> sees, just before your documentation
 gets built.</p>
 </section>
 <section id="adding-extra-links">
-<h2>Adding Extra Links<a class="headerlink" href="#adding-extra-links" title="Permalink to this headline">¶</a></h2>
+<h2>Adding Extra Links<a class="headerlink" href="#adding-extra-links" title="Permalink to this headline"></a></h2>
 <p>Imagine you want to interlink your project with documentation that isn’t listed
 in <a class="reference internal" href="view_command.html#rez-sphinx-view-sphinx-conf-intersphinx-mapping"><span class="std std-ref">rez_sphinx view sphinx-conf intersphinx_mapping</span></a>. To do that, you
 have two options.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#adding-extra-documentation-interlinks"><span class="std std-ref">Add To build_documentation</span></a></p></li>
+<li><p><a class="reference internal" href="#manually-adding-to-intersphinx-mapping"><span class="std std-ref">Manually Adding to intersphinx_mapping</span></a></p></li>
+</ul>
 <section id="add-to-build-documentation">
-<h3>Add To build_documentation<a class="headerlink" href="#add-to-build-documentation" title="Permalink to this headline">¶</a></h3>
-<p>If the other Rez package you want to include already has <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>
+<span id="adding-extra-documentation-interlinks"></span><h3>Add To build_documentation<a class="headerlink" href="#add-to-build-documentation" title="Permalink to this headline"></a></h3>
+<p>If the other Rez package you want to include already has <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>
 included, adding it to your package is easy.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tests</span> <span class="o">=</span> <span class="p">{</span>
    <span class="s2">&quot;build_documentation&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -152,7 +166,7 @@ with <a class="reference internal" href="view_command.html#rez-sphinx-view-sphin
 </div>
 </section>
 <section id="manually-adding-to-intersphinx-mapping">
-<h3>Manually Adding to intersphinx_mapping<a class="headerlink" href="#manually-adding-to-intersphinx-mapping" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>Manually Adding to intersphinx_mapping<a class="headerlink" href="#manually-adding-to-intersphinx-mapping" title="Permalink to this headline"></a></h3>
 <p>If the documentation that you want to link to either isn’t a Rez package or
 isn’t a Rez package that you can control (e.g. it could be a <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Command-Line-Tools#rez-pip">rez-pip</a> built
 Rez package), you can always write the link like you would any other Sphinx
@@ -170,17 +184,17 @@ project.</p>
 </pre></div>
 </div>
 <p>For any Rez package you are able to modify, it’s always best to either A. Add
-<a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> to it or B. Update the package to point to the URL so
+<a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> to it or B. Update the package to point to the URL so
 rez_sphinx can auto pick it up.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>rez_sphinx is able to see any Sphinx documentation, even if it isn’t built
-with <a class="reference internal" href="user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a>. See
+with <a class="reference internal" href="what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a>. See
 <a class="reference internal" href="linking_rez_sphinx_with_other_documentation_tools.html"><span class="doc">Linking rez_sphinx With Other Documentation Tools</span></a> for details.</p>
 </div>
 </section>
 <section id="searching-for-documentation">
-<h3>Searching For Documentation<a class="headerlink" href="#searching-for-documentation" title="Permalink to this headline">¶</a></h3>
+<h3>Searching For Documentation<a class="headerlink" href="#searching-for-documentation" title="Permalink to this headline"></a></h3>
 <p>If the package you want to add is:</p>
 <ul class="simple">
 <li><p>A third-party tool that you can’t easily modify (in Rez or in general)</p></li>
@@ -189,7 +203,7 @@ with <a class="reference internal" href="user_documentation.html#rez-sphinx"><sp
 </ul>
 <p>It may make sense to define those paths globally with <code class="docutils literal notranslate"><span class="pre">rez_sphinx</span> <span class="pre">config</span></code>.</p>
 <section id="as-a-package-documentation-url-dict">
-<h4>As A {“package”: “documentation URL”} Dict<a class="headerlink" href="#as-a-package-documentation-url-dict" title="Permalink to this headline">¶</a></h4>
+<h4>As A {“package”: “documentation URL”} Dict<a class="headerlink" href="#as-a-package-documentation-url-dict" title="Permalink to this headline"></a></h4>
 <p>There’s a way to make a Python dictionary like
 <code class="docutils literal notranslate"><span class="pre">{&quot;the_rez_package&quot;:</span> <span class="pre">&quot;https://www.package.com/the/sphinx/docs&quot;}</span></code>.
 Any time the_rez_package is found but no documentation URL exists, it’ll use

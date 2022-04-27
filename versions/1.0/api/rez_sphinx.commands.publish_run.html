@@ -4,12 +4,14 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.commands.publish_run &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.commands.publish_run &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer_documentation.html">Developer Documentation</a></li>
@@ -59,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="rez_sphinx.preprocess.html">preprocess</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rez_sphinx_plugins.html">rez_sphinx_plugins</a></li>
 </ul>
 </li>
 </ul>
@@ -91,16 +94,21 @@
            <div itemprop="articleBody">
              
   <section id="module-rez_sphinx.commands.publish_run">
-<span id="rez-sphinx-commands-publish-run"></span><h1>rez_sphinx.commands.publish_run<a class="headerlink" href="#module-rez_sphinx.commands.publish_run" title="Permalink to this headline">¶</a></h1>
+<span id="rez-sphinx-commands-publish-run"></span><h1>rez_sphinx.commands.publish_run<a class="headerlink" href="#module-rez_sphinx.commands.publish_run" title="Permalink to this headline"></a></h1>
 <p>The module which handles the <a class="reference internal" href="../publish_command.html#rez-sphinx-publish-run"><span class="std std-ref">rez_sphinx publish run</span></a> command.</p>
 <dl class="py function">
-<dt id="rez_sphinx.commands.publish_run.build_documentation">
-<code class="sig-name descname">build_documentation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#build_documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.build_documentation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build all <a class="reference internal" href="../user_documentation.html#rez-sphinx"><span class="std std-ref">User Documentation</span></a> registered documentation at <code class="docutils literal notranslate"><span class="pre">directory</span></code>.</p>
+<dt class="sig sig-object py" id="rez_sphinx.commands.publish_run.build_documentation">
+<span class="sig-name descname"><span class="pre">build_documentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packages_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#build_documentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.build_documentation" title="Permalink to this definition"></a></dt>
+<dd><p>Build all <a class="reference internal" href="../what_is_rez_sphinx.html#rez-sphinx"><span class="std std-ref">rez_sphinx</span></a> registered documentation at <code class="docutils literal notranslate"><span class="pre">directory</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path to a folder on disk. This folder should be
-a sub-folder inside of a Rez package to the root of the Rez package.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – The source Rez package to build documentation for.</p></li>
+<li><p><strong>packages_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – Paths on-disk to search within for an installed Rez package.  This
+package is assumed to have a defined <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> attribute, containing
+a <a class="reference internal" href="../build_command.html#rez-sphinx-build"><span class="std std-ref">rez_sphinx build</span></a> command. But if it doesn’t exist, a
+default build command is used instead.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="rez_sphinx.core.exception.html#rez_sphinx.core.exception.NoDocumentationFound" title="rez_sphinx.core.exception.NoDocumentationFound"><strong>NoDocumentationFound</strong></a> – If any found <a class="reference external" href="https://github.com/nerdvegas/rez/wiki/Package-Definition-Guide#tests">tests</a> attributes ran, succeeded to run, but no
@@ -117,14 +125,14 @@ into. For typical users, this list contains only one value.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rez_sphinx.commands.publish_run.get_all_publishers">
-<code class="sig-name descname">get_all_publishers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#get_all_publishers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.get_all_publishers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="rez_sphinx.commands.publish_run.get_all_publishers">
+<span class="sig-name descname"><span class="pre">get_all_publishers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rez_sphinx/commands/publish_run.html#get_all_publishers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rez_sphinx.commands.publish_run.get_all_publishers" title="Permalink to this definition"></a></dt>
 <dd><p>Find every registered publisher for <code class="docutils literal notranslate"><span class="pre">package</span></code>.</p>
 <p>Every found publisher will be auto-connected to the remote git repository
 that they’re associated with (e.g. <a class="reference external" href="https://github.com">GitHub</a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.106)"><em>rez.packages.Package</em></a>) – A package which may contain extra configuration overrides.
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://nerdvegas.github.io/rez/api/rez.html#rez.packages.Package" title="(in Rez v2.109)"><em>rez.packages.Package</em></a>) – A package which may contain extra configuration overrides.
 Any override not found will be retrieved globally.</p>
 </dd>
 <dt class="field-even">Returns</dt>

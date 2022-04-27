@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rez_sphinx.core.configuration &mdash; rez_sphinx 1.0.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>rez_sphinx.core.configuration &mdash; rez_sphinx 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -35,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_documentation.html">User Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_documentation.html">Developer Documentation</a></li>
@@ -73,12 +75,14 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
 
-<span class="kn">from</span> <span class="nn">python_compatibility</span> <span class="kn">import</span> <span class="n">imports</span>
+<span class="kn">from</span> <span class="nn">python_compatibility</span> <span class="kn">import</span> <span class="n">imports</span><span class="p">,</span> <span class="n">wrapping</span>
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">mock</span>
-<span class="kn">from</span> <span class="nn">sphinx</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">sphinx</span> <span class="kn">import</span> <span class="n">builders</span><span class="p">,</span> <span class="n">config</span>
 
-<span class="n">_CONFIGURATION_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;conf.py&quot;</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constant</span>
+
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
@@ -111,7 +115,7 @@
 <span class="sd">            ConfPy: The created instance.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_CONFIGURATION_FILE_NAME</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">constant</span><span class="o">.</span><span class="n">SPHINX_CONF_NAME</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ConfPy.from_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.from_path">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_path</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -147,7 +151,7 @@
 <span class="sd">            bool: If the configuration can be read, return True.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_CONFIGURATION_FILE_NAME</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">constant</span><span class="o">.</span><span class="n">SPHINX_CONF_NAME</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">_get_extensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;list[str]: Get each Python importable module that `Sphinx`_ will load.&quot;&quot;&quot;</span>
@@ -210,7 +214,10 @@
 
         <span class="k">if</span> <span class="n">allow_extensions</span><span class="p">:</span>
             <span class="n">extensions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_extensions</span><span class="p">()</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_extension_attribute_names</span><span class="p">(</span><span class="n">extensions</span><span class="p">))</span>
+            <span class="n">modules</span> <span class="o">=</span> <span class="n">_get_modules_from_namespace</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_extension_attribute_names</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_known_builder_attribute_names</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">output</span></div>
 
@@ -225,20 +232,19 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="n">source_suffix</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;.rst&quot;</span>  <span class="c1"># A reasonable default</span></div>
+            <span class="k">return</span> <span class="n">constant</span><span class="o">.</span><span class="n">SOURCE_DOCUMENTATION_EXTENSION</span>  <span class="c1"># A reasonable default</span></div>
 
 <div class="viewcode-block" id="ConfPy.get_module_path"><a class="viewcode-back" href="../../../api/rez_sphinx.core.configuration.html#rez_sphinx.core.configuration.ConfPy.get_module_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_module_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;str: Get the full path to this `Sphinx conf.py`_ file, on-disk.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module</span><span class="o">.</span><span class="vm">__file__</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_get_extension_attribute_names</span><span class="p">(</span><span class="n">extensions</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find every attribute for each `Sphinx`_ extension in ``extensions``.</span>
+<span class="k">def</span> <span class="nf">_get_extension_attribute_names</span><span class="p">(</span><span class="n">modules</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find every attribute for each `Sphinx`_ extension in ``modules``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        extensions (iter[str]):</span>
-<span class="sd">            An importable Python namespace to try to get attribute contents</span>
-<span class="sd">            from. e.g. ``[&quot;sphinx.ext.intersphinx&quot;, &quot;sphinx.ext.viewcode&quot;]``.</span>
+<span class="sd">        modules (iter[module]):</span>
+<span class="sd">            An importable Python namespace to try to get attribute contents from.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        set[str]: Every found attribute name across all extensions.</span>
@@ -250,21 +256,6 @@
             <span class="n">appender</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">_wrap</span>
-
-    <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
-        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Now importing &quot;</span><span class="si">%s</span><span class="s1">&quot; to query its attributes.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
-            <span class="c1"># We&#39;re importing arbitrary Python modules based on whatever the</span>
-            <span class="c1"># user has set.  So we need to catch generalized errors.</span>
-            <span class="c1">#</span>
-            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot;. Error, &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
-
-            <span class="k">continue</span>
 
     <span class="c1"># Since `Sphinx`_ requires a ``setup`` function on every extension module</span>
     <span class="c1"># which defines attributes, we take advantage of this convention by passing</span>
@@ -278,9 +269,56 @@
 
     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;setup&quot;</span><span class="p">):</span>
-            <span class="n">module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">mocker</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">wrapping</span><span class="o">.</span><span class="n">silence_printing</span><span class="p">():</span>  <span class="c1"># Sphinx can be rather spammy.</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">mocker</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">container</span>
+
+
+<span class="k">def</span> <span class="nf">_get_known_builder_attribute_names</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;set[str]: Find all attributes which come from `Sphinx`_ builder modules.&quot;&quot;&quot;</span>
+    <span class="c1"># Reference: https://stackoverflow.com/a/1707786/3626104</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">builders</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span>
+            <span class="n">builders</span><span class="o">.</span><span class="n">__path__</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">_get_extension_attribute_names</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_modules_from_namespace</span><span class="p">(</span><span class="n">namespaces</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert fully-qualified Python importable namespaces into modules.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        namespaces (iter[str]):</span>
+<span class="sd">            Each importable Python namespace to try to import.</span>
+<span class="sd">            e.g. ``[&quot;sphinx.ext.intersphinx&quot;, &quot;sphinx.ext.viewcode&quot;]``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[module]: The imported modules.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">namespaces</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Now importing &quot;</span><span class="si">%s</span><span class="s1">&quot; to query its attributes.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+            <span class="c1"># We&#39;re importing arbitrary Python modules based on whatever the</span>
+            <span class="c1"># user has set.  So we need to catch generalized errors.</span>
+            <span class="c1">#</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Skipped loading &quot;</span><span class="si">%s</span><span class="s1">&quot;. Error, &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">modules</span>
 </pre></div>
 
            </div>
